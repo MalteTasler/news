@@ -1,7 +1,8 @@
 import React from 'react';
 
-const App = () => {
-    return <h1>Hi! Welcome to your newly created chayns application!</h1>;
-};
+const App = () => 
+    <div>
+        <h1>BamBoo! News</h1>
+    </div>;
 
 export default App;
