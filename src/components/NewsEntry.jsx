@@ -1,6 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { Gallery, SharingBar } from 'chayns-components'
+import Footer from './Footer'
 
 const NewsEntry = ({title, message, imageList, publishTimestamp, now}) =>
 {
@@ -46,8 +47,7 @@ const NewsEntry = ({title, message, imageList, publishTimestamp, now}) =>
             <Gallery images={imageList} />
             <h2>{title}</h2>
             {message}
-            <SharingBar link="abcdefghijk" linkText="a" />
-            {getTimeAgo(publishTimestamp)}
+            <Footer date = {getTimeAgo(publishTimestamp)} />
         </div>
     )
 }

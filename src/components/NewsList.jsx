@@ -14,8 +14,7 @@ const NewsList = ({news, now}) =>
 
 NewsList.propTypes = {
     news: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string,
-
+        id: PropTypes.string
     })).isRequired,
     now: PropTypes.shape({}).isRequired
 }
