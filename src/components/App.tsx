@@ -10,8 +10,8 @@ const App = () => {
 
     const [news, setNews] = React.useState([])
 
-    function laodMore() {
-        fetchNews(true);
+    async function laodMore() {
+        await fetchNews(true);
     }
     function getTimestampOfOldestLoadedNewsEntry() {
         if(news.length <= 1) { // if no news entries are loaded yet, just use the current timestamp (timestamp when the page was loaded)
