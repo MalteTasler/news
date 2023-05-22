@@ -4,10 +4,10 @@ import { SharingBar } from 'chayns-components'
 import styles from "./Footer.module.css"
 
 const Footer = ({date}) => 
-        <div className = {styles.newsFooter}>
-             <SharingBar link="abcdefghijk" linkText="a" />
-             {date}
-        </div>
+    <div className = {styles.newsFooter}>
+            <SharingBar link="abcdefghijk" linkText="a" />
+            {date}
+    </div>
 Footer.propTypes = {
     date: PropTypes.string.isRequired
 }
