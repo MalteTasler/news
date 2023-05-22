@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from 'chayns-components'
 import NewsList from './NewsList';
+import AddNewsEntry from './AddNewsEntry'
 import styles from "./App.module.css"
 
 const App = () => {
@@ -39,6 +40,9 @@ const App = () => {
         })
         console.log(`fetched ${count} news entries: `, news);
     }
+    function publish() {
+        console.log("new entry")
+    }
     React.useEffect(() => {
         const getItems = async() => {
             await fetchNews(false)
@@ -49,6 +53,7 @@ const App = () => {
         <div>
             <h1 id = "pageHeadline">Aktuelle News aus dem BamBoo!</h1>
             <p id = "pageSubHeadline">Kurz, kompakt und immer wieder frisch informieren wir hier über aktuelle Themen und Aktionen.</p>
+            <AddNewsEntry onPublish = {publish} />
             {news.length > 9 ? <NewsList news = {news} now = {now}/> : "loading..."}
             <div className={styles.btContainer}>
                 <Button id={styles.btLoadMore} onClick={laodMore}>Mehr</Button>

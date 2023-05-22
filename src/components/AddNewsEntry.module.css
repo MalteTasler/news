@@ -1,0 +1,7 @@
+#addNewsEntryFrame {
+    display: flex;
+    padding: 19px;
+}
+#btPublish {
+    margin-left: 14px;
+}
