@@ -1,10 +1,32 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { Gallery, SharingBar } from 'chayns-components'
+import { Gallery } from 'chayns-components'
 import Footer from './Footer'
 
 const NewsEntry = ({title, message, imageList, publishTimestamp, now}) =>
 {
+    const maxLength = 220
+    let messageIsLong = false;
+    const [messageIsExtended, setMessageIsExtended] = React.useState(false)
+    let cutMessage;
+    
+    if(message.length < maxLength || messageIsExtended)
+    {
+        console.log("no cut ", message, message.length, messageIsExtended)
+    }
+    else
+    {
+        console.log("news message is long, try to cut news message...")
+        messageIsLong = true
+        const truncated = message.substr(0, maxLength);
+        const lastSpaceIndex = truncated.lastIndexOf(" ");
+        const substring = truncated.substr(0, lastSpaceIndex);
+        cutMessage = <span>{substring} <a className="btLoadWholeMessage" onClick={displayWholeMessage}>Mehr</a></span>
+    }
+   
+    function displayWholeMessage() {
+        setMessageIsExtended(true)
+    }
     const getTimeAgo = (timestamp) => {
         const diff = now.getTime() - timestamp;
 
@@ -41,12 +63,12 @@ const NewsEntry = ({title, message, imageList, publishTimestamp, now}) =>
         const monthsAgo = Math.floor(diff / month);
         return `vor ${monthsAgo} Monat${monthsAgo > 1 ? 'en' : ''}`;   
     }
-
+    
     return(
         <div className = "news content__card">
             <Gallery images={imageList} />
             <h2>{title}</h2>
-            {message}
+            {messageIsLong ? cutMessage : message}
             <Footer date = {getTimeAgo(publishTimestamp)} />
         </div>
     )
