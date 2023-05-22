@@ -4,14 +4,10 @@ import { ChaynsProvider } from 'chayns-api';
 import App from './App';
 import store from '../redux-modules';
 
-const AppWrapper = () => {
-    return (
+const AppWrapper = () => 
         <ChaynsProvider>
             <Provider store={store}>
                 <App/>
             </Provider>
         </ChaynsProvider>
-    )
-}
-
 export default AppWrapper;
