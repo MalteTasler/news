@@ -1,12 +1,12 @@
 import React from 'react';
-import { Button } from 'chayns-components'
+import { AnimationWrapper, Button } from 'chayns-components'
 import NewsList from './NewsList';
 import AddNewsEntry from './AddNewsEntry'
 import styles from "./App.module.css"
 
 const App = () => {
     const fetchURL = "https://mashup.tobit.com/api/news/v3.0/newsvstring/1";
-    const count = 10;
+    const count = 1;
     const now = new Date();
 
     const [news, setNews] = React.useState([])
@@ -51,13 +51,15 @@ const App = () => {
     }, [])
     return (
         <div>
-            <h1 id = "pageHeadline">Aktuelle News aus dem BamBoo!</h1>
-            <p id = "pageSubHeadline">Kurz, kompakt und immer wieder frisch informieren wir hier über aktuelle Themen und Aktionen.</p>
-            <AddNewsEntry onPublish = {publish} />
-            {news.length > 9 ? <NewsList news = {news} now = {now}/> : "loading..."}
-            <div className={styles.btContainer}>
-                <Button id={styles.btLoadMore} onClick={laodMore}>Mehr</Button>
-            </div>
+            <AnimationWrapper>
+                <h1 id = "pageHeadline">Aktuelle News aus dem BamBoo!</h1>
+                <p id = "pageSubHeadline">Kurz, kompakt und immer wieder frisch informieren wir hier über aktuelle Themen und Aktionen.</p>
+                <AddNewsEntry onPublish = {publish} />
+            </AnimationWrapper>
+                {news.length > 0 ? <NewsList news = {news} now = {now}/> : "loading..."}
+                <div className={styles.btContainer}>
+                    <Button id={styles.btLoadMore} onClick={laodMore}>Mehr</Button>
+                </div>
         </div>
     )
 }

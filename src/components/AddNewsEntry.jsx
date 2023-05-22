@@ -1,6 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { Accordion, Input, Button } from 'chayns-components'
+import { Accordion, Input, Button, AnimationWrapper } from 'chayns-components'
 import styles from "./AddNewsEntry.module.css"
 
 const AddNewsEntry = ({onPublish}) => {
@@ -9,14 +9,16 @@ const AddNewsEntry = ({onPublish}) => {
         <Accordion
             head = "Create News Entry"
         >
-            <div id = {styles.addNewsEntryFrame}>
-                <Input 
-                    placeholder = "Enter your message here." 
-                    value = {message}
-                    onChange = {setMessage}
-                />
-                <Button id = {styles.btPublish} onClick={onPublish}>Publish</Button>
-            </div>
+            {/* <AnimationWrapper> */}
+                <div id = {styles.addNewsEntryFrame}>
+                    <Input 
+                        placeholder = "Enter your message here." 
+                        value = {message}
+                        onChange = {setMessage}
+                    />
+                    <Button id = {styles.btPublish} onClick={onPublish}>Publish</Button>
+                </div>
+            {/* </AnimationWrapper> */}
             {message}
         </Accordion>
     )
