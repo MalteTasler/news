@@ -53,64 +53,60 @@ const AddNewsEntry = ({onPublish, now}) => {
         <Accordion
             head = "Create News Entry"
         >
-                <div id = {styles.addNewsEntryFrame}>
-                    <p>{displayPath}</p>
-                   {images.length > 0 ? <Gallery
-                        images = {images}
-                        deleteMode
-                        onDelete={onDelete}
-                        dragMode
-                        onDragEnd={onDragEnd}
-                    /> : "choose image"}
-                    <div id = {styles.btAddImage}>
-                        <i className = "react-chayns-icon fa fa-image sc-pyfCe hSJfHn" />
-                    </div>
-                    <FileInput 
-                       items = 
-                        {[
-                            {
-                                types: FileInput.typePresets.TSIMG_CLOUD, // only images are allowed
-                                maxFileSize: 4194304, // max file size is 4 MB
-                                maxNumberOfFiles: 0, // no limit for number of files
-                                onChange,
-                                content: { text: 'Bild hochladen' },
+            <div id = {styles.addNewsEntryFrame}>
+                <p>{displayPath}</p>
+                {images.length > 0 ? <Gallery
+                    images = {images}
+                    deleteMode
+                    onDelete={onDelete}
+                    dragMode
+                    onDragEnd={onDragEnd}
+                /> : "choose image"}
+                <FileInput 
+                    items = 
+                    {[
+                        {
+                            types: FileInput.typePresets.TSIMG_CLOUD, // only images are allowed
+                            maxFileSize: 4194304, // max file size is 4 MB
+                            maxNumberOfFiles: 0, // no limit for number of files
+                            onChange,
+                            content: { text: 'Bild hochladen' },
+                        },
+                        {
+                            onClick,
+                            content: {
+                                text: 'Bild auswählen',
+                                icon: 'ts-image',
                             },
-                            {
-                                onClick,
-                                content: {
-                                    text: 'Bild auswählen',
-                                    icon: 'ts-image',
-                                },
-                            },
-                        ]}
-                        /* onClick = {() => console.log("file")} */
+                        },
+                    ]}
+                    /* onClick = {() => console.log("file")} */
+                />
+                <div id = {styles.addNewsEntryInputFrame}>
+                    <Input 
+                        placeholder = "Title" 
+                        value = {title}
+                        onChange = {setTitle}
                     />
-                    <div id = {styles.addNewsEntryInputFrame}>
-                        <Input 
-                            placeholder = "Title" 
-                            value = {title}
-                            onChange = {setTitle}
-                        />
-                    </div>
-                    <div id = {styles.addNewsEntryInputFrame}>
-                        <Input 
-                            placeholder = "Enter your message here." 
-                            value = {message}
-                            onChange = {setMessage}
-                        />
-                    </div>
-                    <div className = {appStyles.btContainer}>
-                        <Button id = {styles.btPublish} onClick={() => onPublish({
-                            imageList: images,
-                            headline: title,
-                            id: "1",
-                            message,
-                            publishTime: now,
-                            publishTimestamp: now.getTime()
-                        })}>Publish</Button>
-                    </div>
                 </div>
-            {message}
+                <div id = {styles.addNewsEntryInputFrame}>
+                    <Input 
+                        placeholder = "Enter your message here." 
+                        value = {message}
+                        onChange = {setMessage}
+                    />
+                </div>
+                <div className = {appStyles.btContainer}>
+                    <Button id = {styles.btPublish} onClick={() => onPublish({
+                        imageList: images,
+                        headline: title,
+                        id: "1",
+                        message,
+                        publishTime: now,
+                        publishTimestamp: now.getTime()
+                    })}>Publish</Button>
+                </div>
+            </div>
         </Accordion>
     )
 }
