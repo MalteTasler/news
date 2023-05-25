@@ -72,7 +72,7 @@ const App = () => {
                 </Checkbox>
             </AnimationWrapper>
             {console.log(news, news.length, showNews, (news.length > 0 && showNews))}
-            {(news.length > 0 && showNews) 
+            {(news && Array.isArray(news), news.length > 0 && showNews) 
             ? <NewsList news = {news} now = {now} counter={counter}/> 
             : "loading..."}
             <div className={styles.btContainer}>
