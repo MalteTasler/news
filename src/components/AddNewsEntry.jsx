@@ -100,7 +100,6 @@ const AddNewsEntry = ({onPublish, now}) => {
                     <Button id = {styles.btPublish} onClick={() => onPublish({
                         imageList: images,
                         headline: title,
-                        id: "1",
                         message,
                         publishTime: now,
                         publishTimestamp: now.getTime()
