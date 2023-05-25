@@ -5,7 +5,9 @@ import NewsEntry from "./NewsEntry"
 const NewsList = ({news, now}) =>
     <div id = "news_list">
         {console.log("render news list ", news)}
-        {news.map(element => <NewsEntry key={element.id} title = {element.headline} message = {element.message} imageList = {element.imageList} publishTimestamp = {element.publishTimestamp} now = {now} />)}
+        {news.map(element => {(element && element.headline && element.id && element.imageList && element.message && element.publishTime && element.publishTimestamp)
+            ? <NewsEntry key={element.id} title = {element.headline} message = {element.message} imageList = {element.imageList} publishTimestamp = {element.publishTimestamp} now = {now} />
+            : ""})}
     </div>
 NewsList.propTypes = {
     news: PropTypes.arrayOf(PropTypes.shape({
