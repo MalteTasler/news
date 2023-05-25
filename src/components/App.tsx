@@ -36,8 +36,11 @@ const App = () => {
         const itemList = parsedResponse.itemList
         setNews(prevState => {
             if (offset)
+            {
                 prevState.pop()
-            return (prevState.concat(itemList))
+                return (prevState.concat(itemList))
+            }
+            return (itemList)
         })
         console.log(`fetched ${count} news entries: `, news, news.length)
     }
@@ -51,6 +54,7 @@ const App = () => {
             }
             })
         setCounter(c => ++c)
+        fetchNews(false)
     }
     useEffect(() => {
         const getItems = async() => {
