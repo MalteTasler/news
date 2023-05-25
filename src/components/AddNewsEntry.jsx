@@ -37,7 +37,7 @@ const AddNewsEntry = ({onPublish, now}) => {
         console.log("image files ", images)
     }, [images, setImages])
     
-    /* const upload = useCallback(() => {
+    const upload = useCallback(() => {
         images.forEach(async (image) => {
             const result = await imageUpload(
                 image.file || image.url,
@@ -48,7 +48,7 @@ const AddNewsEntry = ({onPublish, now}) => {
             console.log('Uploaded image', result)
             setDisplayPath(`${displayPath}${result.base}/${result.key}\n`)
         })
-    }, [images, setDisplayPath]) */
+    }, [images, setDisplayPath])
     return (
         <Accordion
             head = "Create News Entry"

@@ -5,7 +5,7 @@ import AddNewsEntry from './AddNewsEntry'
 import styles from './App.module.css'
 
 const App = () => {
-    const fetchURL = "https://mashup.tobit.com/api/news/v3.0/newsvstring/1"
+    const fetchURL = "https://run.chayns.codes/f11828e3/api"
     const count = 10
     const now = new Date()
 
@@ -39,13 +39,17 @@ const App = () => {
                 prevState.pop()
             return (prevState.concat(itemList))
         })
-        console.log(`fetched ${count} news entries: `, news)
+        console.log(`fetched ${count} news entries: `, news, news.length)
     }
-    function publish(data) {
-        setNews(prevState => {
-            prevState.unshift(data)
-            return prevState
-        })
+    async function publish(data) {
+        console.log(JSON.stringify(data))
+        await fetch(fetchURL , {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+            })
         setCounter(c => ++c)
     }
     useEffect(() => {
@@ -67,6 +71,7 @@ const App = () => {
                 >Show news
                 </Checkbox>
             </AnimationWrapper>
+            {console.log(news, news.length, showNews, (news.length > 0 && showNews))}
             {(news.length > 0 && showNews) 
             ? <NewsList news = {news} now = {now} counter={counter}/> 
             : "loading..."}
