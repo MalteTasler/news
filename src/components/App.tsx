@@ -44,8 +44,8 @@ const App = () => {
         })
         console.log(`fetched ${count} news entries: `, news, news.length)
     }
-    async function publish(data) {
-        console.log(JSON.stringify(data))
+    async function publish(data, imageURLs) {
+        console.log("publish: ", imageURLs)
         await fetch(fetchURL , {
             method: "POST",
             body: JSON.stringify(data),

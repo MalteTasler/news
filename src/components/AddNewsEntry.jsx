@@ -10,6 +10,24 @@ const AddNewsEntry = ({onPublish, now}) => {
     const [title, setTitle] = useState("")
     const [images, setImages] = useState([])
     const [displayPath, setDisplayPath] = useState('')
+
+    let imageURLs = [];
+
+    async function handlePublish() {
+        console.log("begin upload")
+        await upload()
+        console.log("upload finished")
+        onPublish(
+            {
+                imageList: images,
+                headline: title,
+                message,
+                publishTime: now,
+                publishTimestamp: now.getTime()
+            },
+            imageURLs
+        )
+    }
     const onChange = useCallback(
         (validFiles) => {
             setImages(images.concat(validFiles.map((f) => ({ file: f }))))
@@ -37,14 +55,16 @@ const AddNewsEntry = ({onPublish, now}) => {
         console.log("image files ", images)
     }, [images, setImages])
     
-    const upload = useCallback(() => {
-        images.forEach(async (image) => {
+    const upload = useCallback(async() => {
+        imageURLs = []
+        images.forEach(async(image) => {
             const result = await imageUpload(
                 image.file || image.url,
                 'componentsTestUpload',
                 chayns.env.user.personId,
                 chayns.env.site.id
             )
+            imageURLs.push(result.base + result.key)
             console.log('Uploaded image', result)
             setDisplayPath(`${displayPath}${result.base}/${result.key}\n`)
         })
@@ -97,13 +117,9 @@ const AddNewsEntry = ({onPublish, now}) => {
                     />
                 </div>
                 <div className = {appStyles.btContainer}>
-                    <Button id = {styles.btPublish} onClick={() => onPublish({
-                        imageList: images,
-                        headline: title,
-                        message,
-                        publishTime: now,
-                        publishTimestamp: now.getTime()
-                    })}>Publish</Button>
+                    <Button id = {styles.btPublish} onClick={() => handlePublish()}>
+                        Publish
+                    </Button>
                 </div>
             </div>
         </Accordion>
