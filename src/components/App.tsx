@@ -17,12 +17,13 @@ const App = () => {
         await fetchNews(true)
     }
     function getTimestampOfOldestLoadedNewsEntry() {
-        if(news.length <= 1) { // if no news entries are loaded yet, just use the current timestamp (timestamp when the page was loaded)
+        if(!news || !Array.isArray(news) || news.length <= 1) { // if no news entries are loaded yet, just use the current timestamp (timestamp when the page was loaded)
             return now.getTime()
         }
         //  if entries are already loaded take the timestamp of the oldest
         const oldestLoadedNewsEntry = news[news.length-1]
-        return oldestLoadedNewsEntry.publishTimestamp
+        if (oldestLoadedNewsEntry)
+            return oldestLoadedNewsEntry.publishTimestamp
     }
     async function fetchNews(offset = false) {  // if offset is true, last value of current news array gets popped
         // generate fetchURL with parameters
@@ -33,7 +34,7 @@ const App = () => {
         console.log(`try fetch news entries with the URL with parameters:" ${fetchURLWithParameters}"...`)
         const response = await fetch(fetchURLWithParameters)
         const parsedResponse = await response.json()
-        const itemList = parsedResponse.itemList
+        const itemList = parsedResponse.body.itemList
         setNews(prevState => {
             if (offset)
             {
@@ -42,10 +43,10 @@ const App = () => {
             }
             return (itemList)
         })
-        console.log(`fetched ${count} news entries: `, news, news.length)
+        console.log(`fetched ${count} news entries: `, news, parsedResponse)
     }
     async function publish(data, imageURLs) {
-        console.log("publish: ", imageURLs)
+        console.log("publish: ", data, imageURLs)
         await fetch(fetchURL , {
             method: "POST",
             body: JSON.stringify(data),
@@ -75,8 +76,8 @@ const App = () => {
                 >Show news
                 </Checkbox>
             </AnimationWrapper>
-            {console.log(news, news.length, showNews, (news.length > 0 && showNews))}
-            {(news && Array.isArray(news), news.length > 0 && showNews) 
+            {/* console.log(news, news.length, showNews, (news.length > 0 && showNews)) */}
+            {(news && Array.isArray(news) && news.length > 0 && showNews) 
             ? <NewsList news = {news} now = {now} counter={counter}/> 
             : "loading..."}
             <div className={styles.btContainer}>
