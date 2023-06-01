@@ -9,7 +9,7 @@ const AddNewsEntry = ({onPublish, now}) => {
     const [message, setMessage] = useState("")
     const [title, setTitle] = useState("")
     const [images, setImages] = useState([])
-    const [imageSources, setImageSources] = useState([])
+    // const [imageSources, setImageSources] = useState([])
     const [displayPath, setDisplayPath] = useState('')
     const [isUploading, setIsUploading] = useState(false)
 
@@ -72,7 +72,7 @@ const AddNewsEntry = ({onPublish, now}) => {
                 imageURLs.push(`${result.base}/${result.key}`);
                 setDisplayPath(`${displayPath}${result.base}/${result.key}\n`)
             }));
-        setImageSources(imageURLs);
+        // setImageSources(imageURLs);
         setIsUploading(false);
     }
 
