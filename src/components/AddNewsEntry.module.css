@@ -1,0 +1,29 @@
+input {
+
+    width: 100%;
+}
+#addNewsEntryFrame {
+    display: flex;
+    flex-direction: column;
+    padding: 19px;
+}
+#addNewsEntryInputFrame {
+    display: flex;
+    margin: 7px;
+    justify-content: space-between;
+    width: 100%;
+}
+#btAddImage {
+    margin-right: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px;
+}
+#btAddImage:hover {
+    background-color: grey;
+    border-radius: 4px;
+}
+#btPublish {
+    margin-left: 14px;
+}

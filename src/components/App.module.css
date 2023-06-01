@@ -4,3 +4,10 @@
     align-items: center;
     justify-content: center;
 }
+#cbShowMore {
+    margin: 14px;
+}
+.cc__checkbox {
+    margin: 14px;
+    color: blue;
+}
