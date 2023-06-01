@@ -38,6 +38,7 @@ const App = () => {
         // try to load news entries
         const response = await fetch(fetchURLWithParameters)
         const parsedResponse = await response.json() as IResponse
+        console.log("fetched data: ", parsedResponse)
         const parsedResponseBody = parsedResponse.body
         const {itemList} = parsedResponseBody
         setNews((prevState:INews[]):INews[] => {
@@ -53,6 +54,16 @@ const App = () => {
         await fetch(fetchURL , {
             method: "POST",
             body: JSON.stringify(data),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+            })
+        setCounter(c => ++c)
+        await fetchNews(false)
+    }
+    async function deleteEntry(id : string) {
+        await fetch(`${fetchURL}/${id}` , {
+            method: "DELETE",
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
             }
@@ -93,7 +104,7 @@ const App = () => {
             (news && Array.isArray(news) && news.length > 0 && showNews) 
             ? 
             <div>
-                <NewsList news = {news} now = {now} counter={counter}/> 
+                <NewsList news = {news} now = {now} counter={counter} onDelete={deleteEntry}/> 
                 <div className={styles.btContainer}>
                     <Button disabled = {!loadMoreButtonIsEnabled} id={styles.btLoadMore} onClick={laodMore}>Mehr</Button>
                 </div>

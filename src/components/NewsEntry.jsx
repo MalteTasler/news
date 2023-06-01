@@ -1,10 +1,43 @@
 import React, { useState } from "react"
 import PropTypes from "prop-types"
-import { Gallery } from 'chayns-components'
+import { Gallery, ContextMenu } from 'chayns-components'
 import Footer from './Footer'
 
-const NewsEntry = ({title, message, imageList, publishTimestamp, now}) =>
+const NewsEntry = ({id, title, message, imageList, publishTimestamp, onDelete, now}) =>
 {
+    const contextMenuItems/*  : {
+        className : null;
+        onClick: AnyAction;
+        text: string;
+        icon: string;
+    }[] */ = 
+    [
+        {
+            className: null,
+            onClick: () => {
+                chayns.dialog.confirm('Confirm', 'Are you sure you want to delete that new entry?', [
+                {
+                    text: 'YES',
+                    buttonType: 1,
+                }, 
+                {
+                    text: 'NO',
+                    buttonType: 0,
+                    collapseTime: 3
+                }
+                ]).then((result) => {
+                    if(result === 1)
+                    {
+                        console.log("try to delete new entry now:", result, "key _ ", id)
+                        onDelete(id)
+                    }
+                }
+                );
+            },
+            text: "Delete",
+            icon: "fa fa-trash"
+        }
+    ]
     const maxLength = 220
     let messageIsLong = false
     let cutMessage
@@ -60,6 +93,13 @@ const NewsEntry = ({title, message, imageList, publishTimestamp, now}) =>
     } 
     return(
         <div className = "news content__card">
+            <ContextMenu
+                items = {contextMenuItems}
+                onLayerClick = { (event) => {
+                    console.log("clicked layer ,", event)
+                }
+                }
+            />
             <Gallery images={imageList} />
             <h2>{title}</h2>
             {messageIsLong ? cutMessage : message}
@@ -68,10 +108,12 @@ const NewsEntry = ({title, message, imageList, publishTimestamp, now}) =>
     )
 }
 NewsEntry.propTypes = {
+    id: PropTypes.string.isRequired,
     title: PropTypes.string,
     message: PropTypes.string.isRequired,
     imageList: PropTypes.arrayOf(PropTypes.string),
     publishTimestamp: PropTypes.number.isRequired,
+    onDelete: PropTypes.func.isRequired,
     now: PropTypes.shape({
         getTime: PropTypes.func
     }).isRequired
