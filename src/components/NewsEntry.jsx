@@ -28,7 +28,7 @@ const NewsEntry = ({id, title, message, imageList, publishTimestamp, onDelete, n
                 ]).then((result) => {
                     if(result === 1)
                     {
-                        console.log("try to delete new entry now:", result, "key _ ", id)
+                        /* console.log("try to delete new entry now:", result, "key _ ", id) */
                         onDelete(id)
                     }
                 }
@@ -95,10 +95,10 @@ const NewsEntry = ({id, title, message, imageList, publishTimestamp, onDelete, n
         <div className = "news content__card">
             <ContextMenu
                 items = {contextMenuItems}
-                onLayerClick = { (event) => {
-                    console.log("clicked layer ,", event)
+                /* onLayerClick = { (event) => {
+                console.log("clicked layer ,", event)
                 }
-                }
+                } */
             />
             <Gallery images={imageList} />
             <h2>{title}</h2>

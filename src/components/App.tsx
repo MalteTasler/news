@@ -4,8 +4,7 @@ import { AnimationWrapper, Button, Checkbox } from 'chayns-components'
 import NewsList from './NewsList'
 import AddNewsEntry from './AddNewsEntry'
 import styles from './App.module.css'
-import { INewsEntry, IItem, IResponse, INews } from '../interfaces.ts'
-import NewsEntry from './NewsEntry'
+import { IResponse, INews } from '../interfaces'
 
 const App = () => {
     const fetchURL = "https://run.chayns.codes/f11828e3/api"
@@ -25,7 +24,7 @@ const App = () => {
             return now.getTime()
         }
         //  if entries are already loaded take the timestamp of the oldest
-        const oldestLoadedNewsEntry : INewsEntry = news[news.length-1]
+        const oldestLoadedNewsEntry : INews = news[news.length-1]
         if (oldestLoadedNewsEntry)
             return (oldestLoadedNewsEntry.publishTimestamp)
         return now.getTime()
@@ -38,7 +37,7 @@ const App = () => {
         // try to load news entries
         const response = await fetch(fetchURLWithParameters)
         const parsedResponse = await response.json() as IResponse
-        console.log("fetched data: ", parsedResponse)
+        /* console.log("fetched data: ", parsedResponse) */
         const parsedResponseBody = parsedResponse.body
         const {itemList} = parsedResponseBody
         setNews((prevState:INews[]):INews[] => {
@@ -50,7 +49,7 @@ const App = () => {
             return (itemList)
         })
     }
-    async function publish(data) {
+    async function publish(data : INews) {
         await fetch(fetchURL , {
             method: "POST",
             body: JSON.stringify(data),
@@ -58,7 +57,7 @@ const App = () => {
                 "Content-type": "application/json; charset=UTF-8"
             }
             })
-        setCounter(c => ++c)
+        setCounter(c => c+1)
         await fetchNews(false)
     }
     async function deleteEntry(id : string) {
@@ -68,7 +67,7 @@ const App = () => {
                 "Content-type": "application/json; charset=UTF-8"
             }
             })
-        setCounter(c => ++c)
+        setCounter(c => c+1)
         await fetchNews(false)
     }
     useEffect(() => {
@@ -104,7 +103,7 @@ const App = () => {
             (news && Array.isArray(news) && news.length > 0 && showNews) 
             ? 
             <div>
-                <NewsList news = {news} now = {now} counter={counter} onDelete={deleteEntry}/> 
+                <NewsList news = {news} now = {now} counter = {counter} onDelete = {deleteEntry} /> 
                 <div className={styles.btContainer}>
                     <Button disabled = {!loadMoreButtonIsEnabled} id={styles.btLoadMore} onClick={laodMore}>Mehr</Button>
                 </div>
