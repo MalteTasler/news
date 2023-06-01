@@ -17,7 +17,6 @@ const AddNewsEntry = ({onPublish, now}) => {
 
     async function handlePublish() {
         await postImages()
-        console.log("finished uploading", imageSources)
         onPublish(
             {
                 imageList: imageURLs,
@@ -33,7 +32,6 @@ const AddNewsEntry = ({onPublish, now}) => {
             if(!isUploading)
             {
                 setImages(images.concat(validFiles.map((f) => ({ file: f }))))
-                console.log("image files change ", images, validFiles)
             }
         },
         [images, setImages, isUploading]
@@ -55,7 +53,6 @@ const AddNewsEntry = ({onPublish, now}) => {
     const onClick = useCallback(async () => {
         const data = await chayns.dialog.mediaSelect({ multiselect: true })
         setImages(images.concat(data.selection.map((url) => ({ url }))))
-        console.log("image files ", images)
     }, [images, setImages])
     /*
     const upload = useCallback(async() => {
@@ -74,11 +71,8 @@ const AddNewsEntry = ({onPublish, now}) => {
                 );
                 imageURLs.push(`${result.base}/${result.key}`);
                 setDisplayPath(`${displayPath}${result.base}/${result.key}\n`)
-                console.log('Uploaded image', result, imageURLs);
             }));
-        console.log("finished upload", imageURLs);
         setImageSources(imageURLs);
-        console.log("images ", imageSources)
         setIsUploading(false);
     }
 
@@ -113,7 +107,6 @@ const AddNewsEntry = ({onPublish, now}) => {
                             },
                         },
                     ]}
-                    /* onClick = {() => console.log("file")} */
                 />
                 <div id = {styles.addNewsEntryInputFrame}>
                     <Input 

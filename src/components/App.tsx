@@ -36,11 +36,8 @@ const App = () => {
         fetchURLWithParameters += `timestamp=${getTimestampOfOldestLoadedNewsEntry()}&count=${count}&past=true&categoryId=0&locationOnly=false&TappID=91958&noCache=false`
 
         // try to load news entries
-        console.log(`try fetch news entries with the URL with parameters:" ${fetchURLWithParameters}"...`)
         const response = await fetch(fetchURLWithParameters)
-        console.log(response)
         const parsedResponse = await response.json() as IResponse
-        console.log(parsedResponse)
         const parsedResponseBody = parsedResponse.body
         const {itemList} = parsedResponseBody
         setNews((prevState:INews[]):INews[] => {
@@ -51,10 +48,8 @@ const App = () => {
             }
             return (itemList)
         })
-        console.log(`fetched ${count} news entries: `, news, parsedResponse)
     }
     async function publish(data) {
-        console.log("publish: ", data)
         await fetch(fetchURL , {
             method: "POST",
             body: JSON.stringify(data),

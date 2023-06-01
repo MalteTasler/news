@@ -9,7 +9,6 @@ const NewsList = ({news, now}) =>
             {
                 if(!element)
                     return ""
-                console.log("render news list ", news, element, element.headline, element.id, element.imageList, element.message, element.publishTime, element.publishTimestamp)
                 return (element && element.headline && element.id && element.imageList && element.message && element.publishTime && element.publishTimestamp)
                 ? <NewsEntry key={element.id} title = {element.headline} message = {element.message} imageList = {element.imageList} publishTimestamp = {element.publishTimestamp} now = {now} />
                 : ""
