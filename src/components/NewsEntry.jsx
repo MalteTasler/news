@@ -72,7 +72,9 @@ NewsEntry.propTypes = {
     message: PropTypes.string.isRequired,
     imageList: PropTypes.arrayOf(PropTypes.string),
     publishTimestamp: PropTypes.number.isRequired,
-    now: PropTypes.shape({}).isRequired
+    now: PropTypes.shape({
+        getTime: PropTypes.func
+    }).isRequired
 }
 NewsEntry.defaultProps = {
     title : "",

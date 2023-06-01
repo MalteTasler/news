@@ -1,29 +1,33 @@
 import React, { useEffect, useState } from 'react'
+import PropTypes from "prop-types"
 import { AnimationWrapper, Button, Checkbox } from 'chayns-components'
 import NewsList from './NewsList'
 import AddNewsEntry from './AddNewsEntry'
 import styles from './App.module.css'
+import { INewsEntry, IItem, IResponse, INews } from '../interfaces.ts'
+import NewsEntry from './NewsEntry'
 
 const App = () => {
     const fetchURL = "https://run.chayns.codes/f11828e3/api"
     const count = 10
     const now = new Date()
 
-    const [news, setNews] = useState([])
+    const [news, setNews] = useState<INews[]>([])
     const [showNews, setShowNews] = useState(false)
     const [counter, setCounter] = useState(0)
 
     async function laodMore() {
         await fetchNews(true)
     }
-    function getTimestampOfOldestLoadedNewsEntry() {
+    function getTimestampOfOldestLoadedNewsEntry():string | number {
         if(!news || !Array.isArray(news) || news.length <= 1) { // if no news entries are loaded yet, just use the current timestamp (timestamp when the page was loaded)
             return now.getTime()
         }
         //  if entries are already loaded take the timestamp of the oldest
-        const oldestLoadedNewsEntry = news[news.length-1]
+        const oldestLoadedNewsEntry : INewsEntry = news[news.length-1]
         if (oldestLoadedNewsEntry)
-            return oldestLoadedNewsEntry.publishTimestamp
+            return (oldestLoadedNewsEntry.publishTimestamp)
+        return now.getTime()
     }
     async function fetchNews(offset = false) {  // if offset is true, last value of current news array gets popped
         // generate fetchURL with parameters
@@ -33,9 +37,12 @@ const App = () => {
         // try to load news entries
         console.log(`try fetch news entries with the URL with parameters:" ${fetchURLWithParameters}"...`)
         const response = await fetch(fetchURLWithParameters)
-        const parsedResponse = await response.json()
-        const itemList = parsedResponse.body.itemList
-        setNews(prevState => {
+        console.log(response)
+        const parsedResponse = await response.json() as IResponse
+        console.log(parsedResponse)
+        const parsedResponseBody = parsedResponse.body
+        const {itemList} = parsedResponseBody
+        setNews((prevState:INews[]):INews[] => {
             if (offset)
             {
                 prevState.pop()
@@ -55,7 +62,7 @@ const App = () => {
             }
             })
         setCounter(c => ++c)
-        fetchNews(false)
+        await fetchNews(false)
     }
     useEffect(() => {
         const getItems = async() => {
@@ -63,6 +70,16 @@ const App = () => {
         }
         getItems()
     }, [])
+    const localStyles : {
+        cbShowMore : string;
+        btContainer : string;
+        btLoadMore : string;
+    } =
+    {
+        cbShowMore : styles.cbShowMore as string,
+        btContainer : styles.btContainer as string,
+        btLoadMore : styles.btLoadMore as string
+    }
     return (
         <div>
             <AnimationWrapper>
@@ -72,7 +89,7 @@ const App = () => {
                 <Checkbox
                     checked = {showNews}
                     onChange = {setShowNews}
-                    id = {styles.cbShowMore}
+                    id = {(styles.cbShowMore)}
                 >Show news
                 </Checkbox>
             </AnimationWrapper>
@@ -85,5 +102,10 @@ const App = () => {
             </div>
         </div>
     )
+}
+App.propTypes = {
+    NewsEntry: PropTypes.shape({
+        publishTimestamp: PropTypes.string
+    }),
 }
 export default App

@@ -1,7 +1,7 @@
 import React, {useCallback, useState} from "react"
 import PropTypes from "prop-types"
 import { Accordion, Input, Button, FileInput, Gallery } from 'chayns-components'
-import imageUpload from '../../node_modules/chayns-components/lib/utils/imageUpload'
+import imageUpload from "chayns-components/lib/utils/imageUpload"
 import styles from "./AddNewsEntry.module.css"
 import appStyles from "./App.module.css"
 
@@ -127,6 +127,8 @@ const AddNewsEntry = ({onPublish, now}) => {
 }
 AddNewsEntry.propTypes = {
     onPublish: PropTypes.func.isRequired,
-    now: PropTypes.shape({}).isRequired
+    now: PropTypes.shape({
+        getTime: PropTypes.func
+    }).isRequired
 }
 export default AddNewsEntry
