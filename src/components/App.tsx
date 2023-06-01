@@ -15,6 +15,7 @@ const App = () => {
     const [news, setNews] = useState<INews[]>([])
     const [showNews, setShowNews] = useState(false)
     const [counter, setCounter] = useState(0)
+    const [loadMoreButtonIsEnabled, setLoadMoreButtonIsEnabled] = useState(false)
 
     async function laodMore() {
         await fetchNews(true)
@@ -93,13 +94,18 @@ const App = () => {
                 >Show news
                 </Checkbox>
             </AnimationWrapper>
-            {/* console.log(news, news.length, showNews, (news.length > 0 && showNews)) */}
-            {(news && Array.isArray(news) && news.length > 0 && showNews) 
-            ? <NewsList news = {news} now = {now} counter={counter}/> 
-            : "loading..."}
-            <div className={styles.btContainer}>
-                <Button id={styles.btLoadMore} onClick={laodMore}>Mehr</Button>
+            {
+            (news && Array.isArray(news) && news.length > 0 && showNews) 
+            ? 
+            <div>
+                <NewsList news = {news} now = {now} counter={counter}/> 
+                <div className={styles.btContainer}>
+                    <Button disabled = {!loadMoreButtonIsEnabled} id={styles.btLoadMore} onClick={laodMore}>Mehr</Button>
+                </div>
             </div>
+            :
+            "loading..."
+            }
         </div>
     )
 }
