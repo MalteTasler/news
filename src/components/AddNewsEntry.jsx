@@ -9,31 +9,34 @@ const AddNewsEntry = ({onPublish, now}) => {
     const [message, setMessage] = useState("")
     const [title, setTitle] = useState("")
     const [images, setImages] = useState([])
+    const [imageSources, setImageSources] = useState([])
     const [displayPath, setDisplayPath] = useState('')
+    const [isUploading, setIsUploading] = useState(false)
 
     let imageURLs = [];
 
     async function handlePublish() {
-        console.log("begin upload")
-        await upload()
-        console.log("upload finished")
+        await postImages()
+        console.log("finished uploading", imageSources)
         onPublish(
             {
-                imageList: images,
+                imageList: imageURLs,
                 headline: title,
                 message,
                 publishTime: now,
                 publishTimestamp: now.getTime()
-            },
-            imageURLs
+            }
         )
     }
     const onChange = useCallback(
         (validFiles) => {
-            setImages(images.concat(validFiles.map((f) => ({ file: f }))))
-            console.log("image files change ", images, validFiles)
+            if(!isUploading)
+            {
+                setImages(images.concat(validFiles.map((f) => ({ file: f }))))
+                console.log("image files change ", images, validFiles)
+            }
         },
-        [images, setImages]
+        [images, setImages, isUploading]
     )
     const onDelete = useCallback(
         (image, index) => {
@@ -42,8 +45,8 @@ const AddNewsEntry = ({onPublish, now}) => {
             setImages(img)
         },
         [images, setImages]
-    )
-    const onDragEnd = useCallback(
+        )
+        const onDragEnd = useCallback(
         (imgs) => {
             setImages(imgs)
         },
@@ -54,21 +57,31 @@ const AddNewsEntry = ({onPublish, now}) => {
         setImages(images.concat(data.selection.map((url) => ({ url }))))
         console.log("image files ", images)
     }, [images, setImages])
-    
+    /*
     const upload = useCallback(async() => {
+        await postImages()
+    }, [images, setDisplayPath, postImages])
+    */
+    async function postImages() {
+        setIsUploading(true)
         imageURLs = []
-        images.forEach(async(image) => {
+        await Promise.all(images.map(async (image) => {
             const result = await imageUpload(
                 image.file || image.url,
                 'componentsTestUpload',
                 chayns.env.user.personId,
                 chayns.env.site.id
-            )
-            imageURLs.push(result.base + result.key)
-            console.log('Uploaded image', result)
-            setDisplayPath(`${displayPath}${result.base}/${result.key}\n`)
-        })
-    }, [images, setDisplayPath])
+                );
+                imageURLs.push(`${result.base}/${result.key}`);
+                setDisplayPath(`${displayPath}${result.base}/${result.key}\n`)
+                console.log('Uploaded image', result, imageURLs);
+            }));
+        console.log("finished upload", imageURLs);
+        setImageSources(imageURLs);
+        console.log("images ", imageSources)
+        setIsUploading(false);
+    }
+
     return (
         <Accordion
             head = "Create News Entry"
