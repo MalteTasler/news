@@ -93,13 +93,15 @@ const NewsEntry = ({id, title, message, imageList, publishTimestamp, onDelete, n
     } 
     return(
         <div className = "news content__card">
-            <ContextMenu
-                items = {contextMenuItems}
-                /* onLayerClick = { (event) => {
-                console.log("clicked layer ,", event)
-                }
-                } */
-            />
+            {chayns.env.user.adminMode &&
+                <ContextMenu
+                    items = {contextMenuItems}
+                    /* onLayerClick = { (event) => {
+                    console.log("clicked layer ,", event)
+                    }
+                    } */
+                />
+            }
             <Gallery images={imageList} />
             <h2>{title}</h2>
             {messageIsLong ? cutMessage : message}

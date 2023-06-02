@@ -4,10 +4,17 @@
     align-items: center;
     justify-content: center;
 }
-#cbShowMore {
-    margin: 14px;
+.cbShowMore {
+    margin-top: 44px;
 }
-.cc__checkbox {
-    margin: 14px;
-    color: blue;
+.loading {
+    margin-top: 19px;
+}
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+.newsContainer {
+    margin-top: 19px;
 }
