@@ -5,7 +5,7 @@ import styles from "./Footer.module.css"
 
 const Footer = ({date, id, frontendURL}) => 
     <div className = {styles.newsFooter}>
-        <SharingBar link={`${frontendURL}#${id}`} linkText="Link" />
+        <SharingBar link={`${frontendURL}?M=${id}`} linkText="Link" />
         {date}
     </div>
 Footer.propTypes = {

@@ -92,7 +92,8 @@ const NewsEntry = ({id, title, message, imageList, publishTimestamp, onDelete, f
         return `vor ${monthsAgo} Monat${monthsAgo > 1 ? 'en' : ''}`   
     } 
     return(
-        <div className = "news content__card">
+        <div className = "news content__card" id = {id}>
+            <a name={id} />
             {chayns.env.user.adminMode &&
                 <ContextMenu
                     items = {contextMenuItems}
