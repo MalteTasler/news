@@ -7,6 +7,7 @@ import styles from './App.module.css'
 import { IResponse, INews } from '../interfaces'
 
 const App = () => {
+    const frontendURL = "https://schule.chayns.net/news-page-react"
     const fetchURL = "https://run.chayns.codes/f11828e3/api"
     const count = 10
     const now = new Date()
@@ -104,7 +105,7 @@ const App = () => {
                 (news && Array.isArray(news) && news.length > 0 && showNews) 
                 ? 
                     <div className={styles.newsContainer}>
-                        <NewsList news = {news} now = {now} counter = {counter} onDelete = {deleteEntry} /> 
+                        <NewsList news = {news} now = {now} counter = {counter} onDelete = {deleteEntry} frontendURL = {frontendURL} /> 
                         <div className={styles.btContainer}>
                             <Button disabled = {!loadMoreButtonIsEnabled} id={styles.btLoadMore} onClick={laodMore}>Mehr</Button>
                         </div>

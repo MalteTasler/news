@@ -3,12 +3,14 @@ import PropTypes from "prop-types"
 import { SharingBar } from 'chayns-components'
 import styles from "./Footer.module.css"
 
-const Footer = ({date}) => 
+const Footer = ({date, id, frontendURL}) => 
     <div className = {styles.newsFooter}>
-        <SharingBar link="abcdefghijk" linkText="a" />
+        <SharingBar link={`${frontendURL}#${id}`} linkText="Link" />
         {date}
     </div>
 Footer.propTypes = {
-    date: PropTypes.string.isRequired
+    date: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    frontendURL: PropTypes.string.isRequired
 }
 export default Footer

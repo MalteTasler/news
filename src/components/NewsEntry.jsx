@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import { Gallery, ContextMenu } from 'chayns-components'
 import Footer from './Footer'
 
-const NewsEntry = ({id, title, message, imageList, publishTimestamp, onDelete, now}) =>
+const NewsEntry = ({id, title, message, imageList, publishTimestamp, onDelete, frontendURL, now}) =>
 {
     const contextMenuItems/*  : {
         className : null;
@@ -105,7 +105,7 @@ const NewsEntry = ({id, title, message, imageList, publishTimestamp, onDelete, n
             <Gallery images={imageList} />
             <h2>{title}</h2>
             {messageIsLong ? cutMessage : message}
-            <Footer date = {getTimeAgo(publishTimestamp)} />
+            <Footer date = {getTimeAgo(publishTimestamp)} id = {id} frontendURL = {frontendURL} />
         </div>
     )
 }
@@ -116,6 +116,7 @@ NewsEntry.propTypes = {
     imageList: PropTypes.arrayOf(PropTypes.string),
     publishTimestamp: PropTypes.number.isRequired,
     onDelete: PropTypes.func.isRequired,
+    frontendURL: PropTypes.string.isRequired,
     now: PropTypes.shape({
         getTime: PropTypes.func
     }).isRequired
