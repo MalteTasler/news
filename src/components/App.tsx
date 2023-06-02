@@ -76,7 +76,7 @@ const App = () => {
         }
         getItems()
     }, [])
-    const localStyles : {
+    /* const localStyles : {
         cbShowMore : string;
         btContainer : string;
         btLoadMore : string;
@@ -85,31 +85,36 @@ const App = () => {
         cbShowMore : styles.cbShowMore as string,
         btContainer : styles.btContainer as string,
         btLoadMore : styles.btLoadMore as string
-    }
+    } */
     return (
-        <div>
+        <div className = {styles.main}>
             <AnimationWrapper>
-                <h1 id = "pageHeadline">Aktuelle News aus dem BamBoo!</h1>
+                <h1 id = "pageHeadline">Aktuelle News</h1>
                 <p id = "pageSubHeadline">Kurz, kompakt und immer wieder frisch informieren wir hier über aktuelle Themen und Aktionen.</p>
-                <AddNewsEntry onPublish = {publish} now = {now} />
-                <Checkbox
-                    checked = {showNews}
-                    onChange = {setShowNews}
-                    id = {(styles.cbShowMore)}
-                >Show news
-                </Checkbox>
             </AnimationWrapper>
+            {chayns.env.user.adminMode &&
+                <AddNewsEntry onPublish = {publish} now = {now} />
+            }
+            <Checkbox
+                checked = {showNews}
+                onChange = {setShowNews}
+                className = {styles.cbShowMore}
+            >
+                Show news
+            </Checkbox>
             {
-            (news && Array.isArray(news) && news.length > 0 && showNews) 
-            ? 
-            <div>
-                <NewsList news = {news} now = {now} counter = {counter} onDelete = {deleteEntry} /> 
-                <div className={styles.btContainer}>
-                    <Button disabled = {!loadMoreButtonIsEnabled} id={styles.btLoadMore} onClick={laodMore}>Mehr</Button>
-                </div>
-            </div>
-            :
-            "loading..."
+                (news && Array.isArray(news) && news.length > 0 && showNews) 
+                ? 
+                    <div className={styles.newsContainer}>
+                        <NewsList news = {news} now = {now} counter = {counter} onDelete = {deleteEntry} /> 
+                        <div className={styles.btContainer}>
+                            <Button disabled = {!loadMoreButtonIsEnabled} id={styles.btLoadMore} onClick={laodMore}>Mehr</Button>
+                        </div>
+                    </div>
+                :
+                    <div className = {styles.loading}>
+                        <br />waiting for news...
+                    </div>
             }
         </div>
     )
