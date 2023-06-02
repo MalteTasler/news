@@ -36,17 +36,15 @@ const App = () => {
 
         // try to load news entries
         const response = await fetch(fetchURLWithParameters)
-        const parsedResponse = await response.json() as IResponse
+        const parsedResponse = await response.json() as IResponse[]
         /* console.log("fetched data: ", parsedResponse) */
-        const parsedResponseBody = parsedResponse.body
-        const {itemList} = parsedResponseBody
         setNews((prevState:INews[]):INews[] => {
             if (offset)
             {
                 prevState.pop()
-                return (prevState.concat(itemList))
+                return (prevState.concat(parsedResponse))
             }
-            return (itemList)
+            return (parsedResponse)
         })
     }
     async function publish(data : INews) {
@@ -62,10 +60,10 @@ const App = () => {
     }
     async function deleteEntry(id : string) {
         await fetch(`${fetchURL}/${id}` , {
-            method: "DELETE",
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
+                method: "DELETE",
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
             })
         setCounter(c => c+1)
         await fetchNews(false)
