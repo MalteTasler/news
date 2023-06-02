@@ -11,11 +11,10 @@ const App = () => {
     const frontendURL = "https://schule.chayns.net/news-page-react"
     const fetchURL = "https://run.chayns.codes/f11828e3/api"
     const count = 10
-    let URLparamCounter = 0;
     const now = new Date()
 
     const [news, setNews] = useState<INews[]>([])
-    const [URLparam, setURLparam] = useState({})
+    const [URLparam, setURLparam] = useState({M: false})
     const [showNews, setShowNews] = useState(true)
     const [counter, setCounter] = useState(0)
     const [loadMoreButtonIsEnabled, setLoadMoreButtonIsEnabled] = useState(false)
@@ -23,8 +22,13 @@ const App = () => {
     async function laodMore() {
         //await fetchNews(true)
     }
-    function navigateToAllNews() {
-        //setURLparam({})
+    async function navigateToAllNews() {
+        const delay = ms => new Promise(res => setTimeout(res, ms));
+        setURLparam({})
+        /* console.log("waiting 3 seconds")
+        await delay(3000)
+        console.log("3 seconds end", URLparam, URLparam.M)
+        await fetchNews(true) */
     }
     function getTimestampOfOldestLoadedNewsEntry():string | number {
         if(!news || !Array.isArray(news) || news.length <= 1) { // if no news entries are loaded yet, just use the current timestamp (timestamp when the page was loaded)
@@ -36,7 +40,7 @@ const App = () => {
             return (oldestLoadedNewsEntry.publishTimestamp)
         return now.getTime()
     }
-    async function fetchNews(offset = false, param = getParameters()) {  // if offset is true, last value of current news array gets popped
+    async function fetchNews(offset = false, param = URLparam) {  // if offset is true, last value of current news array gets popped
         console.log("fetching news with id - ", param, (param.M == (null || undefined)))
 
         if(param.M == (null || undefined) ) // if no parameter for a news entry is used in the URL, load multiple entries
@@ -58,7 +62,7 @@ const App = () => {
                 return (parsedResponse)
             })
         }
-        else // otherwise fetch only the news entry with the id defined in parameter
+        else if(param.M !== false) // otherwise fetch only the news entry with the id defined in parameter
         {
             const id : string = param.M as string
 
@@ -82,7 +86,7 @@ const App = () => {
             }
             })
         setCounter(c => c+1)
-        //await fetchNews(false)
+        await fetchNews(false)
     }
     async function deleteEntry(id : string) {
         await fetch(`${fetchURL}/${id}` , {
@@ -92,7 +96,7 @@ const App = () => {
                 }
             })
         setCounter(c => c+1)
-        //await fetchNews(false)
+        await fetchNews(false)
     }
     useEffect(() => {
         setURLparam(getParameters())
@@ -115,6 +119,13 @@ const App = () => {
             //document.getElementById("3c34d4ae-2dc0-4898-9f4c-8589361bb66c")?.scrollIntoView()
         }
         scrollToNewsEntry() */
+
+        const getItems = async() => {
+            await fetchNews(false)
+        }
+        getItems()     
+
+
     }, [URLparam])
 
     /* const localStyles : {
@@ -162,7 +173,7 @@ const App = () => {
                                 <div>Param {URLparam.M}</div>
                                 <NewsList news = {news} now = {now} counter = {counter} onDelete = {deleteEntry} frontendURL = {frontendURL} /> 
                                 <div className={styles.btContainer}>
-                                    <Button disabled = {!loadMoreButtonIsEnabled} id={styles.btLoadMore} onClick={() => navigateToAllNews()}>
+                                    <Button id={styles.btLoadMore} onClick={() => navigateToAllNews()}>
                                         Alle News anzeigen
                                     </Button>
                                 </div>
