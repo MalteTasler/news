@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import PropTypes from "prop-types"
 import { Gallery, ContextMenu } from 'chayns-components'
 import Footer from './Footer'
+import styles from './NewsEntry.module.css'
 
 const NewsEntry = ({id, title, message, imageList, publishTimestamp, onDelete, frontendURL, now}) =>
 {
@@ -95,13 +96,18 @@ const NewsEntry = ({id, title, message, imageList, publishTimestamp, onDelete, f
         <div className = "news content__card" id = {id}>
             <a name={id} />
             {chayns.env.user.adminMode &&
-                <ContextMenu
-                    items = {contextMenuItems}
-                    /* onLayerClick = { (event) => {
-                    console.log("clicked layer ,", event)
-                    }
-                    } */
-                />
+                <div className = {styles.newsEntryHeader}>
+                    <div className = {styles.contextMenuFrame}>
+                        <ContextMenu
+                            items = {contextMenuItems}
+                            className = {styles.contextMenu}
+                            /* onLayerClick = { (event) => {
+                            console.log("clicked layer ,", event)
+                            }
+                            } */
+                        />
+                    </div>
+                </div>
             }
             <Gallery images={imageList} />
             <h2>{title}</h2>
