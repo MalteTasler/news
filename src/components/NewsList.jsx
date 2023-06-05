@@ -1,9 +1,10 @@
-import React from "react"
+import React, { useState } from "react"
 import PropTypes from "prop-types"
 import NewsEntry from "./NewsEntry"
 
-const NewsList = ({news, now, onDelete, frontendURL}) =>
-    <div id = "news_list">
+const NewsList = ({news, now, onDelete, frontendURL}) => {
+    const [newsToDisplay, setNewsToDisplay] = useState(news.slice(0,10))
+    return <div id = "news_list">
         {
             news.map(element =>
             {
@@ -15,6 +16,7 @@ const NewsList = ({news, now, onDelete, frontendURL}) =>
             })
         }
     </div>
+}
 NewsList.propTypes = {
     news: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string
