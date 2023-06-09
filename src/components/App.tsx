@@ -118,6 +118,18 @@ const App = () => {
         // await delay(3000)
         await fetchNews(false)
     }
+    async function patchEntry(data : INews) {
+        await fetch(fetchURL , {
+            method: "PATCH",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+            })
+        setCounter(c => c+1)
+        now = new Date()
+        await fetchNews(false)
+    }
     async function deleteEntry(id : string) {
         await fetch(`${fetchURL}/${id}` , {
                 method: "DELETE",
@@ -205,7 +217,7 @@ const App = () => {
                         (!URLparam.M)
                         ?
                             <div className={styles.newsContainer}>
-                                <NewsList news = {news} now = {now} counter = {counter} onDelete = {deleteEntry} frontendURL = {frontendURL} /> 
+                                <NewsList news = {news} now = {now} counter = {counter} onPatch = {patchEntry} onDelete = {deleteEntry} frontendURL = {frontendURL} /> 
                                 <div className={styles.btContainer}>
                                     <Button disabled = {!loadMoreButtonIsEnabled} id={styles.btLoadMore} onClick={() => laodMore()}>Mehr</Button>
                                 </div>
@@ -213,7 +225,7 @@ const App = () => {
                         :
                             <div className={styles.newsContainer}>
                                 <div>Param {URLparam.M}</div>
-                                <NewsList news = {news} now = {now} counter = {counter} onDelete = {deleteEntry} frontendURL = {frontendURL} /> 
+                                <NewsList news = {news} now = {now} counter = {counter} onPatch = {patchEntry} onDelete = {deleteEntry} frontendURL = {frontendURL} /> 
                                 <div className={styles.btContainer}>
                                     <Button id={styles.btLoadMore} onClick={() => navigateToAllNews()}>
                                         Alle News anzeigen
