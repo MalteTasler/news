@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from "prop-types"
 import { getParameters } from 'chayns-api'
 import { AnimationWrapper, Button, Checkbox } from 'chayns-components'
+import DeveloperTools from './DeveloperTools'
 import NewsList from './NewsList'
 import AddNewsEntry from './AddNewsEntry'
 import styles from './App.module.css'
@@ -71,11 +72,22 @@ const App = () => {
             let number = itemList.length; // number of new fetched entries
             console.log(`fetched ${number} new entries`)
             let displayNumber = number;
-            setNumberOfFetchedNews(prevState => prevState + number)
-            if(number > 10)
-                setNumberOfDisplayedNews(prevState => prevState + 10)
+            if(offset)
+            {
+                setNumberOfFetchedNews(prevState => prevState + number)
+                if(number > 10)
+                    setNumberOfDisplayedNews(prevState => prevState + 10)
+                else
+                    setNumberOfDisplayedNews(prevState => prevState + number)
+            }
             else
-                setNumberOfDisplayedNews(prevState => prevState + number)
+            {
+                setNumberOfFetchedNews(number)
+                if(number > 10)
+                    setNumberOfDisplayedNews(10)
+                else
+                    setNumberOfDisplayedNews(number)
+            }
         }
         else if(param.M !== false) // otherwise fetch only the news entry with the id defined in parameter
         {
@@ -168,15 +180,16 @@ const App = () => {
                 <p id = "pageSubHeadline">Kurz, kompakt und immer wieder frisch informieren wir hier über aktuelle Themen und Aktionen.</p>
             </AnimationWrapper>
             {chayns.env.user.adminMode &&
-                <AddNewsEntry onPublish = {publish} now = {now} />
+                <div>
+                    <AddNewsEntry onPublish = {publish} now = {now} />
+                    <DeveloperTools 
+                        numberOfDisplayedNews = {numberOfDisplayedNews}
+                        numberOfFetchedNews = {numberOfFetchedNews}
+                        numberOfDatabaseNews = {numberOfDatabaseNews}
+                    />
+                </div>
             }
             <br />
-            <div>
-                
-                Number of News in the databse - {numberOfDatabaseNews}<br />
-                Number of fetched News - {numberOfFetchedNews}<br />
-                Number of displayed News - {numberOfDisplayedNews}
-            </div>
             <Checkbox
                 checked = {showNews}
                 onChange = {setShowNews}
