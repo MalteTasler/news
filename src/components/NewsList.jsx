@@ -10,7 +10,7 @@ const NewsList = ({news, now, onDelete, frontendURL}) => {
             {
                 if(!element)
                     return ""
-                return (element && element.headline && element.id && element.imageList && element.message && element.publishTime && element.publishTimestamp)
+                return (element && element.id && element.imageList && element.publishTime && element.publishTimestamp)
                 ? <NewsEntry key={element.id} id={element.id} title = {element.headline} message = {element.message} imageList = {element.imageList} publishTimestamp = {element.publishTimestamp} onDelete = {onDelete} frontendURL = {frontendURL} now = {now} />
                 : ""
             })

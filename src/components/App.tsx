@@ -23,6 +23,7 @@ const App = () => {
     const [loadMoreButtonIsEnabled, setLoadMoreButtonIsEnabled] = useState(false)
 
     async function laodMore() {
+        console.log("trying to laod more")
         await fetchNews(true)
     }
     function navigateToAllNews() {
@@ -56,26 +57,23 @@ const App = () => {
             const response = await fetch(fetchURLWithParameters)
             const parsedResponse = await response.json()
             const { itemList, length } = parsedResponse
-            console.log("fetched data: ", parsedResponse)
+            console.log("fetched data with URL: ", fetchURLWithParameters, parsedResponse)
             setNews((prevState:INews[]):INews[] => {
                 if (offset)
                 {
-                    prevState.pop()
                     return (prevState.concat(itemList))
                 }
                 return (itemList)
             })
             setNumberOfDatabaseNews(length)
             let number = itemList.length; // number of new fetched entries
+            console.log(`fetched ${number} new entries`)
             let displayNumber = number;
-            if(offset)
-                number--
             setNumberOfFetchedNews(prevState => prevState + number)
             if(number > 10)
                 setNumberOfDisplayedNews(prevState => prevState + 10)
             else
                 setNumberOfDisplayedNews(prevState => prevState + number)
-            setLoadMoreButtonIsEnabled(!(numberOfDisplayedNews < numberOfDatabaseNews))
         }
         else if(param.M !== false) // otherwise fetch only the news entry with the id defined in parameter
         {
@@ -124,6 +122,10 @@ const App = () => {
     /*  useEffect(() => {
     }, [news]) */
     
+    useEffect(() => {
+        console.log((numberOfDisplayedNews < numberOfDatabaseNews))
+        setLoadMoreButtonIsEnabled((numberOfDisplayedNews < numberOfDatabaseNews))
+    }, [numberOfDisplayedNews, numberOfDatabaseNews])
     useEffect(() => {
         /* const delay = ms => new Promise(res => setTimeout(res, ms));
         const scrollToNewsEntry = async() => {
