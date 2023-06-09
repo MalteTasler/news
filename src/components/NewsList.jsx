@@ -1,20 +1,22 @@
-import React from "react"
+import React, { useState } from "react"
 import PropTypes from "prop-types"
 import NewsEntry from "./NewsEntry"
 
-const NewsList = ({news, now, onDelete, frontendURL}) =>
-    <div id = "news_list">
+const NewsList = ({news, now, onDelete, frontendURL}) => {
+    const [newsToDisplay, setNewsToDisplay] = useState(news.slice(0,10))
+    return <div id = "news_list">
         {
             news.map(element =>
             {
                 if(!element)
                     return ""
-                return (element && element.headline && element.id && element.imageList && element.message && element.publishTime && element.publishTimestamp)
+                return (element && element.id && element.imageList && element.publishTime && element.publishTimestamp)
                 ? <NewsEntry key={element.id} id={element.id} title = {element.headline} message = {element.message} imageList = {element.imageList} publishTimestamp = {element.publishTimestamp} onDelete = {onDelete} frontendURL = {frontendURL} now = {now} />
                 : ""
             })
         }
     </div>
+}
 NewsList.propTypes = {
     news: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string

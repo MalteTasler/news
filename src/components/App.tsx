@@ -10,20 +10,24 @@ import { IResponse, INews } from '../interfaces'
 const App = () => {
     const frontendURL = "https://schule.chayns.net/news-page-react"
     const fetchURL = "https://run.chayns.codes/f11828e3/api"
-    const count = 10
+    const count = 10 // maximum number of news to fetch
     const now = new Date()
 
     const [news, setNews] = useState<INews[]>([])
     const [URLparam, setURLparam] = useState({M: false})
     const [showNews, setShowNews] = useState(true)
     const [counter, setCounter] = useState(0)
+    const [numberOfFetchedNews, setNumberOfFetchedNews] = useState(0)
+    const [numberOfDisplayedNews, setNumberOfDisplayedNews] = useState(0)
+    const [numberOfDatabaseNews, setNumberOfDatabaseNews] = useState(0)
     const [loadMoreButtonIsEnabled, setLoadMoreButtonIsEnabled] = useState(false)
 
     async function laodMore() {
-        //await fetchNews(true)
+        console.log("trying to laod more")
+        await fetchNews(true)
     }
-    async function navigateToAllNews() {
-        const delay = ms => new Promise(res => setTimeout(res, ms));
+    function navigateToAllNews() {
+        // const delay = ms => new Promise(res => setTimeout(res, ms));
         setURLparam({})
         /* console.log("waiting 3 seconds")
         await delay(3000)
@@ -41,7 +45,7 @@ const App = () => {
         return now.getTime()
     }
     async function fetchNews(offset = false, param = URLparam) {  // if offset is true, last value of current news array gets popped
-        console.log("fetching news with id - ", param, (param.M == (null || undefined)))
+        // console.log("fetching news with id - ", param, (param.M == (null || undefined)))
 
         if(param.M == (null || undefined) ) // if no parameter for a news entry is used in the URL, load multiple entries
         {
@@ -51,16 +55,25 @@ const App = () => {
     
             // try to load news entries
             const response = await fetch(fetchURLWithParameters)
-            const parsedResponse = await response.json() as IResponse[]
-            /* console.log("fetched data: ", parsedResponse) */
+            const parsedResponse = await response.json()
+            const { itemList, length } = parsedResponse
+            console.log("fetched data with URL: ", fetchURLWithParameters, parsedResponse)
             setNews((prevState:INews[]):INews[] => {
                 if (offset)
                 {
-                    prevState.pop()
-                    return (prevState.concat(parsedResponse))
+                    return (prevState.concat(itemList))
                 }
-                return (parsedResponse)
+                return (itemList)
             })
+            setNumberOfDatabaseNews(length)
+            let number = itemList.length; // number of new fetched entries
+            console.log(`fetched ${number} new entries`)
+            let displayNumber = number;
+            setNumberOfFetchedNews(prevState => prevState + number)
+            if(number > 10)
+                setNumberOfDisplayedNews(prevState => prevState + 10)
+            else
+                setNumberOfDisplayedNews(prevState => prevState + number)
         }
         else if(param.M !== false) // otherwise fetch only the news entry with the id defined in parameter
         {
@@ -110,6 +123,10 @@ const App = () => {
     }, [news]) */
     
     useEffect(() => {
+        console.log((numberOfDisplayedNews < numberOfDatabaseNews))
+        setLoadMoreButtonIsEnabled((numberOfDisplayedNews < numberOfDatabaseNews))
+    }, [numberOfDisplayedNews, numberOfDatabaseNews])
+    useEffect(() => {
         /* const delay = ms => new Promise(res => setTimeout(res, ms));
         const scrollToNewsEntry = async() => {
             console.log("waiting 3 seconds")
@@ -148,6 +165,13 @@ const App = () => {
             {chayns.env.user.adminMode &&
                 <AddNewsEntry onPublish = {publish} now = {now} />
             }
+            <br />
+            <div>
+                
+                Number of News in the databse - {numberOfDatabaseNews}<br />
+                Number of fetched News - {numberOfFetchedNews}<br />
+                Number of displayed News - {numberOfDisplayedNews}
+            </div>
             <Checkbox
                 checked = {showNews}
                 onChange = {setShowNews}
@@ -165,7 +189,7 @@ const App = () => {
                             <div className={styles.newsContainer}>
                                 <NewsList news = {news} now = {now} counter = {counter} onDelete = {deleteEntry} frontendURL = {frontendURL} /> 
                                 <div className={styles.btContainer}>
-                                    <Button disabled = {!loadMoreButtonIsEnabled} id={styles.btLoadMore} onClick={() => laodMore}>Mehr</Button>
+                                    <Button disabled = {!loadMoreButtonIsEnabled} id={styles.btLoadMore} onClick={() => laodMore()}>Mehr</Button>
                                 </div>
                             </div>
                         :
