@@ -12,4 +12,9 @@ const DeveloperTools = ({numberOfDisplayedNews, numberOfFetchedNews, numberOfDat
         </div>
     </Accordion>
 
+DeveloperTools.propTypes = {
+    numberOfDatabaseNews: PropTypes.number.isRequired,
+    numberOfFetchedNews: PropTypes.number.isRequired,
+    numberOfDisplayedNews: PropTypes.number.isRequired
+}
 export default DeveloperTools
