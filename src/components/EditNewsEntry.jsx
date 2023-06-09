@@ -5,11 +5,11 @@ import imageUpload from "chayns-components/lib/utils/imageUpload"
 import styles from "./EditNewsEntry.module.css"
 import appStyles from "./App.module.css"
 
-const EditNewsEntry = ({onPublish, now, initMessage, initTitle, initImageList}) =>
+const EditNewsEntry = ({id, onPublish, now, initMessage, initTitle, initImageList}) =>
 {
     const [message, setMessage] = useState(initMessage)
     const [title, setTitle] = useState(initTitle)
-    const [images, setImages] = useState(initImageList)
+    const [images, setImages] = useState(initImageList.map((image) => ({ url: image})))
     const [displayPath, setDisplayPath] = useState('')
     const [isUploading, setIsUploading] = useState(false)
 
@@ -19,6 +19,7 @@ const EditNewsEntry = ({onPublish, now, initMessage, initTitle, initImageList}) 
         await postImages()
         onPublish(
             {
+                id,
                 imageList: imageURLs,
                 headline: title,
                 message,
@@ -55,6 +56,7 @@ const EditNewsEntry = ({onPublish, now, initMessage, initTitle, initImageList}) 
         setImages(images.concat(data.selection.map((url) => ({ url }))))
     }, [images, setImages])
     async function postImages() {
+        console.log("images list ", images)
         setIsUploading(true)
         imageURLs = []
         await Promise.all(images.map(async (image) => {
@@ -126,6 +128,7 @@ const EditNewsEntry = ({onPublish, now, initMessage, initTitle, initImageList}) 
     )
 }
 EditNewsEntry.propTypes = {
+    id: PropTypes.string.isRequired,
     onPublish: PropTypes.func.isRequired,
     now: PropTypes.shape({
         getTime: PropTypes.func

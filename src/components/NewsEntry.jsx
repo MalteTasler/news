@@ -8,6 +8,7 @@ import EditNewsEntry from "./EditNewsEntry"
 const NewsEntry = ({id, title, message, imageList, publishTimestamp, onPatch, onDelete, frontendURL, now}) =>
 {
     const [editMode, setEditMode] = useState(false)
+    const [isVisible, setIsVisible] = useState(true)
     const contextMenuItems = 
         {
             delete: {
@@ -50,6 +51,14 @@ const NewsEntry = ({id, title, message, imageList, publishTimestamp, onPatch, on
                 },
                 text: "View",
                 icon: "fa fa-view"
+            },
+            hide: {
+                className: null,
+                onClick: () => {
+                    setIsVisible(false)
+                },
+                text: "Hide",
+                icon: "fa fa-hide"
             }
         }
     const maxLength = 220
@@ -68,6 +77,10 @@ const NewsEntry = ({id, title, message, imageList, publishTimestamp, onPatch, on
     }
     function displayWholeMessage() {
         setMessageIsExtended(true)
+    }
+    function handlePut(data) {
+        setEditMode(!editMode)
+        onPatch(data)
     }
     const getTimeAgo = (timestamp) => {
         const diff = now.getTime() - timestamp
@@ -106,45 +119,51 @@ const NewsEntry = ({id, title, message, imageList, publishTimestamp, onPatch, on
         return `vor ${monthsAgo} Monat${monthsAgo > 1 ? 'en' : ''}`   
     } 
     return(
-        <div className = "news content__card" id = {id}>
-            <a name={id} />
-            {chayns.env.user.adminMode &&
-                <div className = {styles.newsEntryHeader}>
-                    <div className = {styles.contextMenuFrame}>
-                        <ContextMenu
-                            items = {
-                                (editMode)
-                                ?
-                                    [contextMenuItems.delete, contextMenuItems.view]
-                                :
-                                    [contextMenuItems.delete, contextMenuItems.edit]
-                            }
-                            className = {styles.contextMenu}
-                            /* onLayerClick = { (event) => {
-                                console.log("clicked layer ,", event)
-                            }
-                            } */
-                        />
-                    </div>
-                </div>
-            }
-            {(chayns.env.user.adminMode && editMode)
-            ?   
-                <div>
-                    <EditNewsEntry
-                        onPublish = {onPatch}
-                        now = {now}
-                        initMessage = {message}
-                        initTitle = {title}
-                        initImageList = {imageList}
-                    />
-                </div>
-            :
-                <div>
-                    <Gallery images={imageList} />
-                    <h2>{title}</h2>
-                    {messageIsLong ? cutMessage : message}
-                    <Footer date = {getTimeAgo(publishTimestamp)} id = {id} frontendURL = {frontendURL} />
+        <div>
+            {(chayns.env.user.adminMode || isVisible)
+            &&
+                <div className = "news content__card" id = {id}>
+                    <a name={id} />
+                    {chayns.env.user.adminMode &&
+                        <div className = {styles.newsEntryHeader}>
+                            <div className = {styles.contextMenuFrame}>
+                                <ContextMenu
+                                    items = {
+                                        (editMode)
+                                        ?
+                                            [contextMenuItems.delete, contextMenuItems.view, contextMenuItems.hide]
+                                        :
+                                            [contextMenuItems.delete, contextMenuItems.edit, contextMenuItems.hide]
+                                    }
+                                    className = {styles.contextMenu}
+                                    /* onLayerClick = { (event) => {
+                                        console.log("clicked layer ,", event)
+                                    }
+                                    } */
+                                />
+                            </div>
+                        </div>
+                    }
+                    {(chayns.env.user.adminMode && editMode)
+                    ?   
+                        <div>
+                            <EditNewsEntry
+                                id = {id}
+                                onPublish = {handlePut}
+                                now = {now}
+                                initMessage = {message}
+                                initTitle = {title}
+                                initImageList = {imageList}
+                            />
+                        </div>
+                    :
+                        <div>
+                            <Gallery images={imageList} />
+                            <h2>{title}</h2>
+                            {messageIsLong ? cutMessage : message}
+                            <Footer date = {getTimeAgo(publishTimestamp)} id = {id} frontendURL = {frontendURL} />
+                        </div>
+                    }
                 </div>
             }
         </div>
