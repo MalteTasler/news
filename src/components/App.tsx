@@ -11,7 +11,7 @@ const App = () => {
     const frontendURL = "https://schule.chayns.net/news-page-react"
     const fetchURL = "https://run.chayns.codes/f11828e3/api"
     const count = 10 // maximum number of news to fetch
-    const now = new Date()
+    let now = new Date()
 
     const [news, setNews] = useState<INews[]>([])
     const [URLparam, setURLparam] = useState({M: false})
@@ -34,11 +34,13 @@ const App = () => {
         console.log("3 seconds end", URLparam, URLparam.M)
         await fetchNews(true) */
     }
-    function getTimestampOfOldestLoadedNewsEntry():string | number {
-        if(!news || !Array.isArray(news) || news.length <= 1) { // if no news entries are loaded yet, just use the current timestamp (timestamp when the page was loaded)
+    function getTimestamp(newest = false):string | number {
+        if(!news || !Array.isArray(news) || news.length <= 1 || newest) { // if no news entries are loaded yet or the parmeter "newest" is set to true, just use the current timestamp (timestamp when the page was loaded)
+            console.log("give now time")
             return now.getTime()
         }
         //  if entries are already loaded take the timestamp of the oldest
+        console.log("give oldest time")
         const oldestLoadedNewsEntry : INews = news[news.length-1]
         if (oldestLoadedNewsEntry)
             return (oldestLoadedNewsEntry.publishTimestamp)
@@ -51,7 +53,7 @@ const App = () => {
         {
 
             // generate fetchURL with parameters
-            const fetchURLWithParameters = `${fetchURL}?timestamp=${getTimestampOfOldestLoadedNewsEntry()}&count=${count}&past=true&categoryId=0&locationOnly=false&TappID=91958&noCache=false`
+            const fetchURLWithParameters = `${fetchURL}?timestamp=${getTimestamp(!offset)}&count=${count}&past=true&categoryId=0&locationOnly=false&TappID=91958&noCache=false`
     
             // try to load news entries
             const response = await fetch(fetchURLWithParameters)
@@ -91,6 +93,7 @@ const App = () => {
         }
     }
     async function publish(data : INews) {
+        // const delay = ms => new Promise(res => setTimeout(res, ms));
         await fetch(fetchURL , {
             method: "POST",
             body: JSON.stringify(data),
@@ -99,6 +102,8 @@ const App = () => {
             }
             })
         setCounter(c => c+1)
+        now = new Date()
+        // await delay(3000)
         await fetchNews(false)
     }
     async function deleteEntry(id : string) {
