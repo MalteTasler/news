@@ -5,6 +5,7 @@ export interface IResponse {
     imageList: Array<string>;
     publishTime: string;
     publishTimestamp: number;
+    hidden: boolean | undefined;
 }
 export interface INews {
     headline: string;
@@ -13,4 +14,5 @@ export interface INews {
     imageList: Array<string>;
     publishTime: string;
     publishTimestamp: number;
+    hidden: boolean | undefined;
 }

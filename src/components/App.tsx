@@ -54,7 +54,7 @@ const App = () => {
         {
 
             // generate fetchURL with parameters
-            const fetchURLWithParameters = `${fetchURL}?timestamp=${getTimestamp(!offset)}&count=${count}&past=true&categoryId=0&locationOnly=false&TappID=91958&noCache=false`
+            const fetchURLWithParameters = `${fetchURL}?timestamp=${getTimestamp(!offset)}&count=${count}&adminMode=${chayns.env.user.adminMode}`
     
             // try to load news entries
             const response = await fetch(fetchURLWithParameters)
@@ -106,7 +106,7 @@ const App = () => {
     }
     async function publish(data : INews) {
         // const delay = ms => new Promise(res => setTimeout(res, ms));
-        // if the Id of the -entry to publish is already present in fetched data, do patch
+        // if the Id of the -entry to publish is already present in fetched data, do put
         console.log(data, news, news.find((entry) => {return entry.id == data.id}))
         if(news.find((entry) => {return entry.id == data.id}))
             await putEntry(data)
@@ -134,6 +134,18 @@ const App = () => {
                 "Content-type": "application/json; charset=UTF-8"
             }
         })
+    }
+    async function patchEntry(data : INews) {
+        // ! hardcode TEST with prop 'hidden' for now
+        console.log("try to patch news entry with that - ", data)
+        await fetch(`${fetchURL}/${data.id}/hidden` , {
+            method: "PATCH",
+            body: JSON.stringify(data.hidden),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+        await fetchNews(false)
     }
     async function deleteEntry(id : string) {
         await fetch(`${fetchURL}/${id}` , {
@@ -222,7 +234,7 @@ const App = () => {
                         (!URLparam.M)
                         ?
                             <div className={styles.newsContainer}>
-                                <NewsList news = {news} now = {now} counter = {counter} onPatch = {publish} onDelete = {deleteEntry} frontendURL = {frontendURL} /> 
+                                <NewsList news = {news} now = {now} counter = {counter} onPut = {publish} onPatch = {patchEntry} onDelete = {deleteEntry} frontendURL = {frontendURL} /> 
                                 <div className={styles.btContainer}>
                                     <Button disabled = {!loadMoreButtonIsEnabled} id={styles.btLoadMore} onClick={() => laodMore()}>Mehr</Button>
                                 </div>
@@ -230,7 +242,7 @@ const App = () => {
                         :
                             <div className={styles.newsContainer}>
                                 <div>Param {URLparam.M}</div>
-                                <NewsList news = {news} now = {now} counter = {counter} onPatch = {publish} onDelete = {deleteEntry} frontendURL = {frontendURL} /> 
+                                <NewsList news = {news} now = {now} counter = {counter} onPut = {publish} onPatch = {patchEntry} onDelete = {deleteEntry} frontendURL = {frontendURL} /> 
                                 <div className={styles.btContainer}>
                                     <Button id={styles.btLoadMore} onClick={() => navigateToAllNews()}>
                                         Alle News anzeigen
