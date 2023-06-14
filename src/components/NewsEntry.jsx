@@ -162,45 +162,47 @@ const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp
         <div>
             {(chayns.env.user.adminMode || isVisible)
             &&
-                <div className = "news content__card" id = {id}>
-                    <a name={id} />
-                    {chayns.env.user.adminMode &&
-                        <div className = {styles.newsEntryHeader}>
-                            {hidden && <div className = {styles.labelOnHide}>Ausgeblendet</div>}
-                            <div className = {styles.contextMenuFrame}>
-                                <ContextMenu
-                                    items = {
-                                        buildContextMenuItems()
-                                    }
-                                    className = {styles.contextMenu}
-                                    /* onLayerClick = { (event) => {
-                                        console.log("clicked layer ,", event)
-                                    }
-                                    } */
+                <div className = {styles.newsEntryFrame}>
+                    <div className= "content__card" id = {id}>
+                        <a name={id} />
+                        {chayns.env.user.adminMode &&
+                            <div className = {styles.newsEntryHeader}>
+                                {hidden && <div className = {styles.labelOnHide}>Ausgeblendet</div>}
+                                <div className = {styles.contextMenuFrame}>
+                                    <ContextMenu
+                                        items = {
+                                            buildContextMenuItems()
+                                        }
+                                        className = {styles.contextMenu}
+                                        /* onLayerClick = { (event) => {
+                                            console.log("clicked layer ,", event)
+                                        }
+                                        } */
+                                    />
+                                </div>
+                            </div>
+                        }
+                        {(chayns.env.user.adminMode && editMode)
+                        ?   
+                            <div>
+                                <EditNewsEntry
+                                    id = {id}
+                                    onPublish = {handlePut}
+                                    now = {now}
+                                    initMessage = {message}
+                                    initTitle = {title}
+                                    initImageList = {imageList}
                                 />
                             </div>
-                        </div>
-                    }
-                    {(chayns.env.user.adminMode && editMode)
-                    ?   
-                        <div>
-                            <EditNewsEntry
-                                id = {id}
-                                onPublish = {handlePut}
-                                now = {now}
-                                initMessage = {message}
-                                initTitle = {title}
-                                initImageList = {imageList}
-                            />
-                        </div>
-                    :
-                        <div>
-                            <Gallery images={imageList} />
-                            <h2>{title}</h2>
-                            {messageIsLong ? cutMessage : message}
-                            <Footer date = {getTimeAgo(publishTimestamp)} id = {id} frontendURL = {frontendURL} />
-                        </div>
-                    }
+                        :
+                            <div>
+                                <Gallery images={imageList} />
+                                <h2>{title}</h2>
+                                {messageIsLong ? cutMessage : message}
+                                <Footer date = {getTimeAgo(publishTimestamp)} id = {id} frontendURL = {frontendURL} />
+                            </div>
+                        }
+                    </div>
                 </div>
             }
         </div>

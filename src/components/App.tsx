@@ -210,7 +210,10 @@ const App = () => {
             </AnimationWrapper>
             {chayns.env.user.adminMode &&
                 <div>
-                    <AddNewsEntry onPublish = {publish} now = {now} />
+                    <AddNewsEntry
+                        onPublish = {publish}
+                        now = {now} 
+                    />
                     <DeveloperTools 
                         numberOfDisplayedNews = {numberOfDisplayedNews}
                         numberOfFetchedNews = {numberOfFetchedNews}
