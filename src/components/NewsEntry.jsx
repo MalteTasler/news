@@ -68,7 +68,7 @@ const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp
                     )
                 },
                 text: "Hide",
-                icon: "fa fa-hide"
+                icon: "fa fa-eye-slash"
             },
             unhide: {
                 className: null,
@@ -86,7 +86,7 @@ const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp
                     )
                 },
                 text: "Unhide",
-                icon: "fa fa-unhide"
+                icon: "fa fa-eye"
             }
         }
     const maxLength = 220
