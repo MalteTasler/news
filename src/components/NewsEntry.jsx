@@ -166,6 +166,7 @@ const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp
                     <a name={id} />
                     {chayns.env.user.adminMode &&
                         <div className = {styles.newsEntryHeader}>
+                            {hidden && <div className = {styles.labelOnHide}>Ausgeblendet</div>}
                             <div className = {styles.contextMenuFrame}>
                                 <ContextMenu
                                     items = {
