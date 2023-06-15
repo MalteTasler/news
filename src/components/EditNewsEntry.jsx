@@ -57,7 +57,7 @@ const EditNewsEntry = ({id, onPublish, now, initMessage, initTitle, initImageLis
         setImages(images.concat(data.selection.map((url) => ({ url }))))
     }, [images, setImages])
     async function postImages() {
-        console.log("images list ", images)
+        //console.log("images list ", images)
         setIsUploading(true)
         imageURLs = []
         await Promise.all(images.map(async (image) => {

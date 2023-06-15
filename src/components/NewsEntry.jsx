@@ -7,7 +7,7 @@ import EditNewsEntry from "./EditNewsEntry"
 
 const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp, onPut, onPatch, onDelete, frontendURL, now, hidden}) =>
 {
-    console.log("render news entry ....................... ", imageList, imageList.length)
+    //console.log("render news entry ....................... ", imageList, imageList.length)
     const [editMode, setEditMode] = useState(false)
     const [isVisible, setIsVisible] = useState(true)
     const contextMenuItems = 
