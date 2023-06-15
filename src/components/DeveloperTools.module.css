@@ -1,4 +1,8 @@
+.cbShowMore {
+    margin-top:19px;
+}
 .developerToolsFrame {
     display: flex;
+    flex-direction: column;
     padding: 19px;
 }

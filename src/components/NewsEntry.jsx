@@ -7,6 +7,7 @@ import EditNewsEntry from "./EditNewsEntry"
 
 const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp, onPut, onPatch, onDelete, frontendURL, now, hidden}) =>
 {
+    console.log("render news entry ....................... ", imageList, imageList.length)
     const [editMode, setEditMode] = useState(false)
     const [isVisible, setIsVisible] = useState(true)
     const contextMenuItems = 
@@ -196,7 +197,12 @@ const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp
                             </div>
                         :
                             <div>
-                                <Gallery images={imageList} />
+                                { imageList.length !== 0
+                                ?
+                                    <Gallery images={imageList} />
+                                :
+                                    ""
+                                }
                                 <h2>{title}</h2>
                                 {messageIsLong ? cutMessage : message}
                                 <Footer date = {getTimeAgo(publishTimestamp)} id = {id} frontendURL = {frontendURL} />
