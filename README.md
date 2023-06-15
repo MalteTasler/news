@@ -1,6 +1,6 @@
 <div align="center">
-    <h1>bamboo-news-react</h1>
-    <p>A pagemaker plugin that displays the news of the BamBoo site, written in React</p>
+    <h1>News</h1>
+    <p>A pagemaker plugin, written in React, that displays news</p>
     <a href="https://github.com/TobitSoftware/chayns-toolkit">
         <img 
             alt="Managed with chayns-toolkit" 
