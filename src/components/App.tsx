@@ -24,7 +24,7 @@ const App = () => {
     const [loadMoreButtonIsEnabled, setLoadMoreButtonIsEnabled] = useState(false)
 
     async function laodMore() {
-        console.log("trying to laod more")
+        //console.log("trying to laod more")
         await fetchNews(true)
     }
     function navigateToAllNews() {
@@ -37,11 +37,11 @@ const App = () => {
     }
     function getTimestamp(newest = false):string | number {
         if(!news || !Array.isArray(news) || news.length <= 1 || newest) { // if no news entries are loaded yet or the parmeter "newest" is set to true, just use the current timestamp (timestamp when the page was loaded)
-            console.log("give now time")
+            //console.log("give now time")
             return now.getTime()
         }
         //  if entries are already loaded take the timestamp of the oldest
-        console.log("give oldest time")
+        //console.log("give oldest time")
         const oldestLoadedNewsEntry : INews = news[news.length-1]
         if (oldestLoadedNewsEntry)
             return (oldestLoadedNewsEntry.publishTimestamp)
@@ -73,7 +73,7 @@ const App = () => {
             })
             setNumberOfDatabaseNews(length)
             let number = itemList.length; // number of new fetched entries
-            console.log(`fetched ${number} new entries`)
+            //console.log(`fetched ${number} new entries`)
             let displayNumber = number;
             if(offset)
             {
@@ -103,14 +103,14 @@ const App = () => {
             // try to load news entries
             const response = await fetch(fetchURLWithParameters)
             const parsedResponse = await response.json() as IResponse
-            console.log("fetched data: ", parsedResponse)
+            //console.log("fetched data: ", parsedResponse)
             setNews((prevState:INews[]):INews[] => [parsedResponse])
         }
     }
     async function publish(data : INews) {
         // const delay = ms => new Promise(res => setTimeout(res, ms));
         // if the Id of the -entry to publish is already present in fetched data, do put
-        console.log(data, news, news.find((entry) => {return entry.id == data.id}))
+        //console.log(data, news, news.find((entry) => {return entry.id == data.id}))
         if(news.find((entry) => {return entry.id == data.id}))
             await putEntry(data)
         else
@@ -140,7 +140,7 @@ const App = () => {
     }
     async function patchEntry(data : INews) {
         // ! hardcode TEST with prop 'hidden' for now
-        console.log("try to patch news entry with that - ", data)
+        //console.log("try to patch news entry with that - ", data)
         await fetch(`${fetchURL}/${data.id}/hidden` , {
             method: "PATCH",
             body: JSON.stringify(data.hidden),
@@ -172,7 +172,7 @@ const App = () => {
     }, [news]) */
     
     useEffect(() => {
-        console.log((numberOfDisplayedNews < numberOfDatabaseNews))
+        //console.log((numberOfDisplayedNews < numberOfDatabaseNews))
         setLoadMoreButtonIsEnabled((numberOfDisplayedNews < numberOfDatabaseNews))
     }, [numberOfDisplayedNews, numberOfDatabaseNews])
     useEffect(() => {
