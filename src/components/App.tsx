@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from "prop-types"
 import { getParameters } from 'chayns-api'
-import { AnimationWrapper, Button, Checkbox } from 'chayns-components'
+import { AnimationWrapper, Button } from 'chayns-components'
 import DeveloperTools from './DeveloperTools'
 import NewsList from './NewsList'
 import AddNewsEntry from './AddNewsEntry'
@@ -46,6 +46,9 @@ const App = () => {
         if (oldestLoadedNewsEntry)
             return (oldestLoadedNewsEntry.publishTimestamp)
         return now.getTime()
+    }
+    function setShowNewsFunc(data) {
+        setShowNews(data)
     }
     async function fetchNews(offset = false, param = URLparam) {  // if offset is true, last value of current news array gets popped
         // console.log("fetching news with id - ", param, (param.M == (null || undefined)))
@@ -218,17 +221,12 @@ const App = () => {
                         numberOfDisplayedNews = {numberOfDisplayedNews}
                         numberOfFetchedNews = {numberOfFetchedNews}
                         numberOfDatabaseNews = {numberOfDatabaseNews}
+                        showNews = {showNews}
+                        cbShowNewsOnChange = {setShowNewsFunc}
                     />
                 </div>
             }
             <br />
-            <Checkbox
-                checked = {showNews}
-                onChange = {setShowNews}
-                className = {styles.cbShowMore}
-            >
-                Show news
-            </Checkbox>
             {
                 (news && Array.isArray(news) && news.length > 0 && showNews) 
                 ? 
