@@ -25,7 +25,7 @@ const App = () => {
     const [loadMoreButtonIsEnabled, setLoadMoreButtonIsEnabled] = useState(false)
 
     const laodMore = async() => {
-         console.log("trying to laod more")
+        // console.log("trying to laod more")
         await fetchNews(true)
     }
     const navigateToAllNews = () => {
@@ -52,7 +52,7 @@ const App = () => {
     }
     
     const fetchNews = async(offset = false, param = URLparam) => {  // if offset is true, last value of current news array gets popped
-        console.log("param m ", param, param?.M, (param?.M === null || param?.M === undefined || param?.M === false))
+        // console.log("param m ", param, param?.M, (param?.M === null || param?.M === undefined || param?.M === false))
         if(!param?.M) // if no parameter for a news entry is used in the URL, load multiple entries
         {
             // generate fetchURL with parameters
@@ -62,7 +62,7 @@ const App = () => {
             const response = await fetch(fetchURLWithParameters)
             const parsedResponse = await response.json() as IListResponse
             const { itemList, length } = parsedResponse
-             console.log("fetched data with URL: ", fetchURLWithParameters, parsedResponse)
+            // console.log("fetched data with URL: ", fetchURLWithParameters, parsedResponse)
             setNews((prevState:INews[]):INews[] => {
                 if (offset)
                 {
@@ -96,12 +96,12 @@ const App = () => {
 
             // generate fetchURL with parameters
             const fetchURLWithParameters = `${fetchURL}/${id}`
-             console.log("try to fetch one new entry with the following link. ", fetchURLWithParameters)
+            // console.log("try to fetch one new entry with the following link. ", fetchURLWithParameters)
 
             // try to load news entries
             const response = await fetch(fetchURLWithParameters)
             const parsedResponse = await response.json() as IResponse
-             console.log("fetched data: ", parsedResponse)
+            // console.log("fetched data: ", parsedResponse)
             setNews([parsedResponse])
         }
     }
@@ -168,7 +168,7 @@ const App = () => {
         const params : {
             [key: string]: string; [key: symbol]: string;
         } = getParameters()
-        console.log("received parameters:", params, (params.M !== undefined))
+        // console.log("received parameters:", params, (params.M !== undefined))
         // check if paramters are valid
         if(params.M !== undefined)
             setURLparam({M : params.M})
