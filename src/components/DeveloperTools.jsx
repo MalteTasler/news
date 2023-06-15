@@ -16,6 +16,16 @@ const DeveloperTools = ({numberOfDisplayedNews, numberOfFetchedNews, numberOfDat
             >
                 Show news
             </Checkbox>
+            <br />
+            <u>Sources: </u>
+            <ul>
+                <li>
+                    Frontend Code: <a href="https://github.com/MalteTasler/news" target="_blank">GitHub</a>
+                </li>
+                <li>
+                    Backend Code: <a href="https://schule.chayns.site/admin/code-editor?backendId=f11828e3" target="_blank">chayns.Codes</a>
+                </li>
+            </ul>
         </div>
     </Accordion>
 
