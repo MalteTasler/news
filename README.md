@@ -1,6 +1,19 @@
 <div align="center">
     <h1>News</h1>
     <p>A pagemaker plugin, written in React, that displays news</p>
+    <p>
+        Features:
+
+        <ul>
+            <li>Beiträge laden</li>
+            <li>Beiträge nachladen</li>
+            <li>Beiträge hinzufügen (Admin Mode)</li>
+            <li>Beiträge löschen (Admin Mode)</li>
+            <li>Beiträge bearbeiten (Admin Mode)</li>
+            <li>Beiträge ausblenden  (Admin Mode)</li>
+            <li>Beiträge teilen</li>
+        </ul>
+    </p>
     <a href="https://github.com/TobitSoftware/chayns-toolkit">
         <img 
             alt="Managed with chayns-toolkit" 
