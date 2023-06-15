@@ -1,6 +1,6 @@
 <div align="center">
     <h1>News</h1>
-    <p>A pagemaker plugin, written in React, that displays news</p>
+    <p>A pagemaker plugin for chayns®, written in React, that displays news</p>
 </div>
 <br />Features:<br />
 <br /> 
