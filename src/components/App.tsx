@@ -6,7 +6,7 @@ import DeveloperTools from './DeveloperTools'
 import NewsList from './NewsList'
 import AddNewsEntry from './AddNewsEntry'
 import styles from './App.module.css'
-import { IResponse, INews } from '../interfaces'
+import { IResponse, IListResponse, INews } from '../interfaces'
 
 const App = () => {
     const frontendURL = "https://schule.chayns.net/news-page-react"
@@ -23,37 +23,37 @@ const App = () => {
     const [numberOfDatabaseNews, setNumberOfDatabaseNews] = useState(0)
     const [loadMoreButtonIsEnabled, setLoadMoreButtonIsEnabled] = useState(false)
 
-    async function laodMore() {
-        //console.log("trying to laod more")
+    const laodMore = async() => {
+        // console.log("trying to laod more")
         await fetchNews(true)
     }
-    function navigateToAllNews() {
-        // const delay = ms => new Promise(res => setTimeout(res, ms));
+    const navigateToAllNews = () => {
         setURLparam({})
-        /* console.log("waiting 3 seconds")
+        /* 
+        const delay = ms => new Promise(res => setTimeout(res, ms));
         await delay(3000)
-        console.log("3 seconds end", URLparam, URLparam.M)
-        await fetchNews(true) */
+        */
     }
     function getTimestamp(newest = false):string | number {
         if(!news || !Array.isArray(news) || news.length <= 1 || newest) { // if no news entries are loaded yet or the parmeter "newest" is set to true, just use the current timestamp (timestamp when the page was loaded)
-            //console.log("give now time")
+            // console.log("give now time")
             return now.getTime()
         }
         //  if entries are already loaded take the timestamp of the oldest
-        //console.log("give oldest time")
+        // console.log("give oldest time")
         const oldestLoadedNewsEntry : INews = news[news.length-1]
         if (oldestLoadedNewsEntry)
             return (oldestLoadedNewsEntry.publishTimestamp)
         return now.getTime()
     }
-    function setShowNewsFunc(data) {
+    const setShowNewsFunc = (data : boolean) => {
         setShowNews(data)
     }
+    
     async function fetchNews(offset = false, param = URLparam) {  // if offset is true, last value of current news array gets popped
         // console.log("fetching news with id - ", param, (param.M == (null || undefined)))
 
-        if(param.M == (null || undefined) ) // if no parameter for a news entry is used in the URL, load multiple entries
+        if(param.M === (null || undefined) ) // if no parameter for a news entry is used in the URL, load multiple entries
         {
 
             // generate fetchURL with parameters
@@ -61,9 +61,9 @@ const App = () => {
     
             // try to load news entries
             const response = await fetch(fetchURLWithParameters)
-            const parsedResponse = await response.json()
+            const parsedResponse = await response.json() as IListResponse
             const { itemList, length } = parsedResponse
-            console.log("fetched data with URL: ", fetchURLWithParameters, parsedResponse)
+            // console.log("fetched data with URL: ", fetchURLWithParameters, parsedResponse)
             setNews((prevState:INews[]):INews[] => {
                 if (offset)
                 {
@@ -72,9 +72,8 @@ const App = () => {
                 return (itemList)
             })
             setNumberOfDatabaseNews(length)
-            let number = itemList.length; // number of new fetched entries
-            //console.log(`fetched ${number} new entries`)
-            let displayNumber = number;
+            const number = itemList.length; // number of new fetched entries
+            // console.log(`fetched ${number} new entries`)
             if(offset)
             {
                 setNumberOfFetchedNews(prevState => prevState + number)
@@ -94,24 +93,26 @@ const App = () => {
         }
         else if(param.M !== false) // otherwise fetch only the news entry with the id defined in parameter
         {
-            const id : string = param.M as string
+            const id : string = param.M as unknown as string
 
             // generate fetchURL with parameters
             const fetchURLWithParameters = `${fetchURL}/${id}`
-            console.log("try to fetch one new entry with the following link. ", fetchURLWithParameters)
+            // console.log("try to fetch one new entry with the following link. ", fetchURLWithParameters)
 
             // try to load news entries
             const response = await fetch(fetchURLWithParameters)
             const parsedResponse = await response.json() as IResponse
-            //console.log("fetched data: ", parsedResponse)
-            setNews((prevState:INews[]):INews[] => [parsedResponse])
+            // console.log("fetched data: ", parsedResponse)
+            setNews([parsedResponse])
         }
     }
-    async function publish(data : INews) {
+    const publish = async(data : INews) => {
         // const delay = ms => new Promise(res => setTimeout(res, ms));
         // if the Id of the -entry to publish is already present in fetched data, do put
-        //console.log(data, news, news.find((entry) => {return entry.id == data.id}))
-        if(news.find((entry) => {return entry.id == data.id}))
+        // console.log(data, news, news.find((entry) => {return entry.id == data.id}))
+        if(news.find((entry) => 
+            entry.id === data.id
+        ))
             await putEntry(data)
         else
             await postEntry(data)
@@ -120,7 +121,7 @@ const App = () => {
         // await delay(3000)
         await fetchNews(false)
     }
-    async function postEntry(data : INews) {
+    const postEntry = async(data : INews) => {
         await fetch(fetchURL , {
             method: "POST",
             body: JSON.stringify(data),
@@ -129,8 +130,8 @@ const App = () => {
             }
         })
     }
-    async function putEntry(data : INews) {
-        await fetch(`${fetchURL}/${data.id}` , {
+    const putEntry = async(data : INews) => {
+        await fetch(`${fetchURL}/${data.id as string}` , {
             method: "PUT",
             body: JSON.stringify(data),
             headers: {
@@ -138,10 +139,10 @@ const App = () => {
             }
         })
     }
-    async function patchEntry(data : INews) {
+    const patchEntry = async(data : INews) => {
         // ! hardcode TEST with prop 'hidden' for now
-        //console.log("try to patch news entry with that - ", data)
-        await fetch(`${fetchURL}/${data.id}/hidden` , {
+        // console.log("try to patch news entry with that - ", data)
+        await fetch(`${fetchURL}/${data.id as string}/hidden` , {
             method: "PATCH",
             body: JSON.stringify(data.hidden),
             headers: {
@@ -150,7 +151,7 @@ const App = () => {
         })
         await fetchNews(false)
     }
-    async function deleteEntry(id : string) {
+    const deleteEntry = async(id : string) => {
         await fetch(`${fetchURL}/${id}` , {
             method: "DELETE",
             headers: {
@@ -160,53 +161,29 @@ const App = () => {
         setCounter(c => c+1)
         await fetchNews(false)
     }
+
     useEffect(() => {
-        setURLparam(getParameters())
+        setURLparam((getParameters()))
         const getItems = async() => {
             await fetchNews(false)
         }
         getItems()       
-    }, [])
-    
-    /*  useEffect(() => {
-    }, [news]) */
-    
+    },
+    [])
     useEffect(() => {
-        //console.log((numberOfDisplayedNews < numberOfDatabaseNews))
+        // console.log((numberOfDisplayedNews < numberOfDatabaseNews))
         setLoadMoreButtonIsEnabled((numberOfDisplayedNews < numberOfDatabaseNews))
     }, [numberOfDisplayedNews, numberOfDatabaseNews])
     useEffect(() => {
-        /* const delay = ms => new Promise(res => setTimeout(res, ms));
-        const scrollToNewsEntry = async() => {
-            console.log("waiting 3 seconds")
-            await delay(3000)
-            console.log("3 seconds end", URLparam, URLparam.M)
-            chayns.scrollTo(3000)
-            //document.getElementById("3c34d4ae-2dc0-4898-9f4c-8589361bb66c")?.scrollIntoView()
-        }
-        scrollToNewsEntry() */
-
         const getItems = async() => {
             await fetchNews(false)
         }
         getItems()     
-
-
-    }, [URLparam])
-
-    /* const localStyles : {
-        cbShowMore : string;
-        btContainer : string;
-        btLoadMore : string;
-    } =
-    {
-        cbShowMore : styles.cbShowMore as string,
-        btContainer : styles.btContainer as string,
-        btLoadMore : styles.btLoadMore as string
-    } */
+    },
+    [URLparam])
 
     return (
-        <div className = {styles.main}>
+        <div className = {styles.main as string}>
             <AnimationWrapper>
                 <h1 id = "pageHeadline">Aktuelle News</h1>
                 <p id = "pageSubHeadline">Kurz, kompakt und immer wieder frisch informieren wir hier über aktuelle Themen und Aktionen.</p>
@@ -230,30 +207,29 @@ const App = () => {
             {
                 (news && Array.isArray(news) && news.length > 0 && showNews) 
                 ? 
-                    <div>
-                    {
-                        (!URLparam.M)
-                        ?
-                            <div className={styles.newsContainer}>
-                                <NewsList news = {news} now = {now} counter = {counter} onPut = {publish} onPatch = {patchEntry} onDelete = {deleteEntry} frontendURL = {frontendURL} /> 
-                                <div className={styles.btContainer}>
-                                    <Button disabled = {!loadMoreButtonIsEnabled} id={styles.btLoadMore} onClick={() => laodMore()}>Mehr</Button>
-                                </div>
+                    <div className={styles.newsContainer as string}>
+                        {URLparam.M
+                        &&
+                            <div>Param {URLparam.M}</div>
+                        }
+                        <NewsList news = {news} now = {now} counter = {counter} onPut = {publish} onPatch = {patchEntry} onDelete = {deleteEntry} frontendURL = {frontendURL} /> 
+                        {!URLparam.M
+                        &&
+                            <div className={styles.btContainer as string}>
+                                <Button disabled = {!loadMoreButtonIsEnabled} id={styles.btLoadMore as string} onClick={() => laodMore()}>Mehr</Button>
                             </div>
-                        :
-                            <div className={styles.newsContainer}>
-                                <div>Param {URLparam.M}</div>
-                                <NewsList news = {news} now = {now} counter = {counter} onPut = {publish} onPatch = {patchEntry} onDelete = {deleteEntry} frontendURL = {frontendURL} /> 
-                                <div className={styles.btContainer}>
-                                    <Button id={styles.btLoadMore} onClick={() => navigateToAllNews()}>
-                                        Alle News anzeigen
-                                    </Button>
-                                </div>
+                        }
+                        {URLparam.M
+                        &&
+                            <div className={styles.btContainer as string}>
+                                <Button id={styles.btLoadMore as string} onClick={() => navigateToAllNews()}>
+                                    Alle News anzeigen
+                                </Button>
                             </div>
-                    }
+                        }
                     </div>
                 :
-                    <div className = {styles.loading}>
+                    <div className = {styles.loading as string}>
                         <br />waiting for news...
                     </div>
             }

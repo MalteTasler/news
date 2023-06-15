@@ -1,15 +1,15 @@
 import React, { useState } from "react"
 import PropTypes from "prop-types"
-import { Gallery, ContextMenu, FileInput, Input, Button } from 'chayns-components'
+import { Gallery, ContextMenu } from 'chayns-components'
 import Footer from './Footer'
 import styles from './NewsEntry.module.css'
 import EditNewsEntry from "./EditNewsEntry"
 
 const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp, onPut, onPatch, onDelete, frontendURL, now, hidden}) =>
 {
-    //console.log("render news entry ....................... ", imageList, imageList.length)
+    // console.log("render news entry ....................... ", imageList, imageList.length)
     const [editMode, setEditMode] = useState(false)
-    const [isVisible, setIsVisible] = useState(true)
+    const [isVisible] = useState(true)
     const contextMenuItems = 
         {
             delete: {
@@ -108,7 +108,7 @@ const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp
         setMessageIsExtended(true)
     }
     function buildContextMenuItems() {
-        let array = [contextMenuItems.delete];
+        const array = [contextMenuItems.delete];
         if(editMode)
             array.push(contextMenuItems.view)
         else
@@ -119,7 +119,7 @@ const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp
             array.push(contextMenuItems.hide)
         return array
     }
-    function handlePut(data) {
+    const handlePut = (data) => {
         setEditMode(!editMode)
         onPut(data)
     }
@@ -175,10 +175,13 @@ const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp
                                             buildContextMenuItems()
                                         }
                                         className = {styles.contextMenu}
-                                        /* onLayerClick = { (event) => {
-                                            console.log("clicked layer ,", event)
+                                        /*
+                                        onLayerClick = {
+                                            (event) => {
+                                                console.log("clicked layer ,", event)
+                                            }
                                         }
-                                        } */
+                                        */
                                     />
                                 </div>
                             </div>
