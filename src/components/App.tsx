@@ -6,16 +6,17 @@ import DeveloperTools from './DeveloperTools'
 import NewsList from './NewsList'
 import AddNewsEntry from './AddNewsEntry'
 import styles from './App.module.css'
-import { IResponse, IListResponse, INews } from '../interfaces'
+import { IResponse, IListResponse, INews, IParameters } from '../interfaces'
 
 const App = () => {
     const frontendURL = "https://schule.chayns.net/news-page-react"
     const fetchURL = "https://run.chayns.codes/f11828e3/api"
+    const adminMode : boolean = chayns.env.user.adminMode as boolean
     const count = 10 // maximum number of news to fetch
     let now = new Date()
 
     const [news, setNews] = useState<INews[]>([])
-    const [URLparam, setURLparam] = useState({M: false})
+    const [URLparam, setURLparam] = useState<IParameters>()
     const [showNews, setShowNews] = useState(true)
     const [counter, setCounter] = useState(0)
     const [numberOfFetchedNews, setNumberOfFetchedNews] = useState(0)
@@ -28,7 +29,7 @@ const App = () => {
         await fetchNews(true)
     }
     const navigateToAllNews = () => {
-        setURLparam({})
+        setURLparam({M: false})
         /* 
         const delay = ms => new Promise(res => setTimeout(res, ms));
         await delay(3000)
@@ -50,14 +51,12 @@ const App = () => {
         setShowNews(data)
     }
     
-    async function fetchNews(offset = false, param = URLparam) {  // if offset is true, last value of current news array gets popped
-        // console.log("fetching news with id - ", param, (param.M == (null || undefined)))
-
-        if(param.M === (null || undefined) ) // if no parameter for a news entry is used in the URL, load multiple entries
+    const fetchNews = async(offset = false, param = URLparam) => {  // if offset is true, last value of current news array gets popped
+        // console.log("param m ", param, param?.M, (param?.M === null || param?.M === undefined || param?.M === false))
+        if(!param?.M) // if no parameter for a news entry is used in the URL, load multiple entries
         {
-
             // generate fetchURL with parameters
-            const fetchURLWithParameters = `${fetchURL}?timestamp=${getTimestamp(!offset)}&count=${count}&adminMode=${chayns.env.user.adminMode}`
+            const fetchURLWithParameters = `${fetchURL}?timestamp=${getTimestamp(!offset)}&count=${count}&adminMode=${adminMode as unknown as string}`
     
             // try to load news entries
             const response = await fetch(fetchURLWithParameters)
@@ -91,9 +90,9 @@ const App = () => {
                     setNumberOfDisplayedNews(number)
             }
         }
-        else if(param.M !== false) // otherwise fetch only the news entry with the id defined in parameter
+        else // otherwise fetch only the news entry with the id defined in parameter
         {
-            const id : string = param.M as unknown as string
+            const id : string = param?.M as unknown as string
 
             // generate fetchURL with parameters
             const fetchURLWithParameters = `${fetchURL}/${id}`
@@ -163,11 +162,18 @@ const App = () => {
     }
 
     useEffect(() => {
-        setURLparam((getParameters()))
         const getItems = async() => {
             await fetchNews(false)
         }
-        getItems()       
+        const params : {
+            [key: string]: string; [key: symbol]: string;
+        } = getParameters()
+        // console.log("received parameters:", params, (params.M !== undefined))
+        // check if paramters are valid
+        if(params.M !== undefined)
+            setURLparam({M : params.M})
+        else
+            void getItems()       
     },
     [])
     useEffect(() => {
@@ -178,7 +184,7 @@ const App = () => {
         const getItems = async() => {
             await fetchNews(false)
         }
-        getItems()     
+        void getItems()     
     },
     [URLparam])
 
@@ -188,7 +194,7 @@ const App = () => {
                 <h1 id = "pageHeadline">Aktuelle News</h1>
                 <p id = "pageSubHeadline">Kurz, kompakt und immer wieder frisch informieren wir hier über aktuelle Themen und Aktionen.</p>
             </AnimationWrapper>
-            {chayns.env.user.adminMode &&
+            {adminMode &&
                 <div>
                     <AddNewsEntry
                         onPublish = {publish}
@@ -208,18 +214,18 @@ const App = () => {
                 (news && Array.isArray(news) && news.length > 0 && showNews) 
                 ? 
                     <div className={styles.newsContainer as string}>
-                        {URLparam.M
+                        {URLparam?.M
                         &&
                             <div>Param {URLparam.M}</div>
                         }
-                        <NewsList news = {news} now = {now} counter = {counter} onPut = {publish} onPatch = {patchEntry} onDelete = {deleteEntry} frontendURL = {frontendURL} /> 
-                        {!URLparam.M
+                        <NewsList news = {news} now = {now} onPut = {publish} onPatch = {patchEntry} onDelete = {deleteEntry} frontendURL = {frontendURL} /> 
+                        {!URLparam?.M
                         &&
                             <div className={styles.btContainer as string}>
                                 <Button disabled = {!loadMoreButtonIsEnabled} id={styles.btLoadMore as string} onClick={() => laodMore()}>Mehr</Button>
                             </div>
                         }
-                        {URLparam.M
+                        {URLparam?.M
                         &&
                             <div className={styles.btContainer as string}>
                                 <Button id={styles.btLoadMore as string} onClick={() => navigateToAllNews()}>
