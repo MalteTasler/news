@@ -20,3 +20,6 @@ export interface INews {
     publishTimestamp: number;
     hidden: boolean | undefined;
 }
+export interface IParameters {
+    M: string | boolean
+}
