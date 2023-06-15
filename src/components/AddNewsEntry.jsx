@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from "react"
+import React from "react"
 import PropTypes from "prop-types"
 import { Accordion } from 'chayns-components'
 import EditNewsEntry from "./EditNewsEntry"
