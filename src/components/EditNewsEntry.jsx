@@ -24,7 +24,8 @@ const EditNewsEntry = ({id, onPublish, now, initMessage, initTitle, initImageLis
                 headline: title,
                 message,
                 publishTime: now,
-                publishTimestamp: now.getTime()
+                publishTimestamp: now.getTime(),
+                hidden: false
             }
         )
     }

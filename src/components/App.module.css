@@ -17,4 +17,6 @@
 }
 .newsContainer {
     margin-top: 19px;
+    display: flex;
+    flex-direction: column;
 }

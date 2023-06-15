@@ -10,6 +10,7 @@ const AddNewsEntry = ({onPublish, now}) =>
     >
         <div id = {styles.addNewsEntryFrame}>
             <EditNewsEntry
+                id=""
                 onPublish = {onPublish}
                 now = {now}
                 initMessage = ""

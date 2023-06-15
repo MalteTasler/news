@@ -4,3 +4,6 @@
 .newsEntryHeader {
     display: flex;
 }
+.newsEntryFrame {
+    margin-top: 15px;
+}

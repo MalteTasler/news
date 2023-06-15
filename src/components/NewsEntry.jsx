@@ -5,7 +5,7 @@ import Footer from './Footer'
 import styles from './NewsEntry.module.css'
 import EditNewsEntry from "./EditNewsEntry"
 
-const NewsEntry = ({id, title, message, imageList, publishTimestamp, onPatch, onDelete, frontendURL, now}) =>
+const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp, onPut, onPatch, onDelete, frontendURL, now, hidden}) =>
 {
     const [editMode, setEditMode] = useState(false)
     const [isVisible, setIsVisible] = useState(true)
@@ -55,10 +55,38 @@ const NewsEntry = ({id, title, message, imageList, publishTimestamp, onPatch, on
             hide: {
                 className: null,
                 onClick: () => {
-                    setIsVisible(false)
+                    onPatch(
+                        {
+                            id,
+                            imageList,
+                            headline: title,
+                            message,
+                            publishTime,
+                            publishTimestamp,
+                            hidden: true
+                        }
+                    )
                 },
                 text: "Hide",
-                icon: "fa fa-hide"
+                icon: "fa fa-eye-slash"
+            },
+            unhide: {
+                className: null,
+                onClick: () => {
+                    onPatch(
+                        {
+                            id,
+                            imageList,
+                            headline: title,
+                            message,
+                            publishTime,
+                            publishTimestamp,
+                            hidden: false
+                        }
+                    )
+                },
+                text: "Unhide",
+                icon: "fa fa-eye"
             }
         }
     const maxLength = 220
@@ -78,9 +106,21 @@ const NewsEntry = ({id, title, message, imageList, publishTimestamp, onPatch, on
     function displayWholeMessage() {
         setMessageIsExtended(true)
     }
+    function buildContextMenuItems() {
+        let array = [contextMenuItems.delete];
+        if(editMode)
+            array.push(contextMenuItems.view)
+        else
+            array.push(contextMenuItems.edit)
+        if(hidden)
+            array.push(contextMenuItems.unhide)
+        else
+            array.push(contextMenuItems.hide)
+        return array
+    }
     function handlePut(data) {
         setEditMode(!editMode)
-        onPatch(data)
+        onPut(data)
     }
     const getTimeAgo = (timestamp) => {
         const diff = now.getTime() - timestamp
@@ -122,48 +162,47 @@ const NewsEntry = ({id, title, message, imageList, publishTimestamp, onPatch, on
         <div>
             {(chayns.env.user.adminMode || isVisible)
             &&
-                <div className = "news content__card" id = {id}>
-                    <a name={id} />
-                    {chayns.env.user.adminMode &&
-                        <div className = {styles.newsEntryHeader}>
-                            <div className = {styles.contextMenuFrame}>
-                                <ContextMenu
-                                    items = {
-                                        (editMode)
-                                        ?
-                                            [contextMenuItems.delete, contextMenuItems.view, contextMenuItems.hide]
-                                        :
-                                            [contextMenuItems.delete, contextMenuItems.edit, contextMenuItems.hide]
-                                    }
-                                    className = {styles.contextMenu}
-                                    /* onLayerClick = { (event) => {
-                                        console.log("clicked layer ,", event)
-                                    }
-                                    } */
+                <div className = {styles.newsEntryFrame}>
+                    <div className= "content__card" id = {id}>
+                        <a name={id} />
+                        {chayns.env.user.adminMode &&
+                            <div className = {styles.newsEntryHeader}>
+                                {hidden && <div className = {styles.labelOnHide}>Ausgeblendet</div>}
+                                <div className = {styles.contextMenuFrame}>
+                                    <ContextMenu
+                                        items = {
+                                            buildContextMenuItems()
+                                        }
+                                        className = {styles.contextMenu}
+                                        /* onLayerClick = { (event) => {
+                                            console.log("clicked layer ,", event)
+                                        }
+                                        } */
+                                    />
+                                </div>
+                            </div>
+                        }
+                        {(chayns.env.user.adminMode && editMode)
+                        ?   
+                            <div>
+                                <EditNewsEntry
+                                    id = {id}
+                                    onPublish = {handlePut}
+                                    now = {now}
+                                    initMessage = {message}
+                                    initTitle = {title}
+                                    initImageList = {imageList}
                                 />
                             </div>
-                        </div>
-                    }
-                    {(chayns.env.user.adminMode && editMode)
-                    ?   
-                        <div>
-                            <EditNewsEntry
-                                id = {id}
-                                onPublish = {handlePut}
-                                now = {now}
-                                initMessage = {message}
-                                initTitle = {title}
-                                initImageList = {imageList}
-                            />
-                        </div>
-                    :
-                        <div>
-                            <Gallery images={imageList} />
-                            <h2>{title}</h2>
-                            {messageIsLong ? cutMessage : message}
-                            <Footer date = {getTimeAgo(publishTimestamp)} id = {id} frontendURL = {frontendURL} />
-                        </div>
-                    }
+                        :
+                            <div>
+                                <Gallery images={imageList} />
+                                <h2>{title}</h2>
+                                {messageIsLong ? cutMessage : message}
+                                <Footer date = {getTimeAgo(publishTimestamp)} id = {id} frontendURL = {frontendURL} />
+                            </div>
+                        }
+                    </div>
                 </div>
             }
         </div>
@@ -174,13 +213,16 @@ NewsEntry.propTypes = {
     title: PropTypes.string,
     message: PropTypes.string.isRequired,
     imageList: PropTypes.arrayOf(PropTypes.string),
+    publishTime: PropTypes.string.isRequired,
     publishTimestamp: PropTypes.number.isRequired,
+    onPut: PropTypes.func.isRequired,
     onPatch: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
     frontendURL: PropTypes.string.isRequired,
     now: PropTypes.shape({
         getTime: PropTypes.func
-    }).isRequired
+    }).isRequired,
+    hidden: PropTypes.bool.isRequired
 }
 NewsEntry.defaultProps = {
     title : "",
