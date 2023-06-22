@@ -1,0 +1,10 @@
+C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend.DatabaseSQL\bin\Debug\NewsBackend.DatabaseSQL.dacpac
+C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend.DatabaseSQL\obj\Debug\NewsBackend.DatabaseSQL.sqlproj.AssemblyReference.cache
+C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend.DatabaseSQL\obj\Debug\Model.xml
+C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend.DatabaseSQL\obj\Debug\refactor.xml
+C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend.DatabaseSQL\obj\Debug\postdeploy.sql
+C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend.DatabaseSQL\obj\Debug\predeploy.sql
+C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend.DatabaseSQL\obj\Debug\NewsBackend.DatabaseSQL.dll
+C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend.DatabaseSQL\obj\Debug\NewsBackend.DatabaseSQL.pdb
+C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend.DatabaseSQL\bin\Debug\NewsBackend.DatabaseSQL.dll
+C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend.DatabaseSQL\bin\Debug\NewsBackend.DatabaseSQL.pdb

@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsBackend", "NewsBackend\NewsBackend.csproj", "{4A1F9EC3-E083-4E06-BFCF-6BEBC28A1FBB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsBackend", "NewsBackend\NewsBackend.csproj", "{4A1F9EC3-E083-4E06-BFCF-6BEBC28A1FBB}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "NewsBackend.DatabaseSQL", "NewsBackend.DatabaseSQL\NewsBackend.DatabaseSQL.sqlproj", "{48372581-A83E-4BF9-B98E-F39C3FD389F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,12 @@ Global
 		{4A1F9EC3-E083-4E06-BFCF-6BEBC28A1FBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A1F9EC3-E083-4E06-BFCF-6BEBC28A1FBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A1F9EC3-E083-4E06-BFCF-6BEBC28A1FBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48372581-A83E-4BF9-B98E-F39C3FD389F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48372581-A83E-4BF9-B98E-F39C3FD389F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48372581-A83E-4BF9-B98E-F39C3FD389F9}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{48372581-A83E-4BF9-B98E-F39C3FD389F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48372581-A83E-4BF9-B98E-F39C3FD389F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48372581-A83E-4BF9-B98E-F39C3FD389F9}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
