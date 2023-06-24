@@ -45,13 +45,17 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.143, )"
+            },
             "Microsoft.Data.SqlClient": {
               "target": "Package",
               "version": "[5.1.1, )"
             },
             "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
               "target": "Package",
-              "version": "[1.17.0, )"
+              "version": "[1.18.1, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

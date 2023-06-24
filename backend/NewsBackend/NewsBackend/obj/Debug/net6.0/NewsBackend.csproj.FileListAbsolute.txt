@@ -64,3 +64,4 @@ C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\N
 C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend\obj\Debug\net6.0\NewsBackend.pdb
 C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend\obj\Debug\net6.0\NewsBackend.genruntimeconfig.cache
 C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend\obj\Debug\net6.0\ref\NewsBackend.dll
+C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend\bin\Debug\net6.0\Dapper.dll
