@@ -10,11 +10,12 @@ import { IResponse, IListResponse, INews, IParameters } from '../interfaces'
 
 const App = () => {
     const frontendURL = "https://schule.chayns.net/news-page-react"
-    const fetchURL = "https://localhost:7106/news" // "https://run.chayns.codes/f11828e3/api"
+    const fetchURL = ["https://localhost:7106/news", "https://run.chayns.codes/f11828e3/api"]
     const adminMode : boolean = chayns.env.user.adminMode as boolean
     const count = 10 // maximum number of news to fetch
     let now = new Date()
 
+    const [useDevBackend, setUseDevBackend] = useState(false)
     const [news, setNews] = useState<INews[]>([])
     const [URLparam, setURLparam] = useState<IParameters>()
     const [showNews, setShowNews] = useState(true)
@@ -50,23 +51,27 @@ const App = () => {
     const setShowNewsFunc = (data : boolean) => {
         setShowNews(data)
     }
+    const setUseDevBackendFunc = async(data : boolean) => {
+        // console.log("switch to dev backend ", data)
+        setUseDevBackend(data)
+    }
     
     const fetchNews = async(offset = false, param = URLparam) => {  // if offset is true, last value of current news array gets popped
         // console.log("param m ", param, param?.M, (param?.M === null || param?.M === undefined || param?.M === false))
         if(!param?.M) // if no parameter for a news entry is used in the URL, load multiple entries
         {
             // generate fetchURL with parameters
-            const fetchURLWithParameters = `${fetchURL}?timestamp=${getTimestamp(!offset)}&count=${count}&adminMode=${adminMode as unknown as string}`
+            const fetchURLWithParameters = `${fetchURL[useDevBackend ? 0 : 1]}?timestamp=${getTimestamp(!offset)}&count=${count}&adminMode=${adminMode as unknown as string}`
     
             // try to load news entries
-            console.log("try to fetch data via URI ", fetchURLWithParameters)
+            // console.log("try to fetch data via URI ", fetchURLWithParameters, useDevBackend ? 0 : 1, fetchURL[useDevBackend ? 0 : 1])
             const response = await fetch(fetchURLWithParameters)
-            console.log("unparsed response ", response)
-            if(!response.Ok)
+            // console.log("unparsed response ", response)
+            if(!response.ok)
                 return false
             const parsedResponse = await response.json() as IListResponse
             const { itemList, length } = parsedResponse
-            console.log("fetched data with URL: ", fetchURLWithParameters, parsedResponse)
+            // console.log("fetched data with URL: ", fetchURLWithParameters, parsedResponse)
             setNews((prevState:INews[]):INews[] => {
                 if (offset)
                 {
@@ -99,7 +104,7 @@ const App = () => {
             const id : string = param?.M as unknown as string
 
             // generate fetchURL with parameters
-            const fetchURLWithParameters = `${fetchURL}/${id}`
+            const fetchURLWithParameters = `${fetchURL[useDevBackend ? 0 : 1]}/${id}`
             // console.log("try to fetch one new entry with the following link. ", fetchURLWithParameters)
 
             // try to load news entries
@@ -125,7 +130,7 @@ const App = () => {
         await fetchNews(false)
     }
     const postEntry = async(data : INews) => {
-        await fetch(fetchURL , {
+        await fetch(fetchURL[useDevBackend ? 0 : 1] , {
             method: "POST",
             body: JSON.stringify(data),
             headers: {
@@ -134,7 +139,7 @@ const App = () => {
         })
     }
     const putEntry = async(data : INews) => {
-        await fetch(`${fetchURL}/${data.id as string}` , {
+        await fetch(`${fetchURL[useDevBackend ? 0 : 1]}/${data.id as string}` , {
             method: "PUT",
             body: JSON.stringify(data),
             headers: {
@@ -145,7 +150,7 @@ const App = () => {
     const patchEntry = async(data : INews) => {
         // ! hardcode TEST with prop 'hidden' for now
         // console.log("try to patch news entry with that - ", data)
-        await fetch(`${fetchURL}/${data.id as string}/hidden` , {
+        await fetch(`${fetchURL[useDevBackend ? 0 : 1]}/${data.id as string}/hidden` , {
             method: "PATCH",
             body: JSON.stringify(data.hidden),
             headers: {
@@ -155,7 +160,7 @@ const App = () => {
         await fetchNews(false)
     }
     const deleteEntry = async(id : string) => {
-        await fetch(`${fetchURL}/${id}` , {
+        await fetch(`${fetchURL[useDevBackend ? 0 : 1]}/${id}` , {
             method: "DELETE",
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
@@ -191,6 +196,13 @@ const App = () => {
         void getItems()     
     },
     [URLparam])
+    useEffect(() => { // ! redundancy? test
+        const getItems = async() => {
+            await fetchNews(false)
+        }
+        void getItems()  
+    },
+    [useDevBackend])
 
     return (
         <div className = {styles.main as string}>
@@ -210,6 +222,8 @@ const App = () => {
                         numberOfDatabaseNews = {numberOfDatabaseNews}
                         showNews = {showNews}
                         cbShowNewsOnChange = {setShowNewsFunc}
+                        useDevBackend = {useDevBackend}
+                        cbUseDevBackendOnChange = {setUseDevBackendFunc}
                     />
                 </div>
             }
