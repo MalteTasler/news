@@ -31,7 +31,8 @@ namespace NewsBackend.Controllers
             //news.Add(new Models.NewsEntry());
             //news[0].Title = "this";
             // Data Source=W-MTASLER-L;Initial Catalog=News;Integrated Security=True
-            using (var sqlCon = new SqlConnection("Data Source=W-MTASLER-L;Initial Catalog=News;Integrated Security=True;User ID=ApplicationASP.NETDebug;Password=Tobit913")
+            // Data Source=W-MTASLER-L;Initial Catalog=News;Integrated Security=True;User ID=ApplicationASP.NETDebug;Password=Tobit913
+            using (var sqlCon = new SqlConnection("Data Source=W-MTASLER-L;Initial Catalog=News;Integrated Security=True;TrustServerCertificate=true")
                 /*await _dbContext.GetDBContext()*/)
             {
                 try
