@@ -10,7 +10,7 @@ import { IResponse, IListResponse, INews, IParameters } from '../interfaces'
 
 const App = () => {
     const frontendURL = "https://schule.chayns.net/news-page-react"
-    const fetchURL = "https://run.chayns.codes/f11828e3/api"
+    const fetchURL = "https://localhost:7106/news" // "https://run.chayns.codes/f11828e3/api"
     const adminMode : boolean = chayns.env.user.adminMode as boolean
     const count = 10 // maximum number of news to fetch
     let now = new Date()
@@ -59,10 +59,14 @@ const App = () => {
             const fetchURLWithParameters = `${fetchURL}?timestamp=${getTimestamp(!offset)}&count=${count}&adminMode=${adminMode as unknown as string}`
     
             // try to load news entries
+            console.log("try to fetch data via URI ", fetchURLWithParameters)
             const response = await fetch(fetchURLWithParameters)
+            console.log("unparsed response ", response)
+            if(!response.Ok)
+                return false
             const parsedResponse = await response.json() as IListResponse
             const { itemList, length } = parsedResponse
-            // console.log("fetched data with URL: ", fetchURLWithParameters, parsedResponse)
+            console.log("fetched data with URL: ", fetchURLWithParameters, parsedResponse)
             setNews((prevState:INews[]):INews[] => {
                 if (offset)
                 {
