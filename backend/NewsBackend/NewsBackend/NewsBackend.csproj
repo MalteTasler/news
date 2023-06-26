@@ -15,4 +15,23 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Repositories\**" />
+    <Compile Remove="Controllers\WeatherForecastController.cs" />
+    <Compile Remove="WeatherForecast.cs" />
+    <Compile Remove="Interfaces\INewsRepository.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Repositories\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Repositories\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Repositories\**" />
+  </ItemGroup>
+
 </Project>

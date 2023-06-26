@@ -10,12 +10,15 @@ namespace NewsBackend.Helper
 {
     public class DBContext : IDBContext
     {
-        //private const string ConnectionString = "Data Source=tappqa.tobit.ag;Initial Catalog=20Training-Server-MT;Integrated Security=True;Application Name=MTServer"; 
+        //private const string ConnectionString = "Data Source=tappqa.tobit.ag;Initial Catalog=20Training-Server-MT;Integrated Security=True;Application Name=MTServer";
+        // Data Source=W-MTASLER-L;Initial Catalog=News;Integrated Security=True;TrustServerCertificate=true
+        private const string ConnectionString = "Data Source=W-MTASLER-L;Initial Catalog=News;Integrated Security=True;TrustServerCertificate=true";
         private readonly DBSetting _dbSettings;
 
         public DBContext(IOptions<DBSetting> dbSettings)
         {
             _dbSettings = dbSettings.Value;
+            _dbSettings.ConnectionString = ConnectionString;
         }
         public async Task<IDbConnection> GetDBContext()
         {
@@ -28,8 +31,8 @@ namespace NewsBackend.Helper
             catch (Exception ex)
             {
                 //_logger.LogError("sql database not reached.", ex);
-                throw ex;
                 Console.WriteLine("SqlBulkCopy databse not reached", ex);
+                throw ex;
             }
         }
     }
