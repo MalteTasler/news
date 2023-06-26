@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using System.Web.Http.Cors;
+using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.Data.SqlClient;
@@ -9,6 +10,7 @@ namespace NewsBackend.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [EnableCors(origins: "http://w-mtasler-l:1234", headers: "*", methods: "*")]
     public class NewsController : ControllerBase
     {
         private readonly ILogger<NewsController> _logger;

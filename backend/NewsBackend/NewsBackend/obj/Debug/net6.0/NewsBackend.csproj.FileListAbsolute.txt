@@ -65,3 +65,9 @@ C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\N
 C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend\obj\Debug\net6.0\NewsBackend.genruntimeconfig.cache
 C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend\obj\Debug\net6.0\ref\NewsBackend.dll
 C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend\bin\Debug\net6.0\Dapper.dll
+C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend\bin\Debug\net6.0\System.Web.Cors.dll
+C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend\bin\Debug\net6.0\System.Net.Http.Formatting.dll
+C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend\bin\Debug\net6.0\System.Web.Http.dll
+C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend\bin\Debug\net6.0\System.Web.Http.Cors.dll
+C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\MTasler\OneDrive\Development\Tobit\Praktikum Entwicklung\news\backend\NewsBackend\NewsBackend\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll
