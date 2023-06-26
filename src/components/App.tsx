@@ -64,9 +64,13 @@ const App = () => {
             const fetchURLWithParameters = `${fetchURL[useDevBackend ? 0 : 1]}?timestamp=${getTimestamp(!offset)}&count=${count}&adminMode=${adminMode as unknown as string}`
     
             // try to load news entries
-            // console.log("try to fetch data via URI ", fetchURLWithParameters, useDevBackend ? 0 : 1, fetchURL[useDevBackend ? 0 : 1])
-            const response = await fetch(fetchURLWithParameters)
-            // console.log("unparsed response ", response)
+             console.log("try to fetch data via URI ", fetchURLWithParameters, useDevBackend ? 0 : 1, fetchURL[useDevBackend ? 0 : 1])
+            const response = await fetch(fetchURLWithParameters
+                /* , {
+                    mode: 'no-cors'
+                } */
+            )
+             console.log("unparsed response ", response)
             if(!response.ok)
                 return false
             const parsedResponse = await response.json() as IListResponse
