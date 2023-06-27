@@ -75,7 +75,7 @@ const App = () => {
                 return false
             const parsedResponse = await response.json() as IListResponse
             const { itemList, length } = parsedResponse
-            // console.log("fetched data with URL: ", fetchURLWithParameters, parsedResponse)
+            console.log("fetched data with URL: ", fetchURLWithParameters, parsedResponse)
             setNews((prevState:INews[]):INews[] => {
                 if (offset)
                 {
@@ -240,7 +240,7 @@ const App = () => {
                         &&
                             <div>Param {URLparam.M}</div>
                         }
-                        <NewsList news = {news} now = {now} onPut = {publish} onPatch = {patchEntry} onDelete = {deleteEntry} frontendURL = {frontendURL} /> 
+                        test<NewsList news = {news} now = {now} onPut = {publish} onPatch = {patchEntry} onDelete = {deleteEntry} frontendURL = {frontendURL} /> 
                         {!URLparam?.M
                         &&
                             <div className={styles.btContainer as string}>

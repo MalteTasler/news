@@ -1,0 +1,18 @@
+﻿** Hervorhebungen
+     Tabellen, die mit migrierten Daten neu erstellt werden
+       Kein
+     Gruppierte Indizes, die gelöscht werden.
+       Kein
+     Gruppierte Indizes, die erstellt werden.
+       Kein
+     Mögliche Datenprobleme
+       Kein
+
+** Benutzeraktionen
+     Erstellen
+       [dbo].[Image] (Tabelle)
+       [dbo].[NewsEntries] (Tabelle)
+       Fremdschlüssel: unbenannte Einschränkungen auf [dbo].[Image] (Fremdschlüssel)
+       [dbo].[viNewsEntries] (Sicht)
+
+** Unterstützende Aktionen

@@ -15,11 +15,18 @@ public interface INewsRepository
     Task<NewsEntry?> GetEntry(int id);
 
     /// <summary>
-    /// Get all entries for a specific site
+    /// Get multiple entries for a specific tapp, timespan and of a specific amount
     /// </summary>
-    /// <param name="siteId"></param>
+    /// <param name="tappId"></param>
     /// <returns></returns>
-    Task<IEnumerable<NewsEntry>> GetAll(string siteId);
+    Task<IEnumerable<NewsEntry>> GetMultiple(long tappId, bool adminMode, int count, long timestamp);
+    
+    /// <summary>
+    /// Get all entries for a specific tapp
+    /// </summary>
+    /// <param name="tappId"></param>
+    /// <returns></returns>
+    Task<IEnumerable<NewsEntry>> GetAll(long tappId, bool adminMode);
 
     /// <summary>
     /// Create a new entry
@@ -28,6 +35,10 @@ public interface INewsRepository
     /// <returns>The id of the new created entry</returns>
     Task<int> Create(NewsEntry entry);
 
+    Task<int> Update(NewsEntry entry);
+    
+    Task<int> Patch(NewsEntry entry);
+    
     /// <summary>
     /// Delete an entry by id
     /// </summary>

@@ -200,7 +200,7 @@ const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp
                             </div>
                         :
                             <div>
-                                { imageList.length !== 0
+                                { imageList && imageList.length !== 0
                                 ?
                                     <Gallery images={imageList} />
                                 :

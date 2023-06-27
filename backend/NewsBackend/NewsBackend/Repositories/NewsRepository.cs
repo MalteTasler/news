@@ -1,6 +1,9 @@
 ﻿//using Chayns.Auth.ApiExtensions;
 //using Chayns.Auth.Shared;
 using Dapper;
+using Microsoft.Data.SqlClient;
+using NewsBackend.Configuration;
+using NewsBackend.Controllers;
 using NewsBackend.Helpers;
 using NewsBackend.Models;
 using NewsBackend.Interfaces;
@@ -31,6 +34,22 @@ public class NewsRepository : INewsRepository
     private readonly ISqlConnectionProvider _connectionProvider;
     //private readonly ITokenInfoProvider _tokenInfoProvider;
 
+    private readonly ILogger<NewsController> _logger;
+    private readonly ConnectionString _connectionString;
+
+    private readonly string _queryGetAllNews = 
+        "SELECT * FROM viNewsEntries";
+    private readonly string _queryGetMultipleNews = 
+        "SELECT * FROM viNewsEntries WHERE PublishTime < @time";
+    private readonly string _queryPostNewsEntry_AddImage = 
+        "INSERT INTO Images (NewsEntryId, Url) VALUES (@NewsEntryId, @Image)";
+    private readonly string _queryPostNewsEntry =
+        "INSERT INTO NewsEntries (Title, Message, TappId, PublishTime, IsHidden, LastModificationTime) OUTPUT inserted.Id VALUES (@Headline, @Message, @TappId, @publishTime, @hidden, @lastModificationTime)";
+    private readonly string _queryGetEntry =
+        "SELECT * FROM viNewsEntries WHERE Id = @Id";
+    private readonly string _queryDeleteEntry =
+        "DELETE FROM NewsEntries WHERE Id = @Id";
+    
     /// <summary>
     /// Creates new instance
     /// </summary>
@@ -47,24 +66,109 @@ public class NewsRepository : INewsRepository
     /// <returns></returns>
     public async Task<NewsEntry?> GetEntry(int id)
     {
-        const string query = "SELECT * FROM news WHERE id = @id";
-
-        using var cn = await _connectionProvider.GetConnection();
-        return await cn.QueryFirstOrDefaultAsync<NewsEntry>(query, new {id});
+        Console.WriteLine("GetEntry");
+        using (var sqlCon =
+               new SqlConnection(
+                   "Data Source=W-MTASLER-L;Initial Catalog=News;Integrated Security=True;TrustServerCertificate=true"))
+        {
+            try
+            {
+                var response = await sqlCon.QueryFirstOrDefaultAsync<NewsEntryDBO>(_queryGetEntry, new { id });
+                var parse = new NewsEntry();
+                parse.Id = ""+response.Id;
+                parse.Headline = response.Title;
+                parse.Message = response.Message;
+                // parse.TappId = response.TappId;
+                parse.PublishTime = response.PublishTime;
+                parse.hidden = response.IsHidden;
+                parse.LastModificationTime = response.LastModificationTime;
+                return parse;
+            }
+            catch (Exception ex)
+            {
+                //_logger.LogError("Reading rows in NewsEntries failed.", ex);
+                throw ex;
+            }
+        }
     }
 
     /// <summary>
     /// Get all entries
     /// </summary>
     /// <returns></returns>
-    public async Task<IEnumerable<NewsEntry>> GetAll(string siteId)
+    public async Task<IEnumerable<NewsEntry>> GetAll(long tappId, bool adminMode)
     {
-        // TODO: This is a very basic example. You should never select all entries from a table without skip & take or any other filter
+        Console.WriteLine("GetAll");
+        using (var sqlCon =
+               new SqlConnection(
+                   "Data Source=W-MTASLER-L;Initial Catalog=News;Integrated Security=True;TrustServerCertificate=true"))
+        {
+            try
+            {
+                var response = await sqlCon.QueryAsync<NewsEntryDBO>(_queryGetAllNews, new { tappId });
+                var parsed = new List<NewsEntry>();
+                for(int i = 0; i < response.Count(); i++)
+                {
+                    var parse = new NewsEntry();
+                    parse.Id = ""+response.ElementAt(i).Id;
+                    parse.Headline = response.ElementAt(i).Title;
+                    parse.Message = response.ElementAt(i).Message;
+                    // parse.TappId = response.ElementAt(i).TappId;
+                    parse.PublishTime = response.ElementAt(i).PublishTime;
+                    parse.hidden = response.ElementAt(i).IsHidden;
+                    parse.LastModificationTime = response.ElementAt(i).LastModificationTime;
+                    parsed.Add(parse);
+                }
+                return parsed;
+            }
+            catch (Exception ex)
+            {
+                //_logger.LogError("Reading all rows in NewsEntries failed.", ex);
+                throw ex;
+            }
+        }
+    }
 
-        const string query = "SELECT * FROM news WHERE site_id = @siteId";
-
-        using var cn = await _connectionProvider.GetConnection();
-        return await cn.QueryAsync<NewsEntry>(query, new {siteId});
+    public async Task<IEnumerable<NewsEntry>> GetMultiple(long tappId, bool adminMode, int count, long timestamp)
+    {
+        Console.WriteLine("GetMultiple");
+        using (var sqlCon =
+               new SqlConnection(
+                   "Data Source=W-MTASLER-L;Initial Catalog=News;Integrated Security=True;TrustServerCertificate=true"))
+        {
+            var time = new DateTimeOffset();
+            try
+            {
+                time = DateTimeOffset.FromUnixTimeMilliseconds(timestamp);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            try
+            {
+                var response = await sqlCon.QueryAsync<Models.NewsEntryDBO>(_queryGetMultipleNews, new { tappId, count, time });
+                var parsed = new List<NewsEntry>();
+                for(int i = 0; i < response.Count(); i++)
+                {
+                    var parse = new NewsEntry();
+                    parse.Id = ""+response.ElementAt(i).Id;
+                    parse.Headline = response.ElementAt(i).Title;
+                    parse.Message = response.ElementAt(i).Message;
+                    // parse.TappId = response.ElementAt(i).TappId;
+                    parse.PublishTime = response.ElementAt(i).PublishTime;
+                    parse.hidden = response.ElementAt(i).IsHidden;
+                    parse.LastModificationTime = response.ElementAt(i).LastModificationTime;
+                    parsed.Add(parse);
+                }
+                return parsed;
+            }
+            catch (Exception ex)
+            {
+                //_logger.LogError("Reading all rows in NewsEntries failed.", ex);
+                throw ex;
+            }
+        }
     }
 
     /// <summary>
@@ -72,25 +176,108 @@ public class NewsRepository : INewsRepository
     /// </summary>
     /// <param name="entry"></param>
     /// <returns>The id of the new created entry</returns>
-    public async Task<int> Create(NewsEntry entry)
+    public async Task<int> Create(NewsEntry newsEntry)
     {
+        Console.WriteLine("Create");
         /*if (_tokenInfoProvider.GetPayloadSubject() is not LocationUserTokenPayload tokenInfo)
             throw new Exception("Operation is not permitted");*/
 
-        const string query = "INSERT INTO news (title, text, publish_time, site_id, creation_person_id) OUTPUT inserted.Id VALUES (@title, @text, @publishTime, @siteId, @personId)";
-
-        using var cn = await _connectionProvider.GetConnection();
-
-        return await cn.ExecuteScalarAsync<int>(query, new
+        using (var sqlCon =
+               new SqlConnection(
+                   "Data Source=W-MTASLER-L;Initial Catalog=News;Integrated Security=True;TrustServerCertificate=true"))
         {
-            entry.Headline,
-            entry.Message,
-            PublishTime = entry.publishTime != default ? entry.publishTime : DateTime.UtcNow/*,
-            tokenInfo.SiteId,
-            tokenInfo.PersonId*/
-        });
+            try
+            {
+                List<string> imageList = newsEntry.ImageList;
+                var response = await sqlCon.ExecuteAsync(_queryPostNewsEntry,
+                    new
+                    {
+                        Headline = newsEntry.Headline, Message = newsEntry.Message, TappId = 1,
+                        publishTime = newsEntry.PublishTime, hidden = newsEntry.hidden,
+                        lastModificationTime = DateTime.Now
+                    }
+                );
+                Console.WriteLine(response);
+                /*foreach (var s in imageList)
+                {
+                    await sqlCon.ExecuteAsync(_queryPostNewsEntry_AddImage, new { NewsEntryId = 1, Image = s });
+                }*/
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                //_logger.LogError("Inserting row in NewsEntries failed.", ex);
+                throw ex;
+            }
+        }
     }
 
+    public async Task<int> Update(NewsEntry newsEntry)
+    {
+        Console.WriteLine("Create");
+        using (var sqlCon =
+               new SqlConnection(
+                   "Data Source=W-MTASLER-L;Initial Catalog=News;Integrated Security=True;TrustServerCertificate=true"))
+        {
+            try
+            {
+                List<string> imageList = newsEntry.ImageList;
+                var response = await sqlCon.ExecuteAsync(_queryPostNewsEntry,
+                    new
+                    {
+                        Headline = newsEntry.Headline, Message = newsEntry.Message, TappId = 1,
+                        publishTime = newsEntry.PublishTime, hidden = newsEntry.hidden,
+                        lastModificationTime = DateTime.Now
+                    }
+                );
+                Console.WriteLine(response);
+                /*foreach (var s in imageList)
+                {
+                    await sqlCon.ExecuteAsync(_queryPostNewsEntry_AddImage, new { NewsEntryId = 1, Image = s });
+                }*/
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                //_logger.LogError("Inserting row in NewsEntries failed.", ex);
+                throw ex;
+            }
+        }
+    }
+
+    public async Task<int> Patch(NewsEntry newsEntry)
+    {
+        Console.WriteLine("Create");
+        using (var sqlCon =
+               new SqlConnection(
+                   "Data Source=W-MTASLER-L;Initial Catalog=News;Integrated Security=True;TrustServerCertificate=true"))
+        {
+            try
+            {
+                List<string> imageList = newsEntry.ImageList;
+                var response = await sqlCon.ExecuteAsync(_queryPostNewsEntry,
+                    new
+                    {
+                        Headline = newsEntry.Headline, Message = newsEntry.Message, TappId = 1,
+                        publishTime = newsEntry.PublishTime, hidden = newsEntry.hidden,
+                        lastModificationTime = DateTime.Now
+                    }
+                );
+                Console.WriteLine(response);
+                /*foreach (var s in imageList)
+                {
+                    await sqlCon.ExecuteAsync(_queryPostNewsEntry_AddImage, new { NewsEntryId = 1, Image = s });
+                }*/
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                //_logger.LogError("Inserting row in NewsEntries failed.", ex);
+                throw ex;
+            }
+        }
+    }
+    
     /// <summary>
     /// Delete an entry by id
     /// </summary>
@@ -98,13 +285,9 @@ public class NewsRepository : INewsRepository
     /// <returns></returns>
     public async Task<int> Delete(int id)
     {
-        // Delete by id AND siteId to avoid deleting news from other pages
-        const string query = "DELETE FROM news WHERE id = @id AND site_id = @siteId";
-
+        Console.WriteLine("Delete");
         /*if (_tokenInfoProvider.GetPayloadSubject() is not LocationUserTokenPayload tokenInfo)
             throw new Exception("Operation is not permitted");*/
-
-        using var cn = await _connectionProvider.GetConnection();
-        return await cn.ExecuteAsync(query, new {id/*, tokenInfo.SiteId*/});
+        return 0;
     }
 }

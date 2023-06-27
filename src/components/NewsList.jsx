@@ -8,8 +8,8 @@ const NewsList = ({news, now, onPut, onPatch, onDelete, frontendURL}) =>
             news.map(element =>
             {
                 if(!element)
-                    return ""
-                return (element && element.id && element.imageList && element.publishTime && element.publishTimestamp)
+                    return "no content"
+                return (element && element.id && element.publishTime)
                 ?
                     <NewsEntry
                         key={element.id}

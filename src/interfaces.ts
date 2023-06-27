@@ -2,7 +2,7 @@ export interface IResponse {
     headline: string;
     id: string;
     message: string;
-    imageList: Array<string>;
+    imageList: Array<string> | null;
     publishTime: string;
     publishTimestamp: number;
     hidden: boolean | undefined;

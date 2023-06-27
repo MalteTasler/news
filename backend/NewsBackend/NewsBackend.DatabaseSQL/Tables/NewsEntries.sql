@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [dbo].[NewsEntries]
 (
-	[Id] INT NOT NULL PRIMARY KEY,
-	[Title] nvarchar,
-	[Message] nvarchar,
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY,
+	[Title] nvarchar(255),
+	[Message] nvarchar(MAX),
 	[TappId] bigint,
 	[IsHidden] bit,
 	[LastModificationTime] DATETIME2(3),
