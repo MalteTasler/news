@@ -45,6 +45,14 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Chayns.Backend.Api": {
+              "target": "Package",
+              "version": "[1.0.11, )"
+            },
+            "ChaynsBackendApiHelper": {
+              "target": "Package",
+              "version": "[2.0.37, )"
+            },
             "Dapper": {
               "target": "Package",
               "version": "[2.0.143, )"
@@ -60,6 +68,14 @@
             "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
               "target": "Package",
               "version": "[1.18.1, )"
+            },
+            "Npgsql": {
+              "target": "Package",
+              "version": "[8.0.0-preview.4, )"
+            },
+            "OpenChaynsAuth": {
+              "target": "Package",
+              "version": "[1.2.0, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

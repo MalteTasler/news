@@ -1,9 +1,11 @@
 ﻿using System.Web.Http.Cors;
 using Dapper;
+// using Chayns.Auth.ApiExtensions;
+// using Chayns.Auth.Shared.Constants;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.Data.SqlClient;
-using NewsBackend.Interfaces;
+using Microsoft.Extensions.Options;
+using NewsBackend.Configuration;
 using NewsBackend.Models;
 
 namespace NewsBackend.Controllers
@@ -14,14 +16,20 @@ namespace NewsBackend.Controllers
     public class NewsController : ControllerBase
     {
         private readonly ILogger<NewsController> _logger;
-        private readonly IDBContext _dbContext;
+        private readonly ConnectionString _connectionString;
 
         private readonly string _queryGetAllNews = "SELECT * FROM viNewsEntries";
 
-        public NewsController(ILogger<NewsController> logger)
+        private readonly string _queryPostNewsEntry_AddImage = 
+            "INSERT INTO Images (NewsEntryId, Url) VALUES (@NewsEntryId, @Image)";
+        private readonly string _queryPostNewsEntry =
+            "INSERT INTO NewsEntries (Title, Message, TappId, PublishTime, IsHidden, LastModificationTime) VALUES (@Headline, @Message, @TappId, @publishTime, @hidden, @lastModificationTime)";
+
+        public NewsController(ILogger<NewsController> logger, IOptions<ConnectionString> connectionString)
         {
             _logger = logger;
             _logger.LogInformation("Application is setting up");
+            _connectionString = connectionString.Value;
         }
 
         [HttpGet(Name = "GetMultipleNews")]
@@ -30,7 +38,7 @@ namespace NewsBackend.Controllers
             // Data Source=W-MTASLER-L;Initial Catalog=News;Integrated Security=True
             // Data Source=W-MTASLER-L;Initial Catalog=News;Integrated Security=True;User ID=ApplicationASP.NETDebug;Password=Tobit913
             // Data Source=W-MTASLER-L;Initial Catalog=News;Integrated Security=True;TrustServerCertificate=true
-            using (var sqlCon = new SqlConnection("Data Source=W-MTASLER-L;Initial Catalog=News;Integrated Security=True;TrustServerCertificate=true")/*await _dbContext.GetDBContext()*/)
+            using (var sqlCon = new SqlConnection("Data Source=W-MTASLER-L;Initial Catalog=News;Integrated Security=True;TrustServerCertificate=true"))
             {
                 try
                 {
@@ -50,7 +58,7 @@ namespace NewsBackend.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetMultipleNews(string id, bool adminMode = true)
         {
-            using (var sqlCon = new SqlConnection("Data Source=W-MTASLER-L;Initial Catalog=News;Integrated Security=True;TrustServerCertificate=true")/*await _dbContext.GetDBContext()*/)
+            using (var sqlCon = new SqlConnection("Data Source=W-MTASLER-L;Initial Catalog=News;Integrated Security=True;TrustServerCertificate=true"))
             {
                 try
                 {
@@ -65,10 +73,30 @@ namespace NewsBackend.Controllers
             }
         }
         [HttpPost(Name = "PostNewsEntry")]
-        public IActionResult PostNewsEntry([FromBody] NewsEntry newsEntry)
+        public async Task<IActionResult> PostNewsEntry([FromBody] NewsEntry newsEntry)
         {
-            Console.WriteLine("post with body " + newsEntry);
-            return Ok("Post Ok");
+            using (var sqlCon =
+                   new SqlConnection(
+                       "Data Source=W-MTASLER-L;Initial Catalog=News;Integrated Security=True;TrustServerCertificate=true"))
+            {
+                try
+                {
+                    Console.WriteLine("post with body " + newsEntry.publishTime + newsEntry.publishTimestamp + newsEntry.hidden + newsEntry.Headline + newsEntry.Message + newsEntry.ImageList);
+                    var response = await sqlCon.ExecuteAsync(_queryPostNewsEntry, new { Headline = newsEntry.Headline, Message = newsEntry.Message, TappId = 1, publishTime = newsEntry.publishTime, hidden = newsEntry.hidden, lastModificationTime = DateTime.Now });
+                    Console.WriteLine(response);
+                    List<string> imageList = newsEntry.ImageList;
+                    /*foreach (var s in imageList)
+                    {
+                        await sqlCon.ExecuteAsync(_queryPostNewsEntry_AddImage, new { NewsEntryId = 1, Image = s });
+                    }*/
+                    return Ok("Post Ok");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError("Reading rows in NewsEntries failed.", ex);
+                    throw ex;
+                }
+            }
         }
         [HttpPut("{id}", Name = "PutNewsEntry")]
         public IActionResult PutNewsEntry(int id, [FromBody] NewsEntry newsEntry)
