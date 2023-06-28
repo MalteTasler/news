@@ -5,7 +5,7 @@ import imageUpload from "chayns-components/lib/utils/imageUpload"
 import styles from "./EditNewsEntry.module.css"
 import appStyles from "./App.module.css"
 
-const EditNewsEntry = ({id, onPublish, now, initMessage, initTitle, initImageList}) =>
+const EditNewsEntry = ({id, tappId, onPublish, now, initMessage, initTitle, initImageList}) =>
 {
     const [message, setMessage] = useState(initMessage)
     const [title, setTitle] = useState(initTitle)
@@ -20,6 +20,7 @@ const EditNewsEntry = ({id, onPublish, now, initMessage, initTitle, initImageLis
         onPublish(
             {
                 id,
+                tappId,
                 imageList: imageURLs,
                 headline: title,
                 message,
@@ -130,6 +131,7 @@ const EditNewsEntry = ({id, onPublish, now, initMessage, initTitle, initImageLis
 }
 EditNewsEntry.propTypes = {
     id: PropTypes.string.isRequired,
+    tappId: PropTypes.number.isRequired,
     onPublish: PropTypes.func.isRequired,
     now: PropTypes.shape({
         getTime: PropTypes.func

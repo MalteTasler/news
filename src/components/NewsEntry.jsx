@@ -5,7 +5,7 @@ import Footer from './Footer'
 import styles from './NewsEntry.module.css'
 import EditNewsEntry from "./EditNewsEntry"
 
-const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp, onPut, onPatch, onDelete, frontendURL, now, hidden}) =>
+const NewsEntry = ({id, tappId, title, message, imageList, publishTime, publishTimestamp, onPut, onPatch, onDelete, frontendURL, now, hidden}) =>
 {
     // console.log("render news entry ....................... ", imageList, imageList.length)
     const [editMode, setEditMode] = useState(false)
@@ -191,6 +191,7 @@ const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp
                             <div>
                                 <EditNewsEntry
                                     id = {id}
+                                    tappId={tappId}
                                     onPublish = {handlePut}
                                     now = {now}
                                     initMessage = {message}
@@ -219,6 +220,7 @@ const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp
 }
 NewsEntry.propTypes = {
     id: PropTypes.string.isRequired,
+    tappId: PropTypes.number.isRequired,
     title: PropTypes.string,
     message: PropTypes.string.isRequired,
     imageList: PropTypes.arrayOf(PropTypes.string),

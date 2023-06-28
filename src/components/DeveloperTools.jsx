@@ -3,9 +3,15 @@ import PropTypes from "prop-types"
 import { Accordion, Checkbox } from 'chayns-components'
 import styles from "./DeveloperTools.module.css"
 
-const DeveloperTools = ({numberOfDisplayedNews, numberOfFetchedNews, numberOfDatabaseNews, showNews, cbShowNewsOnChange, useDevBackend, cbUseDevBackendOnChange}) =>
+const DeveloperTools = ({tappId, numberOfDisplayedNews, numberOfFetchedNews, numberOfDatabaseNews, showNews, cbShowNewsOnChange, useDevBackend, cbUseDevBackendOnChange}) =>
     <Accordion head = "Developer Tools" open dafaultOpened>
         <div className = {styles.developerToolsFrame}>  
+            <div className={styles.tappIdDisplay}>
+                <p className={styles.tappIdLabel}>    
+                    tappId = {tappId}
+                </p>
+                <i className="fa fa-eye" /><br />
+            </div>
             Number of News in the databse = {numberOfDatabaseNews}<br />
             Number of fetched News = {numberOfFetchedNews}<br />
             Number of displayed News = {numberOfDisplayedNews}
@@ -30,13 +36,22 @@ const DeveloperTools = ({numberOfDisplayedNews, numberOfFetchedNews, numberOfDat
                     Frontend Code: <a href="https://github.com/MalteTasler/news" target="_blank" rel="noreferrer">GitHub</a>
                 </li>
                 <li>
-                    Backend Code: <a href="https://schule.chayns.site/admin/code-editor?backendId=f11828e3" target="_blank" rel="noreferrer">chayns.Codes</a>
+                    Backend Code: 
+                    <ul>
+                        <li>
+                            <a href="https://schule.chayns.site/admin/code-editor?backendId=f11828e3" target="_blank" rel="noreferrer">chayns.Codes</a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/MalteTasler/news-backend" target="_blank" rel="noreferrer">GitHub (Private - ask for permissions)</a>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </div>
     </Accordion>
 
 DeveloperTools.propTypes = {
+    tappId: PropTypes.number.isRequired,
     numberOfDatabaseNews: PropTypes.number.isRequired,
     numberOfFetchedNews: PropTypes.number.isRequired,
     numberOfDisplayedNews: PropTypes.number.isRequired,

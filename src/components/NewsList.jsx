@@ -2,7 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import NewsEntry from "./NewsEntry"
 
-const NewsList = ({news, now, onPut, onPatch, onDelete, frontendURL}) =>
+const NewsList = ({tappId, news, now, onPut, onPatch, onDelete, frontendURL}) =>
     <div id = "news_list">
         {
             news.map(element =>
@@ -14,6 +14,7 @@ const NewsList = ({news, now, onPut, onPatch, onDelete, frontendURL}) =>
                     <NewsEntry
                         key={element.id}
                         id={element.id}
+                        tappId={tappId}
                         title = {element.headline}
                         message = {element.message}
                         imageList = {element.imageList}
@@ -32,6 +33,7 @@ const NewsList = ({news, now, onPut, onPatch, onDelete, frontendURL}) =>
         }
     </div>
 NewsList.propTypes = {
+    tappId: PropTypes.number.isRequired,
     news: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string
     })).isRequired,

@@ -12,6 +12,7 @@ const App = () => {
     const frontendURL = "https://schule.chayns.net/news-page-react"
     const fetchURL = ["https://localhost:7106/news", "https://run.chayns.codes/f11828e3/api"]
     const adminMode : boolean = chayns.env.user.adminMode as boolean
+    const tappId : number = chayns.env.site.tapp.id as number
     const count = 10 // maximum number of news to fetch
     let now = new Date()
 
@@ -37,7 +38,7 @@ const App = () => {
         */
     }
     function getTimestamp(newest = false):string | number {
-        if(!news || !Array.isArray(news) || news.length <= 1 || newest) { // if no news entries are loaded yet or the parmeter "newest" is set to true, just use the current timestamp (timestamp when the page was loaded)
+        if(!news || !Array.isArray(news) || news.length <= 1 || newest) { // if no news entries are loaded yet or the parmeter "newest" is set to true, just use the current timestamp (timestamp when the page was loaded) which can be done by setting it to 0
             // console.log("give now time")
             return now.getTime()
         }
@@ -51,7 +52,7 @@ const App = () => {
     const setShowNewsFunc = (data : boolean) => {
         setShowNews(data)
     }
-    const setUseDevBackendFunc = async(data : boolean) => {
+    const setUseDevBackendFunc = (data : boolean) => {
         // console.log("switch to dev backend ", data)
         setUseDevBackend(data)
     }
@@ -61,16 +62,12 @@ const App = () => {
         if(!param?.M) // if no parameter for a news entry is used in the URL, load multiple entries
         {
             // generate fetchURL with parameters
-            const fetchURLWithParameters = `${fetchURL[useDevBackend ? 0 : 1]}?timestamp=${getTimestamp(!offset)}&count=${count}&adminMode=${adminMode as unknown as string}`
+            const fetchURLWithParameters = `${fetchURL[useDevBackend ? 0 : 1]}?tappId=${tappId}&timestamp=${getTimestamp(!offset)}&count=${count}&adminMode=${adminMode as unknown as string}`
     
             // try to load news entries
-             console.log("try to fetch data via URI ", fetchURLWithParameters, useDevBackend ? 0 : 1, fetchURL[useDevBackend ? 0 : 1])
-            const response = await fetch(fetchURLWithParameters
-                /* , {
-                    mode: 'no-cors'
-                } */
-            )
-             console.log("unparsed response ", response)
+            console.log("try to fetch data via URI ", fetchURLWithParameters, useDevBackend ? 0 : 1, fetchURL[useDevBackend ? 0 : 1])
+            const response = await fetch(fetchURLWithParameters)
+            console.log("unparsed response ", response)
             if(!response.ok)
                 return false
             const parsedResponse = await response.json() as IListResponse
@@ -79,6 +76,8 @@ const App = () => {
             setNews((prevState:INews[]):INews[] => {
                 if (offset)
                 {
+                    console.log("as offset is true concat the list", itemList)
+                    itemList.shift();
                     return (prevState.concat(itemList))
                 }
                 return (itemList)
@@ -217,10 +216,12 @@ const App = () => {
             {adminMode &&
                 <div>
                     <AddNewsEntry
+                        tappId = {tappId}
                         onPublish = {publish}
                         now = {now} 
                     />
                     <DeveloperTools 
+                        tappId = {tappId}
                         numberOfDisplayedNews = {numberOfDisplayedNews}
                         numberOfFetchedNews = {numberOfFetchedNews}
                         numberOfDatabaseNews = {numberOfDatabaseNews}
@@ -240,7 +241,15 @@ const App = () => {
                         &&
                             <div>Param {URLparam.M}</div>
                         }
-                        test<NewsList news = {news} now = {now} onPut = {publish} onPatch = {patchEntry} onDelete = {deleteEntry} frontendURL = {frontendURL} /> 
+                        <NewsList 
+                            tappId = {tappId} 
+                            news = {news} 
+                            now = {now} 
+                            onPut = {publish} 
+                            onPatch = {patchEntry} 
+                            onDelete = {deleteEntry} 
+                            frontendURL = {frontendURL} 
+                        /> 
                         {!URLparam?.M
                         &&
                             <div className={styles.btContainer as string}>

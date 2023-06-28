@@ -6,3 +6,9 @@
     flex-direction: column;
     padding: 19px;
 }
+.tappIdDisplay {
+    display: flex;
+}
+.tappIdLabel {
+    margin-right: 19px;
+}
