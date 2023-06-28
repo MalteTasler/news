@@ -15,7 +15,7 @@ const App = () => {
     const count = 10 // maximum number of news to fetch
     let now = new Date()
 
-    const [useDevBackend, setUseDevBackend] = useState(false)
+    const [useDevBackend, setUseDevBackend] = useState(true)
     const [news, setNews] = useState<INews[]>([])
     const [URLparam, setURLparam] = useState<IParameters>()
     const [showNews, setShowNews] = useState(true)
