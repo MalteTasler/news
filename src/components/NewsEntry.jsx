@@ -7,7 +7,7 @@ import EditNewsEntry from "./EditNewsEntry"
 
 const NewsEntry = ({id, tappId, title, message, imageList, publishTime, publishTimestamp, onPut, onPatch, onDelete, frontendURL, now, hidden}) =>
 {
-    // console.log("render news entry ....................... ", imageList, imageList.length)
+    console.log("render news entry ....................... ", hidden, chayns.env.user.adminMode)
     const [editMode, setEditMode] = useState(false)
     const [isVisible] = useState(true)
     const contextMenuItems = 
@@ -161,7 +161,7 @@ const NewsEntry = ({id, tappId, title, message, imageList, publishTime, publishT
     } 
     return(
         <div>
-            {(chayns.env.user.adminMode || isVisible)
+            {(chayns.env.user.adminMode || !hidden)
             &&
                 <div className = {styles.newsEntryFrame}>
                     <div className= "content__card" id = {id}>

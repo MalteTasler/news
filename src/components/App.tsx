@@ -23,7 +23,7 @@ const App = () => {
     const [counter, setCounter] = useState(0)
     const [numberOfFetchedNews, setNumberOfFetchedNews] = useState(0)
     const [numberOfDisplayedNews, setNumberOfDisplayedNews] = useState(0)
-    const [numberOfDatabaseNews, setNumberOfDatabaseNews] = useState(0)
+    const [numberOfDatabaseNews, setNumberOfDatabaseNews] = useState(null)
     const [loadMoreButtonIsEnabled, setLoadMoreButtonIsEnabled] = useState(false)
 
     const laodMore = async() => {
@@ -67,39 +67,48 @@ const App = () => {
             // try to load news entries
             console.log("try to fetch data via URI ", fetchURLWithParameters, useDevBackend ? 0 : 1, fetchURL[useDevBackend ? 0 : 1])
             const response = await fetch(fetchURLWithParameters)
-            console.log("unparsed response ", response)
+            console.log("unparsed response ", response, response.status, response.status === 204)
             if(!response.ok)
                 return false
-            const parsedResponse = await response.json() as IListResponse
-            const { itemList, length } = parsedResponse
-            console.log("fetched data with URL: ", fetchURLWithParameters, parsedResponse)
-            setNews((prevState:INews[]):INews[] => {
-                if (offset)
-                {
-                    console.log("as offset is true concat the list", itemList)
-                    itemList.shift();
-                    return (prevState.concat(itemList))
-                }
-                return (itemList)
-            })
-            setNumberOfDatabaseNews(length)
-            const number = itemList.length; // number of new fetched entries
-            // console.log(`fetched ${number} new entries`)
-            if(offset)
+            if(response.status === 204) // No Content
             {
-                setNumberOfFetchedNews(prevState => prevState + number)
-                if(number > 10)
-                    setNumberOfDisplayedNews(prevState => prevState + 10)
-                else
-                    setNumberOfDisplayedNews(prevState => prevState + number)
+                setNumberOfDatabaseNews(0)
+                setNumberOfFetchedNews(0)
+                setNumberOfDisplayedNews(0)
             }
             else
             {
-                setNumberOfFetchedNews(number)
-                if(number > 10)
-                    setNumberOfDisplayedNews(10)
+                const parsedResponse = await response.json() as IListResponse
+                const { itemList, length } = parsedResponse
+                console.log("fetched data with URL: ", fetchURLWithParameters, parsedResponse)
+                setNews((prevState:INews[]):INews[] => {
+                    if (offset)
+                    {
+                        console.log("as offset is true concat the list", itemList)
+                        itemList.shift();
+                        return (prevState.concat(itemList))
+                    }
+                    return (itemList)
+                })
+                setNumberOfDatabaseNews(length)
+                const number = itemList.length; // number of new fetched entries
+                // console.log(`fetched ${number} new entries`)
+                if(offset)
+                {
+                    setNumberOfFetchedNews(prevState => prevState + number)
+                    if(number > 10)
+                        setNumberOfDisplayedNews(prevState => prevState + 10)
+                    else
+                        setNumberOfDisplayedNews(prevState => prevState + number)
+                }
                 else
-                    setNumberOfDisplayedNews(number)
+                {
+                    setNumberOfFetchedNews(number)
+                    if(number > 10)
+                        setNumberOfDisplayedNews(10)
+                    else
+                        setNumberOfDisplayedNews(number)
+                }
             }
         }
         else // otherwise fetch only the news entry with the id defined in parameter
@@ -155,7 +164,7 @@ const App = () => {
         // console.log("try to patch news entry with that - ", data)
         await fetch(`${fetchURL[useDevBackend ? 0 : 1]}/${data.id as string}/hidden` , {
             method: "PATCH",
-            body: JSON.stringify(data.hidden),
+            body: JSON.stringify(data),
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
             }
@@ -234,41 +243,51 @@ const App = () => {
             }
             <br />
             {
-                (news && Array.isArray(news) && news.length > 0 && showNews) 
-                ? 
-                    <div className={styles.newsContainer as string}>
-                        {URLparam?.M
-                        &&
-                            <div>Param {URLparam.M}</div>
+                (showNews)
+                &&
+                    (numberOfDatabaseNews === null) 
+                    ? 
+                        <div className = {styles.loading as string}>
+                            <br />waiting for news... {console.log(numberOfDatabaseNews)}
+                        </div>
+                    :
+                        <div>
+                        {
+                            (numberOfDatabaseNews && news && Array.isArray(news) && news.length > 0)
+                            ?
+                                <div className={styles.newsContainer as string}>
+                                    {URLparam?.M
+                                    &&
+                                        <div>Param {URLparam.M}</div>
+                                    }
+                                    <NewsList 
+                                        tappId = {tappId} 
+                                        news = {news} 
+                                        now = {now} 
+                                        onPut = {publish} 
+                                        onPatch = {patchEntry} 
+                                        onDelete = {deleteEntry} 
+                                        frontendURL = {frontendURL} 
+                                    /> 
+                                    {!URLparam?.M
+                                    &&
+                                        <div className={styles.btContainer as string}>
+                                            <Button disabled = {!loadMoreButtonIsEnabled} id={styles.btLoadMore as string} onClick={() => laodMore()}>Mehr</Button>
+                                        </div>
+                                    }
+                                    {URLparam?.M
+                                    &&
+                                        <div className={styles.btContainer as string}>
+                                            <Button id={styles.btLoadMore as string} onClick={() => navigateToAllNews()}>
+                                                Alle News anzeigen
+                                            </Button>
+                                        </div>
+                                    }
+                                </div>
+                            :
+                                "no news available."
                         }
-                        <NewsList 
-                            tappId = {tappId} 
-                            news = {news} 
-                            now = {now} 
-                            onPut = {publish} 
-                            onPatch = {patchEntry} 
-                            onDelete = {deleteEntry} 
-                            frontendURL = {frontendURL} 
-                        /> 
-                        {!URLparam?.M
-                        &&
-                            <div className={styles.btContainer as string}>
-                                <Button disabled = {!loadMoreButtonIsEnabled} id={styles.btLoadMore as string} onClick={() => laodMore()}>Mehr</Button>
-                            </div>
-                        }
-                        {URLparam?.M
-                        &&
-                            <div className={styles.btContainer as string}>
-                                <Button id={styles.btLoadMore as string} onClick={() => navigateToAllNews()}>
-                                    Alle News anzeigen
-                                </Button>
-                            </div>
-                        }
-                    </div>
-                :
-                    <div className = {styles.loading as string}>
-                        <br />waiting for news...
-                    </div>
+                        </div>   
             }
         </div>
     )
