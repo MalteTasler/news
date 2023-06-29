@@ -8,7 +8,11 @@
 }
 .tappIdDisplay {
     display: flex;
+    cursor: pointer;
 }
 .tappIdLabel {
-    margin-right: 19px;
+    margin-right: 12px;
+}
+.tappIdCopiedLabel {
+    margin-left: 12px;
 }
