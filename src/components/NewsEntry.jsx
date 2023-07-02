@@ -9,7 +9,6 @@ const NewsEntry = ({id, tappId, title, message, imageList, publishTime, publishT
 {
     console.log("render news entry ....................... ", hidden, chayns.env.user.adminMode)
     const [editMode, setEditMode] = useState(false)
-    const [isVisible] = useState(true)
     const contextMenuItems = 
         {
             delete: {
@@ -51,7 +50,7 @@ const NewsEntry = ({id, tappId, title, message, imageList, publishTime, publishT
                     setEditMode(!editMode)
                 },
                 text: "View",
-                icon: "fa fa-view"
+                icon: "fa fa-check"
             },
             hide: {
                 className: null,
