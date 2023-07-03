@@ -1,6 +1,6 @@
 export interface IResponse {
     headline: string;
-    id: string;
+    id: number;
     message: string;
     imageList: Array<string> | null;
     publishTime: string;
@@ -13,7 +13,7 @@ export interface IListResponse {
 }
 export interface INews {
     headline: string;
-    id: string | undefined;
+    id: number | undefined;
     siteId: string;
     tappId: number;
     message: string;

@@ -266,6 +266,7 @@ const App = () => {
             {
                 (showNews)
                 &&
+                <div>{
                     (numberOfDatabaseNews === null) 
                     ? 
                         <div className = {styles.loading as string}>
@@ -310,6 +311,7 @@ const App = () => {
                                 "no news available."
                         }
                         </div>   
+                }</div>
             }
         </div>
     )

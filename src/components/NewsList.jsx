@@ -37,7 +37,7 @@ NewsList.propTypes = {
     siteId: PropTypes.string.isRequired,
     tappId: PropTypes.number.isRequired,
     news: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string
+        id: PropTypes.number
     })).isRequired,
     now: PropTypes.shape({}).isRequired,
     onPut: PropTypes.func.isRequired,

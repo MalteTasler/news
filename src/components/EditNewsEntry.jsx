@@ -131,7 +131,7 @@ const EditNewsEntry = ({id, siteId, tappId, onPublish, now, initMessage, initTit
     )
 }
 EditNewsEntry.propTypes = {
-    id: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
     siteId: PropTypes.string.isRequired,
     tappId: PropTypes.number.isRequired,
     onPublish: PropTypes.func.isRequired,

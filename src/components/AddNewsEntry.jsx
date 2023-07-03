@@ -10,7 +10,7 @@ const AddNewsEntry = ({siteId, tappId, onPublish, now}) =>
     >
         <div id = {styles.addNewsEntryFrame}>
             <EditNewsEntry
-                id=""
+                id={0}
                 siteId={siteId}
                 tappId = {tappId}
                 onPublish = {onPublish}

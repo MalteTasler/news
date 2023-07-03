@@ -27,10 +27,6 @@ const DeveloperTools = ({siteId, tappId, numberOfDisplayedNews, numberOfFetchedN
         navigator.clipboard.writeText(tappId)
         setCopiedTappId(true)
     }
-    const onBackendSelect = (data) => {
-        console.log(data)
-        setUseBackend(data.selection[0].id)
-    }
     return(
         <Accordion head = "Developer Tools" open dafaultOpened>
             <div className = {styles.developerToolsFrame}>  

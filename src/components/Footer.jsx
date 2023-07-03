@@ -10,7 +10,7 @@ const Footer = ({date, id, frontendURL}) =>
     </div>
 Footer.propTypes = {
     date: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
     frontendURL: PropTypes.string.isRequired
 }
 export default Footer

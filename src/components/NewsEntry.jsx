@@ -223,7 +223,7 @@ const NewsEntry = ({id, siteId, tappId, title, message, imageList, publishTime, 
     )
 }
 NewsEntry.propTypes = {
-    id: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
     siteId: PropTypes.string.isRequired,
     tappId: PropTypes.number.isRequired,
     title: PropTypes.string,
