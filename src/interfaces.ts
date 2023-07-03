@@ -14,6 +14,8 @@ export interface IListResponse {
 export interface INews {
     headline: string;
     id: string | undefined;
+    siteId: string;
+    tappId: number;
     message: string;
     imageList: Array<string>;
     publishTime: string;

@@ -4,13 +4,14 @@ import { Accordion } from 'chayns-components'
 import EditNewsEntry from "./EditNewsEntry"
 import styles from "./AddNewsEntry.module.css"
 
-const AddNewsEntry = ({tappId, onPublish, now}) => 
+const AddNewsEntry = ({siteId, tappId, onPublish, now}) => 
     <Accordion
         head = "Create News Entry"
     >
         <div id = {styles.addNewsEntryFrame}>
             <EditNewsEntry
                 id=""
+                siteId={siteId}
                 tappId = {tappId}
                 onPublish = {onPublish}
                 now = {now}
@@ -21,6 +22,7 @@ const AddNewsEntry = ({tappId, onPublish, now}) =>
         </div>
     </Accordion>
 AddNewsEntry.propTypes = {
+    siteId: PropTypes.string.isRequired,
     tappId: PropTypes.number.isRequired,
     onPublish: PropTypes.func.isRequired,
     now: PropTypes.shape({

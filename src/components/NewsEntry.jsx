@@ -5,7 +5,7 @@ import Footer from './Footer'
 import styles from './NewsEntry.module.css'
 import EditNewsEntry from "./EditNewsEntry"
 
-const NewsEntry = ({id, tappId, title, message, imageList, publishTime, publishTimestamp, onPut, onPatch, onDelete, frontendURL, now, hidden}) =>
+const NewsEntry = ({id, siteId, tappId, title, message, imageList, publishTime, publishTimestamp, onPut, onPatch, onDelete, frontendURL, now, hidden}) =>
 {
     console.log("render news entry ....................... ", hidden, chayns.env.user.adminMode)
     const [editMode, setEditMode] = useState(false)
@@ -58,6 +58,8 @@ const NewsEntry = ({id, tappId, title, message, imageList, publishTime, publishT
                     onPatch(
                         {
                             id,
+                            siteId,
+                            tappId,
                             imageList,
                             headline: title,
                             message,
@@ -76,6 +78,8 @@ const NewsEntry = ({id, tappId, title, message, imageList, publishTime, publishT
                     onPatch(
                         {
                             id,
+                            siteId,
+                            tappId,
                             imageList,
                             headline: title,
                             message,
@@ -190,6 +194,7 @@ const NewsEntry = ({id, tappId, title, message, imageList, publishTime, publishT
                             <div>
                                 <EditNewsEntry
                                     id = {id}
+                                    siteId={siteId}
                                     tappId={tappId}
                                     onPublish = {handlePut}
                                     now = {now}
@@ -219,6 +224,7 @@ const NewsEntry = ({id, tappId, title, message, imageList, publishTime, publishT
 }
 NewsEntry.propTypes = {
     id: PropTypes.string.isRequired,
+    siteId: PropTypes.string.isRequired,
     tappId: PropTypes.number.isRequired,
     title: PropTypes.string,
     message: PropTypes.string.isRequired,

@@ -10,14 +10,16 @@ import { IResponse, IListResponse, INews, IParameters } from '../interfaces'
 
 const App = () => {
     const frontendURL = "https://schule.chayns.net/news-page-react"
-    const fetchURL = ["https://localhost:7106/news", "https://run.chayns.codes/f11828e3/api"]
+    const fetchURL = ["https://run.chayns.codes/f11828e3/api", "https://localhost:7106/news"]
     const adminMode : boolean = chayns.env.user.adminMode as boolean
+    const siteId : string = chayns.env.site.id as string
     const tappId : number = chayns.env.site.tapp.id as number
+    const tobitAccessToken : string = chayns.env.user.tobitAccessToken as string
     const count = 10 // maximum number of news to fetch
     let now = new Date()
 
-    const [useDevBackend, setUseDevBackend] = useState(true)
     const [news, setNews] = useState<INews[]>([])
+    const [useBackend, setUseBackend] = useState<number>(1)
     const [URLparam, setURLparam] = useState<IParameters>()
     const [showNews, setShowNews] = useState(true)
     const [counter, setCounter] = useState(0)
@@ -52,20 +54,16 @@ const App = () => {
     const setShowNewsFunc = (data : boolean) => {
         setShowNews(data)
     }
-    const setUseDevBackendFunc = (data : boolean) => {
-        // console.log("switch to dev backend ", data)
-        setUseDevBackend(data)
-    }
     
     const fetchNews = async(offset = false, param = URLparam) => {  // if offset is true, last value of current news array gets popped
         // console.log("param m ", param, param?.M, (param?.M === null || param?.M === undefined || param?.M === false))
         if(!param?.M) // if no parameter for a news entry is used in the URL, load multiple entries
         {
             // generate fetchURL with parameters
-            const fetchURLWithParameters = `${fetchURL[useDevBackend ? 0 : 1]}?tappId=${tappId}&timestamp=${getTimestamp(!offset)}&count=${count}&adminMode=${adminMode as unknown as string}`
+            const fetchURLWithParameters = `${fetchURL[useBackend]}?siteId=${siteId}&tappId=${tappId}&timestamp=${getTimestamp(!offset)}&count=${count}&adminMode=${adminMode as unknown as string}`
     
             // try to load news entries
-            console.log("try to fetch data via URI ", fetchURLWithParameters, useDevBackend ? 0 : 1, fetchURL[useDevBackend ? 0 : 1])
+            console.log("try to fetch data via URI ", fetchURLWithParameters)
             const response = await fetch(fetchURLWithParameters)
             console.log("unparsed response ", response, response.status, response.status === 204)
             if(!response.ok)
@@ -116,7 +114,7 @@ const App = () => {
             const id : string = param?.M as unknown as string
 
             // generate fetchURL with parameters
-            const fetchURLWithParameters = `${fetchURL[useDevBackend ? 0 : 1]}/${id}`
+            const fetchURLWithParameters = `${fetchURL[useBackend]}/${id}`
             // console.log("try to fetch one new entry with the following link. ", fetchURLWithParameters)
 
             // try to load news entries
@@ -133,7 +131,9 @@ const App = () => {
         if(news.find((entry) => 
             entry.id === data.id
         ))
+        {            
             await putEntry(data)
+        }
         else
             await postEntry(data)
         setCounter(c => c+1)
@@ -142,40 +142,59 @@ const App = () => {
         await fetchNews(false)
     }
     const postEntry = async(data : INews) => {
-        await fetch(fetchURL[useDevBackend ? 0 : 1] , {
+        const fetchURLWithParameters = `${fetchURL[useBackend]}`
+        console.log("POST ", data, JSON.stringify(data))
+        await fetch(fetchURLWithParameters , {
             method: "POST",
-            body: JSON.stringify(data),
+            body: JSON.stringify({
+                siteId: data.siteId,
+                tappId: data.tappId,
+                imageList: data.imageList,
+                headline: data.headline,
+                message: data.message,
+                publishTime: data.publishTime,
+                publishTimestamp: data.publishTimestamp,
+                hidden: data.hidden
+            }),
             headers: {
-                "Content-type": "application/json; charset=UTF-8"
+                "Content-type": "application/json; charset=UTF-8",
+                "Authorization" : `bearer ${tobitAccessToken}`
             }
         })
     }
     const putEntry = async(data : INews) => {
-        await fetch(`${fetchURL[useDevBackend ? 0 : 1]}/${data.id as string}` , {
+        const fetchURLWithParameters = `${fetchURL[useBackend]}/${data.id as string}`
+        console.log("PUT ", data, JSON.stringify(data))
+        await fetch(fetchURLWithParameters , {
             method: "PUT",
             body: JSON.stringify(data),
             headers: {
-                "Content-type": "application/json; charset=UTF-8"
+                "Content-type": "application/json; charset=UTF-8",
+                "Authorization" : `bearer ${tobitAccessToken}`
             }
         })
     }
     const patchEntry = async(data : INews) => {
         // ! hardcode TEST with prop 'hidden' for now
-        // console.log("try to patch news entry with that - ", data)
-        await fetch(`${fetchURL[useDevBackend ? 0 : 1]}/${data.id as string}/hidden` , {
+        const fetchURLWithParameters = `${fetchURL[useBackend]}/${data.id as string}/hidden`
+        console.log("PATCH ", data, JSON.stringify(data))
+        await fetch(fetchURLWithParameters , {
             method: "PATCH",
             body: JSON.stringify(data),
             headers: {
-                "Content-type": "application/json; charset=UTF-8"
+                "Content-type": "application/json; charset=UTF-8",
+                "Authorization" : `bearer ${tobitAccessToken}`
             }
         })
         await fetchNews(false)
     }
     const deleteEntry = async(id : string) => {
-        await fetch(`${fetchURL[useDevBackend ? 0 : 1]}/${id}` , {
+        const fetchURLWithParameters = `${fetchURL[useBackend]}/${id}`
+        await fetch(fetchURLWithParameters , {
             method: "DELETE",
             headers: {
-                "Content-type": "application/json; charset=UTF-8"
+                "Content-type": "application/json; charset=UTF-8",
+                "Authorization" : `bearer ${tobitAccessToken}`
             }
         })
         setCounter(c => c+1)
@@ -214,7 +233,7 @@ const App = () => {
         }
         void getItems()  
     },
-    [useDevBackend])
+    [useBackend])
 
     return (
         <div className = {styles.main as string}>
@@ -225,19 +244,21 @@ const App = () => {
             {adminMode &&
                 <div>
                     <AddNewsEntry
+                        siteId = {siteId}
                         tappId = {tappId}
                         onPublish = {publish}
                         now = {now} 
                     />
                     <DeveloperTools 
+                        siteId= {siteId}
                         tappId = {tappId}
                         numberOfDisplayedNews = {numberOfDisplayedNews}
                         numberOfFetchedNews = {numberOfFetchedNews}
                         numberOfDatabaseNews = {numberOfDatabaseNews}
                         showNews = {showNews}
                         cbShowNewsOnChange = {setShowNewsFunc}
-                        useDevBackend = {useDevBackend}
-                        cbUseDevBackendOnChange = {setUseDevBackendFunc}
+                        useBackend = {useBackend}
+                        setUseBackend = {setUseBackend}
                     />
                 </div>
             }
@@ -260,7 +281,8 @@ const App = () => {
                                     &&
                                         <div>Param {URLparam.M}</div>
                                     }
-                                    <NewsList 
+                                    <NewsList
+                                        siteId = {siteId} 
                                         tappId = {tappId} 
                                         news = {news} 
                                         now = {now} 

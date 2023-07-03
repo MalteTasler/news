@@ -6,13 +6,19 @@
     flex-direction: column;
     padding: 19px;
 }
-.tappIdDisplay {
+.IdDisplay {
     display: flex;
     cursor: pointer;
 }
-.tappIdLabel {
+.IdLabel {
     margin-right: 12px;
 }
-.tappIdCopiedLabel {
+.IdCopiedLabel {
     margin-left: 12px;
+}
+.selectBackend {
+    display: flex;
+}
+.selectButton {
+    margin-left: 9px;
 }
