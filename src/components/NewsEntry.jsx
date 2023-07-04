@@ -7,7 +7,7 @@ import EditNewsEntry from "./EditNewsEntry"
 
 const NewsEntry = ({id, siteId, tappId, title, message, imageList, publishTime, publishTimestamp, onPut, onPatch, onDelete, frontendURL, now, hidden}) =>
 {
-    // console.log("render news entry ....................... ", hidden, chayns.env.user.adminMode)
+    // console.log("render news entry ....................... ", publishTime, typeof publishTime)
     const [editMode, setEditMode] = useState(false)
     const contextMenuItems = 
         {
@@ -229,6 +229,7 @@ const NewsEntry = ({id, siteId, tappId, title, message, imageList, publishTime, 
                                 </div>
                                 <Footer 
                                     date = {getTimeAgo(publishTimestamp)} 
+                                    dateAbsolute = {publishTime}
                                     id = {id} 
                                     frontendURL = {frontendURL} 
                                 />
