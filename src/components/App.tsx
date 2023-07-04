@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react'
 import PropTypes from "prop-types"
 import { getParameters } from 'chayns-api'
@@ -8,13 +9,16 @@ import AddNewsEntry from './AddNewsEntry'
 import styles from './App.module.css'
 import { IResponse, IListResponse, INews, IParameters } from '../interfaces'
 
+require('../chayns.d')
+require('../chayns-components.d')
+
 const App = () => {
     const frontendURL = "https://schule.chayns.net/news-page-react"
     const fetchURL = ["https://run.chayns.codes/f11828e3/api", "https://localhost:7106/news"]
     const adminMode : boolean = chayns.env.user.adminMode as boolean
-    const siteId : string = chayns.env.site.id as string
-    const tappId : number = chayns.env.site.tapp.id as number
-    const tobitAccessToken : string = chayns.env.user.tobitAccessToken as string
+    const siteId : string = chayns.env.site.id 
+    const tappId : number = chayns.env.site.tapp.id 
+    const {tobitAccessToken} = chayns.env.user 
     const count = 10 // maximum number of news to fetch
     let now = new Date()
 
@@ -22,7 +26,7 @@ const App = () => {
     const [useBackend, setUseBackend] = useState<number>(1)
     const [URLparam, setURLparam] = useState<IParameters>()
     const [showNews, setShowNews] = useState(true)
-    const [counter, setCounter] = useState(0)
+    const [, setCounter] = useState(0)
     const [numberOfFetchedNews, setNumberOfFetchedNews] = useState(0)
     const [numberOfDisplayedNews, setNumberOfDisplayedNews] = useState(0)
     const [numberOfDatabaseNews, setNumberOfDatabaseNews] = useState(null)
@@ -63,9 +67,9 @@ const App = () => {
             const fetchURLWithParameters = `${fetchURL[useBackend]}?siteId=${siteId}&tappId=${tappId}&timestamp=${getTimestamp(!offset)}&count=${count}&adminMode=${adminMode as unknown as string}`
     
             // try to load news entries
-            console.log("try to fetch data via URI ", fetchURLWithParameters)
+            // console.log("try to fetch data via URI ", fetchURLWithParameters)
             const response = await fetch(fetchURLWithParameters)
-            console.log("unparsed response ", response, response.status, response.status === 204)
+            // console.log("unparsed response ", response, response.status, response.status === 204)
             if(!response.ok)
                 return false
             if(response.status === 204) // No Content
@@ -78,11 +82,11 @@ const App = () => {
             {
                 const parsedResponse = await response.json() as IListResponse
                 const { itemList, length } = parsedResponse
-                console.log("fetched data with URL: ", fetchURLWithParameters, parsedResponse)
+                // console.log("fetched data with URL: ", fetchURLWithParameters, parsedResponse)
                 setNews((prevState:INews[]):INews[] => {
                     if (offset)
                     {
-                        console.log("as offset is true concat the list", itemList)
+                        // console.log("as offset is true concat the list", itemList)
                         itemList.shift();
                         return (prevState.concat(itemList))
                     }
@@ -123,6 +127,7 @@ const App = () => {
             // console.log("fetched data: ", parsedResponse)
             setNews([parsedResponse])
         }
+        return 0
     }
     const publish = async(data : INews) => {
         // const delay = ms => new Promise(res => setTimeout(res, ms));
@@ -143,7 +148,7 @@ const App = () => {
     }
     const postEntry = async(data : INews) => {
         const fetchURLWithParameters = `${fetchURL[useBackend]}`
-        console.log("POST ", data, JSON.stringify(data))
+        // console.log("POST ", data, JSON.stringify(data))
         await fetch(fetchURLWithParameters , {
             method: "POST",
             body: JSON.stringify({
@@ -164,7 +169,7 @@ const App = () => {
     }
     const putEntry = async(data : INews) => {
         const fetchURLWithParameters = `${fetchURL[useBackend]}/${data.id as string}`
-        console.log("PUT ", data, JSON.stringify(data))
+        // console.log("PUT ", data, JSON.stringify(data))
         await fetch(fetchURLWithParameters , {
             method: "PUT",
             body: JSON.stringify(data),
@@ -177,7 +182,7 @@ const App = () => {
     const patchEntry = async(data : INews) => {
         // ! hardcode TEST with prop 'hidden' for now
         const fetchURLWithParameters = `${fetchURL[useBackend]}/${data.id as string}/hidden`
-        console.log("PATCH ", data, JSON.stringify(data))
+        // console.log("PATCH ", data, JSON.stringify(data))
         await fetch(fetchURLWithParameters , {
             method: "PATCH",
             body: JSON.stringify(data),
@@ -250,7 +255,7 @@ const App = () => {
                         now = {now} 
                     />
                     <DeveloperTools 
-                        siteId= {siteId}
+                        siteId = {siteId}
                         tappId = {tappId}
                         numberOfDisplayedNews = {numberOfDisplayedNews}
                         numberOfFetchedNews = {numberOfFetchedNews}
@@ -270,14 +275,14 @@ const App = () => {
                     (numberOfDatabaseNews === null) 
                     ? 
                         <div className = {styles.loading as string}>
-                            <br />waiting for news... {console.log(numberOfDatabaseNews)}
+                            <br />waiting for news...
                         </div>
                     :
                         <div>
                         {
                             (numberOfDatabaseNews && news && Array.isArray(news) && news.length > 0)
                             ?
-                                <div className={styles.newsContainer as string}>
+                                <div className = {styles.newsContainer as string}>
                                     {URLparam?.M
                                     &&
                                         <div>Param {URLparam.M}</div>
@@ -294,14 +299,25 @@ const App = () => {
                                     /> 
                                     {!URLparam?.M
                                     &&
-                                        <div className={styles.btContainer as string}>
-                                            <Button disabled = {!loadMoreButtonIsEnabled} id={styles.btLoadMore as string} onClick={() => laodMore()}>Mehr</Button>
+                                        <div className = {styles.btContainer as string}>
+                                            <Button 
+                                                disabled = {!loadMoreButtonIsEnabled} 
+                                                id = {styles.btLoadMore as string} 
+                                                onClick = {() => laodMore()}
+                                            >
+                                                Mehr
+                                            </Button>
                                         </div>
                                     }
                                     {URLparam?.M
                                     &&
-                                        <div className={styles.btContainer as string}>
-                                            <Button id={styles.btLoadMore as string} onClick={() => navigateToAllNews()}>
+                                        <div 
+                                            className = {styles.btContainer as string}
+                                        >
+                                            <Button 
+                                                id = {styles.btLoadMore as string} 
+                                                onClick = {() => navigateToAllNews()}
+                                            >
                                                 Alle News anzeigen
                                             </Button>
                                         </div>

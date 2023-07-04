@@ -4,7 +4,7 @@ import { Accordion, SelectButton, Checkbox } from 'chayns-components'
 import styles from "./DeveloperTools.module.css"
 
 const DeveloperTools = ({siteId, tappId, numberOfDisplayedNews, numberOfFetchedNews, numberOfDatabaseNews, showNews, cbShowNewsOnChange, useBackend, setUseBackend}) => {
-    console.log("render dev tools, provides ", useBackend)
+    // console.log("render dev tools, provides ", useBackend)
     const sbBackendList = [
             {
                 id: '0',
@@ -30,27 +30,27 @@ const DeveloperTools = ({siteId, tappId, numberOfDisplayedNews, numberOfFetchedN
     return(
         <Accordion head = "Developer Tools" open dafaultOpened>
             <div className = {styles.developerToolsFrame}>  
-                <div className={styles.IdDisplay} onClick={copySiteId}>
-                    <div className={styles.IdLabel}>    
+                <div className = {styles.IdDisplay} onClick={copySiteId}>
+                    <div className = {styles.IdLabel}>    
                         SiteId = {siteId}
                     </div>
-                    <i className="fa fa-copy" />
+                    <i className = "fa fa-copy" />
                     {
                         copiedSiteId &&
-                        <div className={styles.IdCopiedLabel}>
+                        <div className = {styles.IdCopiedLabel}>
                             ✅ Copied to clipboard.
                         </div>
                     }
                     <br />
                 </div>
-                <div className={styles.IdDisplay} onClick={copyTappId}>
-                    <div className={styles.IdLabel}>    
+                <div className = {styles.IdDisplay} onClick={copyTappId}>
+                    <div className = {styles.IdLabel}>    
                         TappId = {tappId}
                     </div>
-                    <i className="fa fa-copy" />
+                    <i className = "fa fa-copy" />
                     {
                         copiedTappId &&
-                        <div className={styles.IdCopiedLabel}>
+                        <div className = {styles.IdCopiedLabel}>
                             ✅ Copied to clipboard.
                         </div>
                     }
@@ -68,11 +68,11 @@ const DeveloperTools = ({siteId, tappId, numberOfDisplayedNews, numberOfFetchedN
                         title = "Select the backend"
                         list = {sbBackendList}
                         onSelect = {(data) => setUseBackend(data.selection[0].id)}
-                        listKey="id"
-                        listValue="name"
-                        selectedFlag="isSelected"
-                        showSelection={true}
-                        className={styles.selectButton}
+                        listKey = "id"
+                        listValue = "name"
+                        selectedFlag = "isSelected"
+                        showSelection = {true}
+                        className = {styles.selectButton}
                     />
                 </div>
                 <Checkbox

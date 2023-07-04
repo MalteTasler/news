@@ -10,8 +10,8 @@ const AddNewsEntry = ({siteId, tappId, onPublish, now}) =>
     >
         <div id = {styles.addNewsEntryFrame}>
             <EditNewsEntry
-                id={0}
-                siteId={siteId}
+                id = {0}
+                siteId = {siteId}
                 tappId = {tappId}
                 onPublish = {onPublish}
                 now = {now}

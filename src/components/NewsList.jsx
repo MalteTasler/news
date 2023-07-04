@@ -12,10 +12,10 @@ const NewsList = ({siteId, tappId, news, now, onPut, onPatch, onDelete, frontend
                 return (element && element.id && element.publishTime)
                 ?
                     <NewsEntry
-                        key={element.id}
-                        id={element.id}
-                        siteId={siteId}
-                        tappId={tappId}
+                        key = {element.id}
+                        id = {element.id}
+                        siteId = {siteId}
+                        tappId = {tappId}
                         title = {element.headline}
                         message = {element.message}
                         imageList = {element.imageList}

@@ -7,7 +7,7 @@ import EditNewsEntry from "./EditNewsEntry"
 
 const NewsEntry = ({id, siteId, tappId, title, message, imageList, publishTime, publishTimestamp, onPut, onPatch, onDelete, frontendURL, now, hidden}) =>
 {
-    console.log("render news entry ....................... ", hidden, chayns.env.user.adminMode)
+    // console.log("render news entry ....................... ", hidden, chayns.env.user.adminMode)
     const [editMode, setEditMode] = useState(false)
     const contextMenuItems = 
         {
@@ -27,7 +27,6 @@ const NewsEntry = ({id, siteId, tappId, title, message, imageList, publishTime, 
                     ]).then((result) => {
                         if(result === 1)
                         {
-                            /* console.log("try to delete new entry now:", result, "key _ ", id) */
                             onDelete(id)
                         }
                     }
@@ -105,7 +104,15 @@ const NewsEntry = ({id, siteId, tappId, title, message, imageList, publishTime, 
         const truncated = message.substr(0, maxLength)
         const lastSpaceIndex = truncated.lastIndexOf(" ")
         const substring = truncated.substr(0, lastSpaceIndex)
-        cutMessage = <span>{substring} <a className="btLoadWholeMessage" onClick={displayWholeMessage}>Mehr</a></span>
+        cutMessage = <span>
+            {substring} 
+            <a 
+                className = "btLoadWholeMessage" 
+                onClick = {displayWholeMessage}
+            >
+                Mehr    
+            </a>
+        </span>
     }
     function displayWholeMessage() {
         setMessageIsExtended(true)
@@ -167,8 +174,11 @@ const NewsEntry = ({id, siteId, tappId, title, message, imageList, publishTime, 
             {(chayns.env.user.adminMode || !hidden)
             &&
                 <div className = {styles.newsEntryFrame}>
-                    <div className= "content__card" id = {id}>
-                        <a name={id} />
+                    <div 
+                        className = "content__card" 
+                        id = {id}
+                    >
+                        <a name = {id} />
                         {chayns.env.user.adminMode &&
                             <div className = {styles.newsEntryHeader}>
                                 {hidden && <div className = {styles.labelOnHide}>Ausgeblendet</div>}
@@ -178,13 +188,6 @@ const NewsEntry = ({id, siteId, tappId, title, message, imageList, publishTime, 
                                             buildContextMenuItems()
                                         }
                                         className = {styles.contextMenu}
-                                        /*
-                                        onLayerClick = {
-                                            (event) => {
-                                                console.log("clicked layer ,", event)
-                                            }
-                                        }
-                                        */
                                     />
                                 </div>
                             </div>
@@ -194,8 +197,8 @@ const NewsEntry = ({id, siteId, tappId, title, message, imageList, publishTime, 
                             <div>
                                 <EditNewsEntry
                                     id = {id}
-                                    siteId={siteId}
-                                    tappId={tappId}
+                                    siteId = {siteId}
+                                    tappId = {tappId}
                                     onPublish = {handlePut}
                                     now = {now}
                                     initMessage = {message}
@@ -207,13 +210,26 @@ const NewsEntry = ({id, siteId, tappId, title, message, imageList, publishTime, 
                             <div>
                                 { imageList && imageList.length !== 0
                                 ?
-                                    <Gallery images={imageList} />
+                                    <Gallery
+                                        images = {imageList} 
+                                    />
                                 :
                                     ""
                                 }
-                                <h2>{title}</h2>
-                                {messageIsLong ? cutMessage : message}
-                                <Footer date = {getTimeAgo(publishTimestamp)} id = {id} frontendURL = {frontendURL} />
+                                <h2>
+                                    {title}
+                                </h2>
+                                {messageIsLong 
+                                ?
+                                    cutMessage 
+                                : 
+                                    message
+                                }
+                                <Footer 
+                                    date = {getTimeAgo(publishTimestamp)} 
+                                    id = {id} 
+                                    frontendURL = {frontendURL} 
+                                />
                             </div>
                         }
                     </div>
