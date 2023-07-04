@@ -6,3 +6,20 @@
     flex-direction: column;
     padding: 19px;
 }
+.IdDisplay {
+    display: flex;
+    cursor: pointer;
+}
+.IdLabel {
+    margin-right: 12px;
+}
+.IdCopiedLabel {
+    margin-left: 12px;
+}
+.selectBackend {
+    display: flex;
+    margin-top: 19px;
+}
+.selectButton {
+    margin-left: 17px;
+}

@@ -2,18 +2,20 @@ import React from "react"
 import PropTypes from "prop-types"
 import NewsEntry from "./NewsEntry"
 
-const NewsList = ({news, now, onPut, onPatch, onDelete, frontendURL}) =>
+const NewsList = ({siteId, tappId, news, now, onPut, onPatch, onDelete, frontendURL}) =>
     <div id = "news_list">
         {
             news.map(element =>
             {
                 if(!element)
-                    return ""
-                return (element && element.id && element.imageList && element.publishTime && element.publishTimestamp)
+                    return "no content"
+                return (element && element.id && element.publishTime)
                 ?
                     <NewsEntry
-                        key={element.id}
-                        id={element.id}
+                        key = {element.id}
+                        id = {element.id}
+                        siteId = {siteId}
+                        tappId = {tappId}
                         title = {element.headline}
                         message = {element.message}
                         imageList = {element.imageList}
@@ -32,8 +34,10 @@ const NewsList = ({news, now, onPut, onPatch, onDelete, frontendURL}) =>
         }
     </div>
 NewsList.propTypes = {
+    siteId: PropTypes.string.isRequired,
+    tappId: PropTypes.number.isRequired,
     news: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string
+        id: PropTypes.number
     })).isRequired,
     now: PropTypes.shape({}).isRequired,
     onPut: PropTypes.func.isRequired,

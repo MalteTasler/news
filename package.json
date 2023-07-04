@@ -35,6 +35,7 @@
   "devDependencies": {
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
+    "chayns-doc": "^1.6.1",
     "chayns-toolkit": "^2.0.7",
     "prettier": "^2.8.8",
     "prettier-plugin-packagejson": "^2.4.3",

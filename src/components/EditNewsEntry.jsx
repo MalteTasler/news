@@ -1,11 +1,11 @@
 import React, {useCallback, useState} from "react"
 import PropTypes from "prop-types"
-import { Gallery, FileInput, Input, Button } from 'chayns-components'
+import { Gallery, FileInput, Input, TextArea, Button } from 'chayns-components'
 import imageUpload from "chayns-components/lib/utils/imageUpload"
 import styles from "./EditNewsEntry.module.css"
 import appStyles from "./App.module.css"
 
-const EditNewsEntry = ({id, onPublish, now, initMessage, initTitle, initImageList}) =>
+const EditNewsEntry = ({id, siteId, tappId, onPublish, now, initMessage, initTitle, initImageList}) =>
 {
     const [message, setMessage] = useState(initMessage)
     const [title, setTitle] = useState(initTitle)
@@ -20,6 +20,8 @@ const EditNewsEntry = ({id, onPublish, now, initMessage, initTitle, initImageLis
         onPublish(
             {
                 id,
+                siteId,
+                tappId,
                 imageList: imageURLs,
                 headline: title,
                 message,
@@ -74,9 +76,8 @@ const EditNewsEntry = ({id, onPublish, now, initMessage, initTitle, initImageLis
     }
     return(
         <div>
-            <p>{displayPath}</p>
             {images.length > 0 
-            ? 
+            && 
                 <Gallery
                     images = {images}
                     deleteMode
@@ -84,8 +85,6 @@ const EditNewsEntry = ({id, onPublish, now, initMessage, initTitle, initImageLis
                     dragMode
                     onDragEnd={onDragEnd}
                 />
-            : 
-                "choose image"
             }
             <FileInput 
                 items = 
@@ -114,13 +113,14 @@ const EditNewsEntry = ({id, onPublish, now, initMessage, initTitle, initImageLis
                 />
             </div>
             <div id = {styles.addNewsEntryInputFrame}>
-                <Input 
+                <TextArea
                     placeholder = "Enter your message here." 
                     value = {message}
                     onChange = {setMessage}
+                    autogrow
                 />
             </div>
-            <div className = {appStyles.btContainer}>
+            <div className = {styles.btContainer}>
                 <Button id = {styles.btPublish} onClick={() => handlePublish()}>
                     Publish
                 </Button>
@@ -129,7 +129,9 @@ const EditNewsEntry = ({id, onPublish, now, initMessage, initTitle, initImageLis
     )
 }
 EditNewsEntry.propTypes = {
-    id: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
+    siteId: PropTypes.string.isRequired,
+    tappId: PropTypes.number.isRequired,
     onPublish: PropTypes.func.isRequired,
     now: PropTypes.shape({
         getTime: PropTypes.func

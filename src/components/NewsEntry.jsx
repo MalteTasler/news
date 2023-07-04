@@ -5,11 +5,10 @@ import Footer from './Footer'
 import styles from './NewsEntry.module.css'
 import EditNewsEntry from "./EditNewsEntry"
 
-const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp, onPut, onPatch, onDelete, frontendURL, now, hidden}) =>
+const NewsEntry = ({id, siteId, tappId, title, message, imageList, publishTime, publishTimestamp, onPut, onPatch, onDelete, frontendURL, now, hidden}) =>
 {
-    // console.log("render news entry ....................... ", imageList, imageList.length)
+    // console.log("render news entry ....................... ", publishTime, typeof publishTime)
     const [editMode, setEditMode] = useState(false)
-    const [isVisible] = useState(true)
     const contextMenuItems = 
         {
             delete: {
@@ -28,7 +27,6 @@ const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp
                     ]).then((result) => {
                         if(result === 1)
                         {
-                            /* console.log("try to delete new entry now:", result, "key _ ", id) */
                             onDelete(id)
                         }
                     }
@@ -51,7 +49,7 @@ const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp
                     setEditMode(!editMode)
                 },
                 text: "View",
-                icon: "fa fa-view"
+                icon: "fa fa-check"
             },
             hide: {
                 className: null,
@@ -59,6 +57,8 @@ const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp
                     onPatch(
                         {
                             id,
+                            siteId,
+                            tappId,
                             imageList,
                             headline: title,
                             message,
@@ -77,6 +77,8 @@ const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp
                     onPatch(
                         {
                             id,
+                            siteId,
+                            tappId,
                             imageList,
                             headline: title,
                             message,
@@ -102,7 +104,16 @@ const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp
         const truncated = message.substr(0, maxLength)
         const lastSpaceIndex = truncated.lastIndexOf(" ")
         const substring = truncated.substr(0, lastSpaceIndex)
-        cutMessage = <span>{substring} <a className="btLoadWholeMessage" onClick={displayWholeMessage}>Mehr</a></span>
+        cutMessage = <span>
+            {substring}...
+            &nbsp;
+            <a 
+                className = "btLoadWholeMessage" 
+                onClick = {displayWholeMessage}
+            >
+                Mehr    
+            </a>
+        </span>
     }
     function displayWholeMessage() {
         setMessageIsExtended(true)
@@ -161,11 +172,13 @@ const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp
     } 
     return(
         <div>
-            {(chayns.env.user.adminMode || isVisible)
+            {(chayns.env.user.adminMode || !hidden)
             &&
                 <div className = {styles.newsEntryFrame}>
-                    <div className= "content__card" id = {id}>
-                        <a name={id} />
+                    <div 
+                        className = "content__card" 
+                        id = {id}
+                    >
                         {chayns.env.user.adminMode &&
                             <div className = {styles.newsEntryHeader}>
                                 {hidden && <div className = {styles.labelOnHide}>Ausgeblendet</div>}
@@ -175,13 +188,6 @@ const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp
                                             buildContextMenuItems()
                                         }
                                         className = {styles.contextMenu}
-                                        /*
-                                        onLayerClick = {
-                                            (event) => {
-                                                console.log("clicked layer ,", event)
-                                            }
-                                        }
-                                        */
                                     />
                                 </div>
                             </div>
@@ -191,6 +197,8 @@ const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp
                             <div>
                                 <EditNewsEntry
                                     id = {id}
+                                    siteId = {siteId}
+                                    tappId = {tappId}
                                     onPublish = {handlePut}
                                     now = {now}
                                     initMessage = {message}
@@ -200,15 +208,31 @@ const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp
                             </div>
                         :
                             <div>
-                                { imageList.length !== 0
+                                { imageList && imageList.length !== 0
                                 ?
-                                    <Gallery images={imageList} />
+                                    <Gallery
+                                        images = {imageList} 
+                                    />
                                 :
                                     ""
                                 }
-                                <h2>{title}</h2>
-                                {messageIsLong ? cutMessage : message}
-                                <Footer date = {getTimeAgo(publishTimestamp)} id = {id} frontendURL = {frontendURL} />
+                                <h2>
+                                    {title}
+                                </h2>
+                                <div className = {styles.message}>
+                                    {messageIsLong 
+                                    ?
+                                        cutMessage 
+                                    : 
+                                        message
+                                    }
+                                </div>
+                                <Footer 
+                                    date = {getTimeAgo(publishTimestamp)} 
+                                    dateAbsolute = {publishTime}
+                                    id = {id} 
+                                    frontendURL = {frontendURL} 
+                                />
                             </div>
                         }
                     </div>
@@ -218,7 +242,9 @@ const NewsEntry = ({id, title, message, imageList, publishTime, publishTimestamp
     )
 }
 NewsEntry.propTypes = {
-    id: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
+    siteId: PropTypes.string.isRequired,
+    tappId: PropTypes.number.isRequired,
     title: PropTypes.string,
     message: PropTypes.string.isRequired,
     imageList: PropTypes.arrayOf(PropTypes.string),
