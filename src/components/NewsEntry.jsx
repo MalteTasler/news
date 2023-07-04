@@ -105,7 +105,8 @@ const NewsEntry = ({id, siteId, tappId, title, message, imageList, publishTime, 
         const lastSpaceIndex = truncated.lastIndexOf(" ")
         const substring = truncated.substr(0, lastSpaceIndex)
         cutMessage = <span>
-            {substring} 
+            {substring}...
+            &nbsp;
             <a 
                 className = "btLoadWholeMessage" 
                 onClick = {displayWholeMessage}
@@ -178,7 +179,6 @@ const NewsEntry = ({id, siteId, tappId, title, message, imageList, publishTime, 
                         className = "content__card" 
                         id = {id}
                     >
-                        <a name = {id} />
                         {chayns.env.user.adminMode &&
                             <div className = {styles.newsEntryHeader}>
                                 {hidden && <div className = {styles.labelOnHide}>Ausgeblendet</div>}
@@ -219,12 +219,14 @@ const NewsEntry = ({id, siteId, tappId, title, message, imageList, publishTime, 
                                 <h2>
                                     {title}
                                 </h2>
-                                {messageIsLong 
-                                ?
-                                    cutMessage 
-                                : 
-                                    message
-                                }
+                                <div className = {styles.message}>
+                                    {messageIsLong 
+                                    ?
+                                        cutMessage 
+                                    : 
+                                        message
+                                    }
+                                </div>
                                 <Footer 
                                     date = {getTimeAgo(publishTimestamp)} 
                                     id = {id} 

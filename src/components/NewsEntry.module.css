@@ -1,8 +1,13 @@
 .contextMenuFrame {
     margin-left: auto;
 }
+.message {
+    margin-bottom:19px;
+}
 .newsEntryHeader {
     display: flex;
+    padding-top: 2px;
+    padding-bottom: 5px;
 }
 .newsEntryFrame {
     margin-top: 15px;

@@ -110,12 +110,15 @@ const DeveloperTools = ({siteId, tappId, numberOfDisplayedNews, numberOfFetchedN
 DeveloperTools.propTypes = {
     siteId: PropTypes.string.isRequired,
     tappId: PropTypes.number.isRequired,
-    numberOfDatabaseNews: PropTypes.number.isRequired,
+    numberOfDatabaseNews: PropTypes.number,
     numberOfFetchedNews: PropTypes.number.isRequired,
     numberOfDisplayedNews: PropTypes.number.isRequired,
     showNews: PropTypes.bool.isRequired,
     cbShowNewsOnChange: PropTypes.func.isRequired,
     useBackend: PropTypes.number.isRequired,
     setUseBackend: PropTypes.func.isRequired
+}
+DeveloperTools.defaultProps = {
+    numberOfDatabaseNews: null
 }
 export default DeveloperTools
