@@ -68,7 +68,11 @@ const App = () => {
     
             // try to load news entries
             // console.log("try to fetch data via URI ", fetchURLWithParameters)
-            const response = await fetch(fetchURLWithParameters)
+            const response = await fetch(fetchURLWithParameters, {
+                headers: {
+                    "Authorization" : `bearer ${tobitAccessToken}`
+                }
+            })
             // console.log("unparsed response ", response, response.status, response.status === 204)
             if(!response.ok)
                 return false
