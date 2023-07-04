@@ -1,3 +1,6 @@
+.timeDisplay {
+    cursor: default;
+}
 .newsFooter {
     padding-top: 9px;
     border-top: #5F5F5F solid 1px;

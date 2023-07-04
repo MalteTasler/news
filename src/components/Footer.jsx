@@ -10,9 +10,14 @@ const Footer = ({date, dateAbsolute, id, frontendURL}) =>
             content = {{
                 text : `${new Date(dateAbsolute).toLocaleDateString("de-DE", {weekday: "long", day: "numeric", month: "long", year: "numeric"})}, ${new Date(dateAbsolute).toLocaleTimeString("de-DE")} Uhr`
             }}
+            minWidth = {200}
             bindListeners
         >
-            {date}
+            <div
+                className = {styles.timeDisplay}
+            >
+                {date}
+            </div>
         </Tooltip>
     </div>
    
