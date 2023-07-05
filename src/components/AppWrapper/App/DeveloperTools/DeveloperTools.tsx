@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import PropTypes from "prop-types"
 import { Accordion, SelectButton, Checkbox } from 'chayns-components'
-import styles from "./DeveloperTools.module.css"
+import styles from "./DeveloperTools.module.scss"
 
 const DeveloperTools = ({siteId, tappId, numberOfDisplayedNews, numberOfFetchedNews, numberOfDatabaseNews, showNews, cbShowNewsOnChange, useBackend, setUseBackend}) => {
     // console.log("render dev tools, provides ", useBackend)
@@ -19,12 +19,12 @@ const DeveloperTools = ({siteId, tappId, numberOfDisplayedNews, numberOfFetchedN
     ]
     const [copiedSiteId, setCopiedSiteId] = useState(false)
     const [copiedTappId, setCopiedTappId] = useState(false)
-    const copySiteId = () => {
-        navigator.clipboard.writeText(siteId)
+    const copySiteId = async() => {
+        await navigator.clipboard.writeText(siteId as string)
         setCopiedSiteId(true)
     }
-    const copyTappId = () => {
-        navigator.clipboard.writeText(tappId)
+    const copyTappId = async() => {
+        await navigator.clipboard.writeText(tappId as string)
         setCopiedTappId(true)
     }
     return(
@@ -71,7 +71,7 @@ const DeveloperTools = ({siteId, tappId, numberOfDisplayedNews, numberOfFetchedN
                         listKey = "id"
                         listValue = "name"
                         selectedFlag = "isSelected"
-                        showSelection = {true}
+                        showSelection
                         className = {styles.selectButton}
                     />
                 </div>
@@ -107,6 +107,7 @@ const DeveloperTools = ({siteId, tappId, numberOfDisplayedNews, numberOfFetchedN
         </Accordion>
     )
 }
+
 DeveloperTools.propTypes = {
     siteId: PropTypes.string.isRequired,
     tappId: PropTypes.number.isRequired,
@@ -118,7 +119,11 @@ DeveloperTools.propTypes = {
     useBackend: PropTypes.number.isRequired,
     setUseBackend: PropTypes.func.isRequired
 }
+
 DeveloperTools.defaultProps = {
     numberOfDatabaseNews: null
 }
+
+DeveloperTools.DisplayName = "DeveloperTools"
+
 export default DeveloperTools

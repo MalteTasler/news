@@ -8,7 +8,7 @@ export interface IResponse {
     hidden: boolean | undefined;
 }
 export interface IListResponse {
-    itemList: IResponse[];
+    itemList: INews[];
     length: number;
 }
 export interface INews {

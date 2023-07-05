@@ -2,18 +2,17 @@ import React, {useCallback, useState} from "react"
 import PropTypes from "prop-types"
 import { Gallery, FileInput, Input, TextArea, Button } from 'chayns-components'
 import imageUpload from "chayns-components/lib/utils/imageUpload"
-import styles from "./EditNewsEntry.module.css"
-import appStyles from "./App.module.css"
+import styles from "./EditNewsEntry.module.scss"
 
 const EditNewsEntry = ({id, siteId, tappId, onPublish, now, initMessage, initTitle, initImageList}) =>
 {
     const [message, setMessage] = useState(initMessage)
     const [title, setTitle] = useState(initTitle)
-    const [images, setImages] = useState(initImageList.map((image) => ({ url: image})))
+    const [images, setImages] = useState(initImageList.map((image : string) => ({ url: image})))
     const [displayPath, setDisplayPath] = useState('')
     const [isUploading, setIsUploading] = useState(false)
 
-    let imageURLs = [];
+    let imageURLs : string[] = [];
 
     async function handlePublish() {
         await postImages()
@@ -55,7 +54,7 @@ const EditNewsEntry = ({id, siteId, tappId, onPublish, now, initMessage, initTit
     )
     const onClick = useCallback(async () => {
         const data = await chayns.dialog.mediaSelect({ multiselect: true })
-        setImages(images.concat(data.selection.map((url) => ({ url }))))
+        setImages(images.concat(data.selection.map((url : string) => ({ url }))))
     }, [images, setImages])
     async function postImages() {
         // console.log("images list ", images)
@@ -127,6 +126,7 @@ const EditNewsEntry = ({id, siteId, tappId, onPublish, now, initMessage, initTit
         </div>
     )
 }
+
 EditNewsEntry.propTypes = {
     id: PropTypes.number.isRequired,
     siteId: PropTypes.string.isRequired,
@@ -139,4 +139,7 @@ EditNewsEntry.propTypes = {
     initTitle: PropTypes.string.isRequired,
     initImageList: PropTypes.arrayOf(PropTypes.string).isRequired
 }
+
+EditNewsEntry.DisplayName = "EditNewsEntry"
+
 export default EditNewsEntry
