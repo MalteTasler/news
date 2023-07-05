@@ -95,7 +95,7 @@ const DeveloperTools = ({siteId, tappId, numberOfDisplayedNews, numberOfFetchedN
                                 <a href="https://schule.chayns.site/admin/code-editor?backendId=f11828e3" target="_blank" rel="noreferrer">chayns.Codes</a>
                             </li>
                             <li>
-                                <a href="https://gitlab.tobit.com/MTasler/news-backend" target="_blank" rel="noreferrer">GitLab (Tobit members only)</a>
+                                <a href="https://gitlab.tobit.com/MTasler/news-backend2" target="_blank" rel="noreferrer">GitLab (Tobit members only)</a>
                             </li>
                             <li>
                                 <a href="https://github.com/MalteTasler/news-backend" target="_blank" rel="noreferrer">GitHub (Private - ask for permissions)</a>
