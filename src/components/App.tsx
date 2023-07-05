@@ -68,7 +68,11 @@ const App = () => {
     
             // try to load news entries
             // console.log("try to fetch data via URI ", fetchURLWithParameters)
-            const response = await fetch(fetchURLWithParameters)
+            const response = await fetch(fetchURLWithParameters, {
+                headers: {
+                    "Authorization" : `bearer ${tobitAccessToken}`
+                }
+            })
             // console.log("unparsed response ", response, response.status, response.status === 204)
             if(!response.ok)
                 return false
@@ -137,7 +141,7 @@ const App = () => {
             entry.id === data.id
         ))
         {            
-            await putEntry(data)
+            await patchEntry(data)
         }
         else
             await postEntry(data)
@@ -167,21 +171,8 @@ const App = () => {
             }
         })
     }
-    const putEntry = async(data : INews) => {
-        const fetchURLWithParameters = `${fetchURL[useBackend]}/${data.id as string}`
-        // console.log("PUT ", data, JSON.stringify(data))
-        await fetch(fetchURLWithParameters , {
-            method: "PUT",
-            body: JSON.stringify(data),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8",
-                "Authorization" : `bearer ${tobitAccessToken}`
-            }
-        })
-    }
     const patchEntry = async(data : INews) => {
-        // ! hardcode TEST with prop 'hidden' for now
-        const fetchURLWithParameters = `${fetchURL[useBackend]}/${data.id as string}/hidden`
+        const fetchURLWithParameters = `${fetchURL[useBackend]}/${data.id as string}`
         // console.log("PATCH ", data, JSON.stringify(data))
         await fetch(fetchURLWithParameters , {
             method: "PATCH",

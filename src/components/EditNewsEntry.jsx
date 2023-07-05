@@ -26,8 +26,7 @@ const EditNewsEntry = ({id, siteId, tappId, onPublish, now, initMessage, initTit
                 headline: title,
                 message,
                 publishTime: now,
-                publishTimestamp: now.getTime(),
-                hidden: false
+                publishTimestamp: now.getTime()
             }
         )
     }
