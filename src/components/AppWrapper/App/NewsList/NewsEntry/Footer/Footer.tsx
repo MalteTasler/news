@@ -1,23 +1,26 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { SharingBar, Tooltip } from 'chayns-components'
+import { FRONTEND_URLS } from "constants/config"
+import { FooterProps } from "constants/types"
 import styles from "./Footer.module.scss"
 
-const Footer = ({ date, dateAbsolute, id }) =>
+require('../../../../../../constants/chayns.d')
+require('../../../../../../constants/chayns-components.d')
+
+const Footer = ({ date, dateAbsolute, id } : FooterProps) =>
     <div className = {styles.newsFooter}>
         <SharingBar 
-            link = {`${FRONTEND_URLS[0]}?M=${id as number}`} 
-            linkText="Link" 
-            stopPropagation
+            link = {`${FRONTEND_URLS[0]}?M=${id}`} 
         />
         <Tooltip
             content = {{
-                text : `${new Date(dateAbsolute as string).toLocaleDateString("de-DE", {
+                text : `${new Date(dateAbsolute).toLocaleDateString("de-DE", {
                             weekday: "long", 
                             day: "numeric", 
                             month: "long", 
                             year: "numeric"
-                        })}, ${new Date(dateAbsolute as string).toLocaleTimeString("de-DE")} Uhr`
+                        })}, ${new Date(dateAbsolute).toLocaleTimeString("de-DE")} Uhr`
             }}
             minWidth = {200}
             bindListeners

@@ -2,9 +2,13 @@ import React, {useCallback, useState} from "react"
 import PropTypes from "prop-types"
 import { Gallery, FileInput, Input, TextArea, Button } from 'chayns-components'
 import imageUpload from "chayns-components/lib/utils/imageUpload"
+import { EditNewsEntryProps } from "constants/types"
 import styles from "./EditNewsEntry.module.scss"
 
-const EditNewsEntry = ({id, siteId, tappId, onPublish, now, initMessage, initTitle, initImageList}) =>
+require('../../../constants/chayns.d')
+require('../../../constants/chayns-components.d')
+
+const EditNewsEntry = ({ id, siteId, tappId, onPublish, now, initMessage, initTitle, initImageList } : EditNewsEntryProps) =>
 {
     const [message, setMessage] = useState(initMessage)
     const [title, setTitle] = useState(initTitle)
@@ -30,7 +34,7 @@ const EditNewsEntry = ({id, siteId, tappId, onPublish, now, initMessage, initTit
         )
     }
     const onChange = useCallback(
-        (validFiles) => {
+        (validFiles: { map: (arg0: (f: any) => { file: any }) => ConcatArray<{ url: string }> }) => {
             if(!isUploading)
             {
                 setImages(images.concat(validFiles.map((f) => ({ file: f }))))
@@ -119,9 +123,11 @@ const EditNewsEntry = ({id, siteId, tappId, onPublish, now, initMessage, initTit
                 />
             </div>
             <div className = {styles.btContainer}>
-                <Button id = {styles.btPublish} onClick={() => handlePublish()}>
-                    Publish
-                </Button>
+                <Button 
+                    className = {styles.btPublish} 
+                    onClick={() => handlePublish()}
+                    title = "Veröffentlichen"
+                />
             </div>
         </div>
     )

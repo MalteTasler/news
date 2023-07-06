@@ -1,20 +1,24 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { Accordion } from 'chayns-components'
+import { AddNewsEntryProps } from "constants/types"
 import EditNewsEntry from "../../../shared/EditNewsEntry/EditNewsEntry"
 import styles from "./AddNewsEntry.module.scss"
 
-const AddNewsEntry = ({ siteId, tappId, onPublish, now }) => 
+require('../../../../constants/chayns.d')
+require('../../../../constants/chayns-components.d')
+
+const AddNewsEntry = ({ siteId, tappId, onPublish, now } : AddNewsEntryProps) => 
     <Accordion
         head = "Create News Entry"
     >
         <div className = {styles.addNewsEntryFrame}>
             <EditNewsEntry
                 id = {0}
-                siteId = {siteId as string}
-                tappId = {tappId as number}
-                onPublish = {onPublish as (id: number, title: string, message: string, imageList: string[], publishTime: string, publishTimestamp: number, hidden: boolean) => void}
-                now = {now as {getTime: () => number}}
+                siteId = {siteId }
+                tappId = {tappId }
+                onPublish = {onPublish}
+                now = {now}
                 initMessage = ""
                 initTitle = ""
                 initImageList = {[]}

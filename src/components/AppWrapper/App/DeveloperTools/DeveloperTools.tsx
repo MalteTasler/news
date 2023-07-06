@@ -1,9 +1,13 @@
 import React, { useState } from "react"
 import PropTypes from "prop-types"
 import { Accordion, SelectButton, Checkbox } from 'chayns-components'
+import { DeveloperToolsProps } from "constants/types"
 import styles from "./DeveloperTools.module.scss"
 
-const DeveloperTools = ({siteId, tappId, numberOfDisplayedNews, numberOfFetchedNews, numberOfDatabaseNews, showNews, cbShowNewsOnChange, useBackend, setUseBackend}) => {
+require('../../../../constants/chayns.d')
+require('../../../../constants/chayns-components.d')
+
+const DeveloperTools = ({ siteId, tappId, numberOfDisplayedNews, numberOfFetchedNews, numberOfDatabaseNews, numberOfDatabaseUnhiddenNews, showNews, cbShowNewsOnChange, useBackend, setUseBackend } : DeveloperToolsProps) => {
     // console.log("render dev tools, provides ", useBackend)
     const sbBackendList = [
             {
@@ -17,46 +21,47 @@ const DeveloperTools = ({siteId, tappId, numberOfDisplayedNews, numberOfFetchedN
                 isSelected: useBackend === 1
             }
     ]
-    const [copiedSiteId, setCopiedSiteId] = useState(false)
-    const [copiedTappId, setCopiedTappId] = useState(false)
+    const [shouldCopiedSiteId, setShouldCopiedSiteId] = useState(false)
+    const [shouldCopiedTappId, setShouldCopiedTappId] = useState(false)
     const copySiteId = async() => {
-        await navigator.clipboard.writeText(siteId as string)
-        setCopiedSiteId(true)
+        await navigator.clipboard.writeText(siteId)
+        setShouldCopiedSiteId(true)
     }
     const copyTappId = async() => {
-        await navigator.clipboard.writeText(tappId as string)
-        setCopiedTappId(true)
+        await navigator.clipboard.writeText(`${tappId}`)
+        setShouldCopiedTappId(true)
     }
     return(
         <Accordion head = "Developer Tools" open dafaultOpened>
             <div className = {styles.developerToolsFrame}>  
-                <div className = {styles.IdDisplay} onClick={copySiteId}>
+                <div className = {styles.IdDisplay} onClick={() => copySiteId}>
                     <div className = {styles.IdLabel}>    
                         SiteId = {siteId}
                     </div>
                     <i className = "fa fa-copy" />
                     {
-                        copiedSiteId &&
+                        shouldCopiedSiteId &&
                         <div className = {styles.IdCopiedLabel}>
                             ✅ Copied to clipboard.
                         </div>
                     }
                     <br />
                 </div>
-                <div className = {styles.IdDisplay} onClick={copyTappId}>
+                <div className = {styles.IdDisplay} onClick={() => copyTappId}>
                     <div className = {styles.IdLabel}>    
                         TappId = {tappId}
                     </div>
                     <i className = "fa fa-copy" />
                     {
-                        copiedTappId &&
+                        shouldCopiedTappId &&
                         <div className = {styles.IdCopiedLabel}>
                             ✅ Copied to clipboard.
                         </div>
                     }
                     <br />
                 </div>
-                Number of News in the databse = {numberOfDatabaseNews}<br />
+                Number of total News in the databse = {numberOfDatabaseNews}<br />
+                Number of unhidden News in the databse = {numberOfDatabaseUnhiddenNews}<br />
                 Number of fetched News = {numberOfFetchedNews}<br />
                 Number of displayed News = {numberOfDisplayedNews}
                 <div 
@@ -79,26 +84,50 @@ const DeveloperTools = ({siteId, tappId, numberOfDisplayedNews, numberOfFetchedN
                     checked = {showNews}
                     onChange = {cbShowNewsOnChange}
                     className = {styles.cbShowMore}
-                >
-                    Show news
-                </Checkbox>
+                    title = "Show news"
+                />
                 <br />
                 <u>Sources: </u>
                 <ul>
                     <li>
-                        Frontend Code: <a href="https://github.com/MalteTasler/news" target="_blank" rel="noreferrer">GitHub</a>
+                        Frontend Code: 
+                        <a 
+                            href="https://github.com/MalteTasler/news" 
+                            target="_blank" 
+                            rel="noreferrer"
+                        >
+                            GitHub
+                        </a>
                     </li>
                     <li>
                         Backend Code: 
                         <ul>
                             <li>
-                                <a href="https://schule.chayns.site/admin/code-editor?backendId=f11828e3" target="_blank" rel="noreferrer">chayns.Codes</a>
+                                <a 
+                                    href="https://schule.chayns.site/admin/code-editor?backendId=f11828e3" 
+                                    target="_blank" 
+                                    rel="noreferrer"
+                                >
+                                    chayns.Codes
+                                </a>
                             </li>
                             <li>
-                                <a href="https://gitlab.tobit.com/MTasler/news-backend2" target="_blank" rel="noreferrer">GitLab (Tobit members only)</a>
+                                <a 
+                                    href="https://gitlab.tobit.com/MTasler/news-backend2" 
+                                    target="_blank" 
+                                    rel="noreferrer"
+                                >
+                                    GitLab (Tobit members only)
+                                </a>
                             </li>
                             <li>
-                                <a href="https://github.com/MalteTasler/news-backend" target="_blank" rel="noreferrer">GitHub (Private - ask for permissions)</a>
+                                <a 
+                                    href="https://github.com/MalteTasler/news-backend" 
+                                    target="_blank" 
+                                    rel="noreferrer"
+                                >
+                                    GitHub (Private - ask for permissions)
+                                </a>
                             </li>
                         </ul>
                     </li>
@@ -112,6 +141,7 @@ DeveloperTools.propTypes = {
     siteId: PropTypes.string.isRequired,
     tappId: PropTypes.number.isRequired,
     numberOfDatabaseNews: PropTypes.number,
+    numberOfDatabaseUnhiddenNews: PropTypes.number.isRequired,
     numberOfFetchedNews: PropTypes.number.isRequired,
     numberOfDisplayedNews: PropTypes.number.isRequired,
     showNews: PropTypes.bool.isRequired,

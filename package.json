@@ -1,8 +1,8 @@
 {
-  "name": "bamboo-news-react",
+  "name": "newsmt",
   "version": "1.0.0",
   "private": true,
-  "description": "A pagemaker plugin that displays the news of the BamBoo site, written in React",
+  "description": "A web frontend application written in React and TypeScript, useable as a pagemaker plugin for chayns®, that provides the creation and updating of news entries with multimedia content",
   "keywords": [
     "chayns",
     "chayns-toolkit",

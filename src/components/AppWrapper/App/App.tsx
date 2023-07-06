@@ -5,14 +5,15 @@ import { getNews } from 'api/get'
 import { postNewsEntry } from 'api/post'
 import { patchNewsEntry } from 'api/patch'
 import { deleteNewsEntry } from 'api/delete'
+import { BACKEND_URLS, COUNT, FRONTEND_URLS } from 'constants/config'
 import DeveloperTools from './DeveloperTools/DeveloperTools'
 import NewsList from './NewsList/NewsList'
 import AddNewsEntry from './AddNewsEntry/AddNewsEntry'
 import styles from './App.module.scss'
-import { IListResponse, INews, IParameters } from '../../../interfaces'
+import { IListResponse, INews, IParameters } from '../../../constants/interfaces'
 
-require('../../../chayns.d')
-require('../../../chayns-components.d')
+require('../../../constants/chayns.d')
+require('../../../constants/chayns-components.d')
 
 const App: FC = () => {
     const ADMIN_MODE : boolean = chayns.env.user.adminMode as boolean
@@ -23,12 +24,13 @@ const App: FC = () => {
     const [news, setNews] = useState<INews[]>([])
     const [useBackend, setUseBackend] = useState<number>(1)
     const [URLparam, setURLparam] = useState<IParameters>()
-    const [showNews, setShowNews] = useState(true)
-    const [, setCounter] = useState(0)
-    const [numberOfFetchedNews, setNumberOfFetchedNews] = useState(0)
-    const [numberOfDisplayedNews, setNumberOfDisplayedNews] = useState(0)
-    const [numberOfDatabaseNews, setNumberOfDatabaseNews] = useState(null)
-    const [loadMoreButtonIsEnabled, setLoadMoreButtonIsEnabled] = useState(false)
+    const [showNews, setShowNews] = useState<boolean>(true)
+    const [, setCounter] = useState<number>(0)
+    const [numberOfFetchedNews, setNumberOfFetchedNews] = useState<number>(0)
+    const [numberOfDisplayedNews, setNumberOfDisplayedNews] = useState<number>(0)
+    const [numberOfDatabaseNews, setNumberOfDatabaseNews] = useState<number | null>(null)
+    const [numberOfDatabaseUnhiddenNews, setNumberOfDatabaseUnhiddenNews] = useState<number | null>(null)
+    const [loadMoreButtonIsEnabled, setLoadMoreButtonIsEnabled] = useState<boolean>(false)
     
     let now = new Date()
 
@@ -64,6 +66,7 @@ const App: FC = () => {
         {
             // generate fetchURL with parameters
             const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}?siteId=${SITE_ID}&tappId=${TAPP_ID}&timestamp=${getTimestamp(!offset)}&count=${COUNT}&adminMode=${ADMIN_MODE as unknown as string}`
+            console.log("URL for fetching ", fetchURLWithParameters)
     
             const response = await getNews(fetchURLWithParameters, TOBIT_ACCESS_TOKEN)            
             switch(response.status)
@@ -78,6 +81,7 @@ const App: FC = () => {
                 case 204:
                 {
                     setNumberOfDatabaseNews(0)
+                    setNumberOfDatabaseUnhiddenNews(0)
                     setNumberOfFetchedNews(0)
                     setNumberOfDisplayedNews(0)
                     break;
@@ -85,8 +89,8 @@ const App: FC = () => {
                 default:
                 {
                     const parsedResponse = await response.json() as IListResponse
-                    const { itemList, length } = parsedResponse
-                    // console.log("fetched data with URL: ", fetchURLWithParameters, parsedResponse)
+                    const { itemList, fullLength, length } = parsedResponse
+                    console.log("fetched list of news ", parsedResponse)
                     setNews((prevState:INews[]):INews[] => {
                         if (offset)
                         {
@@ -96,7 +100,8 @@ const App: FC = () => {
                         }
                         return (itemList)
                     })
-                    setNumberOfDatabaseNews(length)
+                    setNumberOfDatabaseNews(fullLength)
+                    setNumberOfDatabaseUnhiddenNews(length)
                     const number = itemList.length; // number of new fetched entries
                     // console.log(`fetched ${number} new entries`)
                     if(offset)
@@ -139,12 +144,14 @@ const App: FC = () => {
         ))
         {                        
             const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}/${data.id as number}`
+            console.log("URL for fetching ", fetchURLWithParameters)
             const response = await patchNewsEntry(fetchURLWithParameters, TOBIT_ACCESS_TOKEN, data)
             console.log("PATCH - Response: ", response)
         }
         else
         {
             const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}`
+            console.log("URL for fetching ", fetchURLWithParameters)
             const response = await postNewsEntry(fetchURLWithParameters, TOBIT_ACCESS_TOKEN, data)
             console.log("POST - Response: ", response)        
         }
@@ -154,6 +161,7 @@ const App: FC = () => {
     }
     const deleteEntry = async(id : number) => {
         const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}/${id}`
+        console.log("URL for fetching ", fetchURLWithParameters)
         const response = await deleteNewsEntry(fetchURLWithParameters, TOBIT_ACCESS_TOKEN)
         console.log("DELETE - Response: ", response)
         setCounter(c => c+1)
@@ -177,8 +185,8 @@ const App: FC = () => {
     [])
     useEffect(() => {
         // console.log((numberOfDisplayedNews < numberOfDatabaseNews))
-        setLoadMoreButtonIsEnabled((numberOfDisplayedNews < numberOfDatabaseNews))
-    }, [numberOfDisplayedNews, numberOfDatabaseNews])
+        setLoadMoreButtonIsEnabled(numberOfDatabaseUnhiddenNews ? (numberOfDisplayedNews < numberOfDatabaseUnhiddenNews) : false)
+    }, [numberOfDisplayedNews, numberOfDatabaseNews, numberOfDatabaseUnhiddenNews])
     useEffect(() => {
         const getItems = async() => {
             await fetchNews(false)
@@ -206,7 +214,7 @@ const App: FC = () => {
                     <AddNewsEntry
                         siteId = {SITE_ID}
                         tappId = {TAPP_ID}
-                        onPublish = {publish}
+                        onPublish = {() => publish}
                         now = {now} 
                     />
                     <DeveloperTools 
@@ -214,7 +222,8 @@ const App: FC = () => {
                         tappId = {TAPP_ID}
                         numberOfDisplayedNews = {numberOfDisplayedNews}
                         numberOfFetchedNews = {numberOfFetchedNews}
-                        numberOfDatabaseNews = {numberOfDatabaseNews}
+                        numberOfDatabaseNews = {numberOfDatabaseNews || 0}
+                        numberOfDatabaseUnhiddenNews = {numberOfDatabaseUnhiddenNews || 0}
                         showNews = {showNews}
                         cbShowNewsOnChange = {setShowNewsFunc}
                         useBackend = {useBackend}
@@ -247,9 +256,8 @@ const App: FC = () => {
                                         tappId = {TAPP_ID} 
                                         news = {news} 
                                         now = {now} 
-                                        onPut = {publish} 
-                                        onPatch = {patchNewsEntry} 
-                                        onDelete = {deleteEntry} 
+                                        onPatch = {() => publish} 
+                                        onDelete = {() => deleteEntry} 
                                         frontendURL = {FRONTEND_URLS[0]} 
                                     /> 
                                     { !URLparam?.M
@@ -257,22 +265,20 @@ const App: FC = () => {
                                         <div className = {styles.btContainer as string}>
                                             <Button 
                                                 disabled = {!loadMoreButtonIsEnabled} 
-                                                id = {styles.btLoadMore as string} 
+                                                className = {styles.btLoadMore as string} 
                                                 onClick = {() => laodMore()}
-                                            >
-                                                Mehr
-                                            </Button>
+                                                title = "Mehr"
+                                            />
                                         </div>
                                     :
                                         <div 
                                             className = {styles.btContainer as string}
                                         >
                                             <Button 
-                                                id = {styles.btLoadMore as string} 
+                                                className = {styles.btLoadMore as string} 
                                                 onClick = {() => navigateToAllNews()}
-                                            >
-                                                Alle News anzeigen
-                                            </Button>
+                                                title = "Alle News anzeigen"
+                                            />                                               
                                         </div>
                                     }
                                 </div>

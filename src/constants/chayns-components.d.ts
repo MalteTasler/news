@@ -26,6 +26,8 @@ declare module 'chayns-components' {
     export const Button: React.FunctionComponent<ButtonProps>;
   
     export const ChooseButton: React.FunctionComponent<Omit<ButtonProps, 'chooseButton'>>;
+
+    export const SelectButton: React.FunctionComponent;
   
     type TextStringProps = {
       stringName?: string;
@@ -512,6 +514,14 @@ declare module 'chayns-components' {
     }; 
   
     export const ExpandableContent: React.FunctionComponent<ExpandableContentProps>;
+
+    type AnimationWrapperProps = {
+      children: ReactNode;
+      className?: string;
+      style?: CSSProperties;
+    };
+
+    export const AnimationWrapper: FunctionComponent<AnimationWrapperProps>;
   }
   
   declare module 'chayns-components/lib/utils/selectFile' {

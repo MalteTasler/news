@@ -2,107 +2,100 @@ import React, { useState } from "react"
 import PropTypes from "prop-types"
 import { Gallery, ContextMenu } from 'chayns-components'
 import { getTimeAgo } from "utils/date"
+import { ContextMenuItem, NewsEntryProps } from "constants/types"
 import Footer from './Footer/Footer'
 import styles from './NewsEntry.module.scss'
 import EditNewsEntry from "../../../../shared/EditNewsEntry/EditNewsEntry"
+import { MAX_MESSAGE_LENGTH } from "constants/config"
 
-const NewsEntry = ({id, siteId, tappId, title, message, imageList, publishTime, publishTimestamp, onPut, onPatch, onDelete, now, hidden}) =>
+require('../../../../../constants/chayns.d')
+require('../../../../../constants/chayns-components.d')
+
+const NewsEntry = ({ id, siteId, tappId, title, message, imageList, publishTime, publishTimestamp, onPatch, onDelete, now, hidden } : NewsEntryProps) =>
 {
     // console.log("render news entry ....................... ", publishTime, typeof publishTime)
-    const [editMode, setEditMode] = useState(false)
-    const contextMenuItems = 
-        {
-            delete: {
-                className: null,
-                onClick: async() => {
-                    await chayns.dialog.confirm('Confirm', 'Are you sure you want to delete that new entry?', [
-                    {
-                        text: 'YES',
-                        buttonType: 1,
-                    }, 
-                    {
-                        text: 'NO',
-                        buttonType: 0,
-                        collapseTime: 3
-                    }
-                    ]).then((result) => {
-                        if(result === 1)
-                        {
-                            onDelete(id)
-                        }
-                    }
-                    );
-                },
-                text: "Delete",
-                icon: "fa fa-trash"
-            },
-            edit: {
-                className: null,
-                onClick: () => {
-                    setEditMode(!editMode)
-                },
-                text: "Edit",
-                icon: "fa fa-edit"
-            },
-            view: {
-                className: null,
-                onClick: () => {
-                    setEditMode(!editMode)
-                },
-                text: "View",
-                icon: "fa fa-check"
-            },
-            hide: {
-                className: null,
-                onClick: () => {
-                    onPatch(
-                        {
-                            id,
-                            siteId,
-                            tappId,
-                            imageList,
-                            headline: title,
-                            message,
-                            publishTime,
-                            publishTimestamp,
-                            hidden: true
-                        }
-                    )
-                },
-                text: "Hide",
-                icon: "fa fa-eye-slash"
-            },
-            unhide: {
-                className: null,
-                onClick: () => {
-                    onPatch(
-                        {
-                            id,
-                            siteId,
-                            tappId,
-                            imageList,
-                            headline: title,
-                            message,
-                            publishTime,
-                            publishTimestamp,
-                            hidden: false
-                        }
-                    )
-                },
-                text: "Unhide",
-                icon: "fa fa-eye"
-            }
-        }
-    const maxLength = 220
     let messageIsLong = false
     let cutMessage
-
-    const [messageIsExtended, setMessageIsExtended] = useState(false)
     
-    if(message.length >= maxLength && !messageIsExtended)
+    const [editMode, setEditMode] = useState(false)
+    const [messageIsExtended, setMessageIsExtended] = useState(false)
+
+    const handleDelete = async() => {
+        await chayns.dialog.confirm('Confirm', 'Are you sure you want to delete that new entry?', [
+            {
+                text: 'YES',
+                buttonType: 1
+            }, 
+            {
+                text: 'NO',
+                buttonType: 0
+            }
+            ]).then((result) => {
+                if(result === 1)
+                {
+                    onDelete(id)
+                }
+            }
+            );
+    }
+    const handlePatch = (isHidden : boolean) => {
+        onPatch(
+            {
+                id,
+                siteId,
+                tappId,
+                imageList,
+                headline: title,
+                message,
+                publishTime,
+                publishTimestamp,
+                hidden: isHidden
+            }
+            )
+        }
+
+        const contextMenuItems = 
+            {
+                delete: {
+                    className: null,
+                    onClick: handleDelete,
+                    text: "Delete",
+                    icon: "fa fa-trash"
+                },
+                edit: {
+                    className: null,
+                    onClick: () => {
+                        setEditMode(!editMode)
+                    },
+                    text: "Edit",
+                    icon: "fa fa-edit"
+                },
+                view: {
+                    className: null,
+                    onClick: () => {
+                        setEditMode(!editMode)
+                    },
+                    text: "View",
+                    icon: "fa fa-check"
+                },
+                hide: {
+                    className: null,
+                    onClick: handlePatch(true),
+                    text: "Hide",
+                    icon: "fa fa-eye-slash"
+                },
+                unhide: {
+                    className: null,
+                    onClick: handlePatch(false),
+                    text: "Unhide",
+                    icon: "fa fa-eye"
+                }
+            }
+    
+    if(message.length >= MAX_MESSAGE_LENGTH && !messageIsExtended)
     {
         messageIsLong = true
-        const truncated = message.substr(0, maxLength) as string
+        const truncated = message.substr(0, MAX_MESSAGE_LENGTH)
         const lastSpaceIndex = truncated.lastIndexOf(" ")
         const substring = truncated.substr(0, lastSpaceIndex)
         cutMessage = <span>
@@ -120,7 +113,8 @@ const NewsEntry = ({id, siteId, tappId, title, message, imageList, publishTime, 
         setMessageIsExtended(true)
     }
     function buildContextMenuItems() {
-        const array = [contextMenuItems.delete];
+        const array : ContextMenuItem[] = []
+        array.push(contextMenuItems.delete)
         if(editMode)
             array.push(contextMenuItems.view)
         else
@@ -131,9 +125,9 @@ const NewsEntry = ({id, siteId, tappId, title, message, imageList, publishTime, 
             array.push(contextMenuItems.hide)
         return array
     }
-    const handlePut = (data) => {
+    const handlePublish = (data) => {
         setEditMode(!editMode)
-        onPut(data)
+        onPatch(data)
     }
      
     return(
@@ -165,7 +159,7 @@ const NewsEntry = ({id, siteId, tappId, title, message, imageList, publishTime, 
                                     id = {id}
                                     siteId = {siteId}
                                     tappId = {tappId}
-                                    onPublish = {handlePut}
+                                    onPublish = {handlePublish}
                                     now = {now}
                                     initMessage = {message}
                                     initTitle = {title}
@@ -177,7 +171,7 @@ const NewsEntry = ({id, siteId, tappId, title, message, imageList, publishTime, 
                                 { imageList && imageList.length !== 0
                                 &&
                                     <Gallery
-                                        images = {imageList as string[]} 
+                                        images = {imageList} 
                                     />                                
                                 }
                                 <h2>
@@ -214,7 +208,6 @@ NewsEntry.propTypes = {
     imageList: PropTypes.arrayOf(PropTypes.string),
     publishTime: PropTypes.string.isRequired,
     publishTimestamp: PropTypes.number.isRequired,
-    onPut: PropTypes.func.isRequired,
     onPatch: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
     now: PropTypes.shape({

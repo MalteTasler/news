@@ -1,14 +1,6 @@
-export interface IResponse {
-    headline: string;
-    id: number;
-    message: string;
-    imageList: Array<string> | null;
-    publishTime: string;
-    publishTimestamp: number;
-    hidden: boolean | undefined;
-}
 export interface IListResponse {
     itemList: INews[];
+    fullLength: number;
     length: number;
 }
 export interface INews {
