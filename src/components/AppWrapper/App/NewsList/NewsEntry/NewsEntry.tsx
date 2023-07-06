@@ -31,65 +31,75 @@ const NewsEntry = ({ id, siteId, tappId, title, message, imageList, publishTime,
                 text: 'NO',
                 buttonType: 0
             }
-            ]).then((result) => {
-                if(result === 1)
-                {
-                    onDelete(id)
-                }
-            }
-            );
-    }
-    const handlePatch = (isHidden : boolean) => {
-        onPatch(
+        ]
+        ).then((result) => {
+            if(result === 1)
             {
-                id,
-                siteId,
-                tappId,
-                imageList,
-                headline: title,
-                message,
-                hidden: isHidden
+                onDelete(id)
             }
-            )
         }
+        );
+    }
+    const handlePublish = (data : INewsBase) => {
+        console.log("++++++++ patching...#################################", data)
+        setEditMode(!editMode)
+        onPatch(data)
+    }
+    const handleHide = (shouldBeHidden : boolean) => {
+        onPatch({
+            id,
+            siteId,
+            tappId,
+            imageList,
+            headline: title,
+            message,
+            hidden: shouldBeHidden
+        })
+    }
 
-        const contextMenuItems = 
-            {
-                delete: {
-                    className: null,
-                    onClick: handleDelete,
-                    text: "Delete",
-                    icon: "fa fa-trash"
+    const contextMenuItems = 
+        {
+            delete: {
+                className: null,
+                onClick: async() => {
+                    await handleDelete()
                 },
-                edit: {
-                    className: null,
-                    onClick: () => {
-                        setEditMode(!editMode)
-                    },
-                    text: "Edit",
-                    icon: "fa fa-edit"
+                text: "Delete",
+                icon: "fa fa-trash"
+            },
+            edit: {
+                className: null,
+                onClick: () => {
+                    setEditMode(!editMode)
                 },
-                view: {
-                    className: null,
-                    onClick: () => {
-                        setEditMode(!editMode)
-                    },
-                    text: "View",
-                    icon: "fa fa-check"
+                text: "Edit",
+                icon: "fa fa-edit"
+            },
+            view: {
+                className: null,
+                onClick: () => {
+                    setEditMode(!editMode)
                 },
-                hide: {
-                    className: null,
-                    onClick: handlePatch(true),
-                    text: "Hide",
-                    icon: "fa fa-eye-slash"
+                text: "View",
+                icon: "fa fa-check"
+            },
+            hide: {
+                className: null,
+                onClick: () => {
+                    handleHide(true)
                 },
-                unhide: {
-                    className: null,
-                    onClick: handlePatch(false),
-                    text: "Unhide",
-                    icon: "fa fa-eye"
-                }
+                text: "Hide",
+                icon: "fa fa-eye-slash"
+            },
+            unhide: {
+                className: null,
+                onClick: () => {
+                    handleHide(false)
+                },
+                text: "Unhide",
+                icon: "fa fa-eye"
             }
+        }
     
     if(message.length >= MAX_MESSAGE_LENGTH && !messageIsExtended)
     {
@@ -123,10 +133,6 @@ const NewsEntry = ({ id, siteId, tappId, title, message, imageList, publishTime,
         else
             array.push(contextMenuItems.hide)
         return array
-    }
-    const handlePublish = (data : INewsBase) => {
-        setEditMode(!editMode)
-        onPatch(data)
     }
      
     return(

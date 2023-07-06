@@ -1,4 +1,4 @@
-import { INews, INewsBase } from "../constants/interfaces";
+import { INewsBase } from "../constants/interfaces";
 
 export const patchNewsEntry = async(fetchUrlWithParameters: string, tobitAccessToken: string, data: INewsBase) : Promise<Response> =>
     fetch(fetchUrlWithParameters , {

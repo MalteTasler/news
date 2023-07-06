@@ -20,7 +20,9 @@ const EditNewsEntry = ({ id, siteId, tappId, onPublish, initMessage, initTitle, 
     let imageURLs : string[] = [];
 
     async function handlePublish() {
+        // console.log("publishing#################################")
         await postImages()
+        // console.log("posted images#################################")
         onPublish(
             {
                 id,
@@ -32,6 +34,7 @@ const EditNewsEntry = ({ id, siteId, tappId, onPublish, initMessage, initTitle, 
                 hidden: isHidden
             }
         )
+        // console.log("on Publish executed#################################")
     }
     const onChange = useCallback(
         (validFiles: { map: (arg0: (f: any) => { file: any }) => ConcatArray<{ url: string }> }) => {

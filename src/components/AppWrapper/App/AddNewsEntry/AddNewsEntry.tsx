@@ -15,8 +15,8 @@ const AddNewsEntry = ({ siteId, tappId, onPublish, now } : AddNewsEntryProps) =>
         <div className = {styles.addNewsEntryFrame}>
             <EditNewsEntry
                 id = {0}
-                siteId = {siteId }
-                tappId = {tappId }
+                siteId = {siteId}
+                tappId = {tappId}
                 onPublish = {onPublish}
                 now = {now}
                 initMessage = ""

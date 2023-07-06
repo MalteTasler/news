@@ -138,7 +138,8 @@ const App: FC = () => {
     }
     const publish = async(data : INewsBase) => {
         // if the Id of the -entry to publish is already present in fetched data, do patch, otherwise do post
-        // console.log(data, news, news.find((entry) => {return entry.id == data.id}))
+        // console.log("App #####################publishing#####################")
+        // console.log(news.find((entry) => {return entry.id == data.id}))
         if(news.find((entry) => 
             entry.id === data.id
         ))
@@ -214,7 +215,7 @@ const App: FC = () => {
                     <AddNewsEntry
                         siteId = {SITE_ID}
                         tappId = {TAPP_ID}
-                        onPublish = {() => publish}
+                        onPublish = {publish}
                         now = {now} 
                     />
                     <DeveloperTools 
@@ -256,9 +257,8 @@ const App: FC = () => {
                                         tappId = {TAPP_ID} 
                                         news = {news} 
                                         now = {now} 
-                                        onPatch = {() => publish} 
-                                        onDelete = {() => deleteEntry} 
-                                        frontendURL = {FRONTEND_URLS[0]} 
+                                        onPatch = {publish} 
+                                        onDelete = {deleteEntry} 
                                     /> 
                                     { !URLparam?.M
                                     ?
