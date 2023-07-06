@@ -1,9 +1,9 @@
-import { INews } from "./interfaces";
+import { INews, INewsBase } from "./interfaces";
 
 export type AddNewsEntryProps = {
     siteId: string;
     tappId: number;
-    onPublish: (data: INews) => void;
+    onPublish: (data: INewsBase) => void;
     now: Date;
 };
 export type DeveloperToolsProps = {
@@ -32,7 +32,7 @@ export type NewsEntryProps = {
     imageList: Array<string>;
     publishTime: string;
     publishTimestamp: number;
-    onPatch: (data: INews) => void;
+    onPatch: (data: INewsBase) => void;
     onDelete: (id: number) => void;
     now: Date;
     hidden: boolean;
@@ -42,23 +42,23 @@ export type NewsListProps = {
     tappId: number;
     news: Array<INews>;
     now: Date;
-    onPatch: (data: INews) => void;
+    onPatch: (data: INewsBase) => void;
     onDelete: (id: number) => void;
-    frontendURL: string;
 }
 export type EditNewsEntryProps = {
     id: number;
     siteId: string;
     tappId: number;
-    onPublish: (data: INews) => void;
+    onPublish: (data: INewsBase) => void;
     now: Date;
     initMessage: string;
     initTitle: string;
     initImageList: Array<string>;
+    initIsHidden: boolean;
 }
 export type ContextMenuItem = {
-    className: string | null;
-    onClick: () => void | Promise<void> | void;
+    className: string | null | undefined;
+    onClick: (() => void | Promise<void> | void);
     text: string;
     icon: string;
 }

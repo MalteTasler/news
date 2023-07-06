@@ -6,7 +6,7 @@ import NewsEntry from "./NewsEntry/NewsEntry"
 require('../../../../constants/chayns.d')
 require('../../../../constants/chayns-components.d')
 
-const NewsList = ({ siteId, tappId, news, now, onPatch, onDelete, frontendURL } : NewsListProps) =>
+const NewsList = ({ siteId, tappId, news, now, onPatch, onDelete } : NewsListProps) =>
     <div id = "news_list">
         {
             news.map((element) =>
@@ -28,7 +28,6 @@ const NewsList = ({ siteId, tappId, news, now, onPatch, onDelete, frontendURL } 
                             publishTimestamp = {element.publishTimestamp}
                             onPatch = {onPatch}
                             onDelete = {onDelete}
-                            frontendURL = {frontendURL}
                             now = {now}
                             hidden = {element.hidden || false}
                         />
@@ -45,8 +44,7 @@ NewsList.propTypes = {
     })).isRequired,
     now: PropTypes.shape({}).isRequired,
     onPatch: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
-    frontendURL: PropTypes.string.isRequired
+    onDelete: PropTypes.func.isRequired
 }
 
 NewsList.DisplayName = "NewsList"

@@ -10,7 +10,7 @@ import DeveloperTools from './DeveloperTools/DeveloperTools'
 import NewsList from './NewsList/NewsList'
 import AddNewsEntry from './AddNewsEntry/AddNewsEntry'
 import styles from './App.module.scss'
-import { IListResponse, INews, IParameters } from '../../../constants/interfaces'
+import { IListResponse, INews, INewsBase, IParameters } from '../../../constants/interfaces'
 
 require('../../../constants/chayns.d')
 require('../../../constants/chayns-components.d')
@@ -66,7 +66,7 @@ const App: FC = () => {
         {
             // generate fetchURL with parameters
             const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}?siteId=${SITE_ID}&tappId=${TAPP_ID}&timestamp=${getTimestamp(!offset)}&count=${COUNT}&adminMode=${ADMIN_MODE as unknown as string}`
-            console.log("URL for fetching ", fetchURLWithParameters)
+            // console.log("URL for fetching ", fetchURLWithParameters)
     
             const response = await getNews(fetchURLWithParameters, TOBIT_ACCESS_TOKEN)            
             switch(response.status)
@@ -90,7 +90,7 @@ const App: FC = () => {
                 {
                     const parsedResponse = await response.json() as IListResponse
                     const { itemList, fullLength, length } = parsedResponse
-                    console.log("fetched list of news ", parsedResponse)
+                    // console.log("fetched list of news ", parsedResponse)
                     setNews((prevState:INews[]):INews[] => {
                         if (offset)
                         {
@@ -136,7 +136,7 @@ const App: FC = () => {
             setNews([parsedResponse])
         }
     }
-    const publish = async(data : INews) => {
+    const publish = async(data : INewsBase) => {
         // if the Id of the -entry to publish is already present in fetched data, do patch, otherwise do post
         // console.log(data, news, news.find((entry) => {return entry.id == data.id}))
         if(news.find((entry) => 
@@ -144,16 +144,16 @@ const App: FC = () => {
         ))
         {                        
             const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}/${data.id as number}`
-            console.log("URL for fetching ", fetchURLWithParameters)
-            const response = await patchNewsEntry(fetchURLWithParameters, TOBIT_ACCESS_TOKEN, data)
-            console.log("PATCH - Response: ", response)
+            // console.log("URL for fetching ", fetchURLWithParameters)
+            await patchNewsEntry(fetchURLWithParameters, TOBIT_ACCESS_TOKEN, data)
+            // console.log("PATCH - Response: ", response)
         }
         else
         {
             const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}`
-            console.log("URL for fetching ", fetchURLWithParameters)
-            const response = await postNewsEntry(fetchURLWithParameters, TOBIT_ACCESS_TOKEN, data)
-            console.log("POST - Response: ", response)        
+            // console.log("URL for fetching ", fetchURLWithParameters)
+            await postNewsEntry(fetchURLWithParameters, TOBIT_ACCESS_TOKEN, data)
+            // console.log("POST - Response: ", response)        
         }
         setCounter(c => c+1)
         now = new Date()
@@ -161,9 +161,9 @@ const App: FC = () => {
     }
     const deleteEntry = async(id : number) => {
         const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}/${id}`
-        console.log("URL for fetching ", fetchURLWithParameters)
-        const response = await deleteNewsEntry(fetchURLWithParameters, TOBIT_ACCESS_TOKEN)
-        console.log("DELETE - Response: ", response)
+        // console.log("URL for fetching ", fetchURLWithParameters)
+        await deleteNewsEntry(fetchURLWithParameters, TOBIT_ACCESS_TOKEN)
+        // console.log("DELETE - Response: ", response)
         setCounter(c => c+1)
         await fetchNews(false)
     }
@@ -267,8 +267,10 @@ const App: FC = () => {
                                                 disabled = {!loadMoreButtonIsEnabled} 
                                                 className = {styles.btLoadMore as string} 
                                                 onClick = {() => laodMore()}
-                                                title = "Mehr"
-                                            />
+                                                // title = "Mehr"
+                                            >
+                                                Mehr    
+                                            </Button>
                                         </div>
                                     :
                                         <div 
@@ -277,8 +279,10 @@ const App: FC = () => {
                                             <Button 
                                                 className = {styles.btLoadMore as string} 
                                                 onClick = {() => navigateToAllNews()}
-                                                title = "Alle News anzeigen"
-                                            />                                               
+                                                // title = "Alle News anzeigen"
+                                            >
+                                                Alle News anzeigen
+                                            </Button>                                               
                                         </div>
                                     }
                                 </div>

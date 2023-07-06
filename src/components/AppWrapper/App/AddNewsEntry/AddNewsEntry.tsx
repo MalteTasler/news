@@ -22,6 +22,7 @@ const AddNewsEntry = ({ siteId, tappId, onPublish, now } : AddNewsEntryProps) =>
                 initMessage = ""
                 initTitle = ""
                 initImageList = {[]}
+                initIsHidden = {false}
             />
         </div>
     </Accordion>

@@ -32,7 +32,11 @@ const DeveloperTools = ({ siteId, tappId, numberOfDisplayedNews, numberOfFetched
         setShouldCopiedTappId(true)
     }
     return(
-        <Accordion head = "Developer Tools" open dafaultOpened>
+        <Accordion 
+            head = "Developer Tools" 
+            open 
+            dafaultOpened
+        >
             <div className = {styles.developerToolsFrame}>  
                 <div className = {styles.IdDisplay} onClick={() => copySiteId}>
                     <div className = {styles.IdLabel}>    
@@ -69,10 +73,9 @@ const DeveloperTools = ({ siteId, tappId, numberOfDisplayedNews, numberOfFetched
                 >
                     Backend:
                     <SelectButton
-                        label = "Select one"
                         title = "Select the backend"
                         list = {sbBackendList}
-                        onSelect = {(data) => setUseBackend(data.selection[0].id)}
+                        onSelect = {(data : {selection : Array<{id : string}>}) => setUseBackend(data.selection[0].id as unknown as number)}
                         listKey = "id"
                         listValue = "name"
                         selectedFlag = "isSelected"

@@ -3,10 +3,11 @@ import PropTypes from "prop-types"
 import { Gallery, ContextMenu } from 'chayns-components'
 import { getTimeAgo } from "utils/date"
 import { ContextMenuItem, NewsEntryProps } from "constants/types"
+import { MAX_MESSAGE_LENGTH } from "constants/config"
+import { INewsBase } from "constants/interfaces"
 import Footer from './Footer/Footer'
 import styles from './NewsEntry.module.scss'
 import EditNewsEntry from "../../../../shared/EditNewsEntry/EditNewsEntry"
-import { MAX_MESSAGE_LENGTH } from "constants/config"
 
 require('../../../../../constants/chayns.d')
 require('../../../../../constants/chayns-components.d')
@@ -47,8 +48,6 @@ const NewsEntry = ({ id, siteId, tappId, title, message, imageList, publishTime,
                 imageList,
                 headline: title,
                 message,
-                publishTime,
-                publishTimestamp,
                 hidden: isHidden
             }
             )
@@ -112,7 +111,7 @@ const NewsEntry = ({ id, siteId, tappId, title, message, imageList, publishTime,
     function displayWholeMessage() {
         setMessageIsExtended(true)
     }
-    function buildContextMenuItems() {
+    function buildContextMenuItems() : ContextMenuItem[] {
         const array : ContextMenuItem[] = []
         array.push(contextMenuItems.delete)
         if(editMode)
@@ -125,7 +124,7 @@ const NewsEntry = ({ id, siteId, tappId, title, message, imageList, publishTime,
             array.push(contextMenuItems.hide)
         return array
     }
-    const handlePublish = (data) => {
+    const handlePublish = (data : INewsBase) => {
         setEditMode(!editMode)
         onPatch(data)
     }
@@ -137,7 +136,7 @@ const NewsEntry = ({ id, siteId, tappId, title, message, imageList, publishTime,
                 <div className = {styles.newsEntryFrame}>
                     <div 
                         className = "content__card" 
-                        id = {id as string}
+                        id = {`news_entry_${id}`}
                     >
                         {chayns.env.user.adminMode &&
                             <div className = {styles.newsEntryHeader}>
@@ -164,6 +163,7 @@ const NewsEntry = ({ id, siteId, tappId, title, message, imageList, publishTime,
                                     initMessage = {message}
                                     initTitle = {title}
                                     initImageList = {imageList}
+                                    initIsHidden = {hidden}
                                 />
                             </div>
                         :

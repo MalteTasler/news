@@ -8,11 +8,12 @@ import styles from "./EditNewsEntry.module.scss"
 require('../../../constants/chayns.d')
 require('../../../constants/chayns-components.d')
 
-const EditNewsEntry = ({ id, siteId, tappId, onPublish, now, initMessage, initTitle, initImageList } : EditNewsEntryProps) =>
+const EditNewsEntry = ({ id, siteId, tappId, onPublish, initMessage, initTitle, initImageList, initIsHidden } : EditNewsEntryProps) =>
 {
-    const [message, setMessage] = useState(initMessage)
-    const [title, setTitle] = useState(initTitle)
-    const [images, setImages] = useState(initImageList.map((image : string) => ({ url: image})))
+    const [message, setMessage] = useState<string>(initMessage)
+    const [title, setTitle] = useState<string>(initTitle)
+    const [images, setImages] = useState<Array<{url: string}>>(initImageList.map((image : string) => ({ url: image})))
+    const [isHidden] = useState<boolean>(initIsHidden)
     const [displayPath, setDisplayPath] = useState('')
     const [isUploading, setIsUploading] = useState(false)
 
@@ -28,8 +29,7 @@ const EditNewsEntry = ({ id, siteId, tappId, onPublish, now, initMessage, initTi
                 imageList: imageURLs,
                 headline: title,
                 message,
-                publishTime: now,
-                publishTimestamp: now.getTime()
+                hidden: isHidden
             }
         )
     }
@@ -69,7 +69,7 @@ const EditNewsEntry = ({ id, siteId, tappId, onPublish, now, initMessage, initTi
                 image.file || image.url,
                 'componentsTestUpload',
                 chayns.env.user.personId,
-                chayns.env.site.id
+                siteId,
                 );
                 imageURLs.push(`${result.base}/${result.key}`);
                 setDisplayPath(`${displayPath}${result.base}/${result.key}\n`)
@@ -126,8 +126,9 @@ const EditNewsEntry = ({ id, siteId, tappId, onPublish, now, initMessage, initTi
                 <Button 
                     className = {styles.btPublish} 
                     onClick={() => handlePublish()}
-                    title = "Veröffentlichen"
-                />
+                >
+                    Veröffentlichen
+                </Button>
             </div>
         </div>
     )
@@ -143,7 +144,8 @@ EditNewsEntry.propTypes = {
     }).isRequired,
     initMessage: PropTypes.string.isRequired,
     initTitle: PropTypes.string.isRequired,
-    initImageList: PropTypes.arrayOf(PropTypes.string).isRequired
+    initImageList: PropTypes.arrayOf(PropTypes.string).isRequired,
+    initIsHidden: PropTypes.bool.isRequired
 }
 
 EditNewsEntry.DisplayName = "EditNewsEntry"

@@ -27,6 +27,20 @@ declare module 'chayns-components' {
   
     export const ChooseButton: React.FunctionComponent<Omit<ButtonProps, 'chooseButton'>>;
 
+    type SelectButtonProps = {
+      title?: string;
+      list: Array<{ id: string | number; name: string }>;
+      onSelect?: () => void;
+      listKey?: string;
+      listValue?: string;
+      selectedFlag?: string | number;
+      showSelection?: boolean;
+      className?: string;
+    }
+    type SelectionButtonSelection = {
+      selection: Array;
+    }
+
     export const SelectButton: React.FunctionComponent;
   
     type TextStringProps = {

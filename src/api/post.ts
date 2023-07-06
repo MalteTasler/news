@@ -1,6 +1,6 @@
-import { INews } from "../constants/interfaces";
+import { INewsBase } from "../constants/interfaces";
 
-export const postNewsEntry = async(fetchUrlWithParameters: string, tobitAccessToken: string, data: INews) : Promise<Response> =>
+export const postNewsEntry = async(fetchUrlWithParameters: string, tobitAccessToken: string, data: INewsBase) : Promise<Response> =>
     fetch(fetchUrlWithParameters , {
         method: "POST",
         body: JSON.stringify({
@@ -9,8 +9,6 @@ export const postNewsEntry = async(fetchUrlWithParameters: string, tobitAccessTo
             imageList: data.imageList,
             headline: data.headline,
             message: data.message,
-            publishTime: data.publishTime,
-            publishTimestamp: data.publishTimestamp,
             hidden: data.hidden
         }),
         headers: {
