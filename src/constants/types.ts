@@ -32,8 +32,8 @@ export type NewsEntryProps = {
     imageList: Array<string>;
     publishTime: string;
     publishTimestamp: number;
-    onPatch: (data: INewsBase) => void;
-    onDelete: (id: number) => void;
+    onPatch: (data: INewsBase) => Promise<void>;
+    onDelete: (id: number) => Promise<void>;
     now: Date;
     hidden: boolean;
 }
@@ -42,8 +42,8 @@ export type NewsListProps = {
     tappId: number;
     news: Array<INews>;
     now: Date;
-    onPatch: (data: INewsBase) => void;
-    onDelete: (id: number) => void;
+    onPatch: (data: INewsBase) => Promise<void>;
+    onDelete: (id: number) => Promise<void>;
 }
 export type EditNewsEntryProps = {
     id: number;

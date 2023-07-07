@@ -6,7 +6,7 @@ import { ContextMenuItem, NewsEntryProps } from "constants/types"
 import { MAX_MESSAGE_LENGTH } from "constants/config"
 import { INewsBase } from "constants/interfaces"
 import Footer from './Footer/Footer'
-import styles from './NewsEntry.module.scss'
+import stylesNewsEntry from './NewsEntry.module.scss'
 import EditNewsEntry from "../../../../shared/EditNewsEntry/EditNewsEntry"
 
 require('../../../../../constants/chayns.d')
@@ -41,7 +41,7 @@ const NewsEntry = ({ id, siteId, tappId, title, message, imageList, publishTime,
         );
     }
     const handlePublish = (data : INewsBase) => {
-        console.log("++++++++ patching...#################################", data)
+        // console.log("++++++++ patching...#################################", data)
         setEditMode(!editMode)
         onPatch(data)
     }
@@ -139,20 +139,20 @@ const NewsEntry = ({ id, siteId, tappId, title, message, imageList, publishTime,
         <div>
             {(chayns.env.user.adminMode || !hidden)
             &&
-                <div className = {styles.newsEntryFrame}>
+                <div className = {stylesNewsEntry.newsEntryFrame}>
                     <div 
                         className = "content__card" 
                         id = {`news_entry_${id}`}
                     >
                         {chayns.env.user.adminMode &&
-                            <div className = {styles.newsEntryHeader}>
-                                {hidden && <div className = {styles.labelOnHide}>Ausgeblendet</div>}
-                                <div className = {styles.contextMenuFrame}>
+                            <div className = {stylesNewsEntry.newsEntryHeader}>
+                                {hidden && <div className = {stylesNewsEntry.labelOnHide}>Ausgeblendet</div>}
+                                <div className = {stylesNewsEntry.contextMenuFrame}>
                                     <ContextMenu
                                         items = {
                                             buildContextMenuItems()
                                         }
-                                        className = {styles.contextMenu}
+                                        className = {stylesNewsEntry.contextMenu}
                                     />
                                 </div>
                             </div>
@@ -183,7 +183,7 @@ const NewsEntry = ({ id, siteId, tappId, title, message, imageList, publishTime,
                                 <h2>
                                     {title}
                                 </h2>
-                                <div className = {styles.message}>
+                                <div className = {stylesNewsEntry.message}>
                                     {messageIsLong 
                                     ?
                                         cutMessage 

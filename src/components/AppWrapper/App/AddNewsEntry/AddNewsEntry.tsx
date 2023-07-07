@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import { Accordion } from 'chayns-components'
 import { AddNewsEntryProps } from "constants/types"
 import EditNewsEntry from "../../../shared/EditNewsEntry/EditNewsEntry"
-import styles from "./AddNewsEntry.module.scss"
+import stylesAddNewsEntry from "./AddNewsEntry.module.scss"
 
 require('../../../../constants/chayns.d')
 require('../../../../constants/chayns-components.d')
@@ -12,7 +12,7 @@ const AddNewsEntry = ({ siteId, tappId, onPublish, now } : AddNewsEntryProps) =>
     <Accordion
         head = "Create News Entry"
     >
-        <div className = {styles.addNewsEntryFrame}>
+        <div className = {stylesAddNewsEntry.addNewsEntryFrame}>
             <EditNewsEntry
                 id = {0}
                 siteId = {siteId}

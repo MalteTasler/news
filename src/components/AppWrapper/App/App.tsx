@@ -5,7 +5,7 @@ import { getNews } from 'api/get'
 import { postNewsEntry } from 'api/post'
 import { patchNewsEntry } from 'api/patch'
 import { deleteNewsEntry } from 'api/delete'
-import { BACKEND_URLS, COUNT, FRONTEND_URLS } from 'constants/config'
+import { BACKEND_URLS, FETCH_COUNT } from 'constants/config'
 import DeveloperTools from './DeveloperTools/DeveloperTools'
 import NewsList from './NewsList/NewsList'
 import AddNewsEntry from './AddNewsEntry/AddNewsEntry'
@@ -20,6 +20,7 @@ const App: FC = () => {
     const SITE_ID : string = chayns.env.site.id 
     const TAPP_ID : number = chayns.env.site.tapp.id 
     const TOBIT_ACCESS_TOKEN = chayns.env.user.tobitAccessToken 
+    let now = new Date()
         
     const [news, setNews] = useState<INews[]>([])
     const [useBackend, setUseBackend] = useState<number>(1)
@@ -31,8 +32,6 @@ const App: FC = () => {
     const [numberOfDatabaseNews, setNumberOfDatabaseNews] = useState<number | null>(null)
     const [numberOfDatabaseUnhiddenNews, setNumberOfDatabaseUnhiddenNews] = useState<number | null>(null)
     const [loadMoreButtonIsEnabled, setLoadMoreButtonIsEnabled] = useState<boolean>(false)
-    
-    let now = new Date()
 
     const laodMore = async() => {
         // console.log("trying to laod more")
@@ -57,7 +56,6 @@ const App: FC = () => {
     const setShowNewsFunc = (data : boolean) => {
         setShowNews(data)
     }
-    
     const fetchNews = async(offset = false, param = URLparam) => {  
         // if offset is true, last value of current news array gets popped
         // console.log("param m ", param, param?.M, (param?.M === null || param?.M === undefined || param?.M === false))
@@ -65,9 +63,8 @@ const App: FC = () => {
         // if no parameter for a news entry is used in the URL, load multiple entries
         {
             // generate fetchURL with parameters
-            const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}?siteId=${SITE_ID}&tappId=${TAPP_ID}&timestamp=${getTimestamp(!offset)}&count=${COUNT}&adminMode=${ADMIN_MODE as unknown as string}`
+            const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}?siteId=${SITE_ID}&tappId=${TAPP_ID}&timestamp=${getTimestamp(!offset)}&count=${FETCH_COUNT}&adminMode=${ADMIN_MODE as unknown as string}`
             // console.log("URL for fetching ", fetchURLWithParameters)
-    
             const response = await getNews(fetchURLWithParameters, TOBIT_ACCESS_TOKEN)            
             switch(response.status)
             {
@@ -107,16 +104,16 @@ const App: FC = () => {
                     if(offset)
                     {
                         setNumberOfFetchedNews(prevState => prevState + number)
-                        if(number > 10)
-                            setNumberOfDisplayedNews(prevState => prevState + 10)
+                        if(number > FETCH_COUNT)
+                            setNumberOfDisplayedNews(prevState => prevState + FETCH_COUNT)
                         else
                             setNumberOfDisplayedNews(prevState => prevState + number)
                     }
                     else
                     {
                         setNumberOfFetchedNews(number)
-                        if(number > 10)
-                            setNumberOfDisplayedNews(10)
+                        if(number > FETCH_COUNT)
+                            setNumberOfDisplayedNews(FETCH_COUNT)
                         else
                             setNumberOfDisplayedNews(number)
                     }
@@ -204,7 +201,7 @@ const App: FC = () => {
     [useBackend])
 
     return (
-        <div className = {styles.main as string}>
+        <div className = {styles.main}>
             <AnimationWrapper>
                 <h1 id = "pageHeadline">Aktuelle News</h1>
                 <p id = "pageSubHeadline">Kurz, kompakt und immer wieder frisch informieren wir hier über aktuelle Themen und Aktionen.</p>
@@ -239,7 +236,7 @@ const App: FC = () => {
                 <div>{
                     (numberOfDatabaseNews === null) 
                     ? 
-                        <div className = {styles.loading as string}>
+                        <div className = {styles.loading}>
                             <br />waiting for news...
                         </div>
                     :
@@ -247,7 +244,7 @@ const App: FC = () => {
                         {
                             (numberOfDatabaseNews && news && Array.isArray(news) && news.length > 0)
                             ?
-                                <div className = {styles.newsContainer as string}>
+                                <div className = {styles.newsContainer}>
                                     {URLparam?.M
                                     &&
                                         <div>Param {URLparam.M}</div>
@@ -262,10 +259,9 @@ const App: FC = () => {
                                     /> 
                                     { !URLparam?.M
                                     ?
-                                        <div className = {styles.btContainer as string}>
+                                        <div className = {styles.btContainer}>
                                             <Button 
                                                 disabled = {!loadMoreButtonIsEnabled} 
-                                                className = {styles.btLoadMore as string} 
                                                 onClick = {() => laodMore()}
                                                 // title = "Mehr"
                                             >
@@ -274,10 +270,9 @@ const App: FC = () => {
                                         </div>
                                     :
                                         <div 
-                                            className = {styles.btContainer as string}
+                                            className = {styles.btContainer}
                                         >
-                                            <Button 
-                                                className = {styles.btLoadMore as string} 
+                                            <Button                                                  
                                                 onClick = {() => navigateToAllNews()}
                                                 // title = "Alle News anzeigen"
                                             >
