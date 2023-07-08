@@ -2,11 +2,11 @@ import React from "react"
 import PropTypes from "prop-types"
 import { Accordion } from 'chayns-components'
 import { AddNewsEntryProps } from "constants/types"
-import EditNewsEntry from "../../../shared/EditNewsEntry/EditNewsEntry"
+import EditNewsEntry from "../../../../shared/EditNewsEntry/EditNewsEntry"
 import stylesAddNewsEntry from "./AddNewsEntry.module.scss"
 
-require('../../../../constants/chayns.d')
-require('../../../../constants/chayns-components.d')
+require('../../../../../constants/chayns.d')
+require('../../../../../constants/chayns-components.d')
 
 const AddNewsEntry = ({ siteId, tappId, onPublish, now } : AddNewsEntryProps) => 
     <Accordion

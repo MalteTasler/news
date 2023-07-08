@@ -3,8 +3,8 @@ import PropTypes from "prop-types"
 import { NewsListProps } from "constants/types"
 import NewsEntry from "./NewsEntry/NewsEntry"
 
-require('../../../../constants/chayns.d')
-require('../../../../constants/chayns-components.d')
+require('../../../../../constants/chayns.d')
+require('../../../../../constants/chayns-components.d')
 
 const NewsList = ({ siteId, tappId, news, now, onPatch, onDelete } : NewsListProps) =>
     <div id = "news_list">

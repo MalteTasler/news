@@ -5,8 +5,8 @@ import { FRONTEND_URLS } from "constants/config"
 import { FooterProps } from "constants/types"
 import stylesFooter from "./Footer.module.scss"
 
-require('../../../../../../constants/chayns.d')
-require('../../../../../../constants/chayns-components.d')
+require('../../../../../../../constants/chayns.d')
+require('../../../../../../../constants/chayns-components.d')
 
 const Footer = ({ date, dateAbsolute, id } : FooterProps) =>
     <div className = {stylesFooter.newsFooter}>

@@ -7,10 +7,10 @@ import { MAX_MESSAGE_LENGTH } from "constants/config"
 import { INewsBase } from "constants/interfaces"
 import Footer from './Footer/Footer'
 import stylesNewsEntry from './NewsEntry.module.scss'
-import EditNewsEntry from "../../../../shared/EditNewsEntry/EditNewsEntry"
+import EditNewsEntry from "../../../../../shared/EditNewsEntry/EditNewsEntry"
 
-require('../../../../../constants/chayns.d')
-require('../../../../../constants/chayns-components.d')
+require('../../../../../../constants/chayns.d')
+require('../../../../../../constants/chayns-components.d')
 
 const NewsEntry = ({ id, siteId, tappId, title, message, imageList, publishTime, publishTimestamp, onPatch, onDelete, now, hidden } : NewsEntryProps) =>
 {

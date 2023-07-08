@@ -7,8 +7,10 @@ import { patchNewsEntry } from 'api/patch'
 import { deleteNewsEntry } from 'api/delete'
 import { BACKEND_URLS, FETCH_COUNT } from 'constants/config'
 import DeveloperTools from './DeveloperTools/DeveloperTools'
-import NewsList from './NewsList/NewsList'
-import AddNewsEntry from './AddNewsEntry/AddNewsEntry'
+import NewsListErrorBoundary from './NewsListErrorBoundary/NewsListErrorBoundary'
+import NewsList from './NewsListErrorBoundary/NewsList/NewsList'
+import AddNewsEntryErrorBoundary from './AddNewsEntryErrorBoundary/AddNewsEntryErrorBoundary'
+import AddNewsEntry from './AddNewsEntryErrorBoundary/AddNewsEntry/AddNewsEntry'
 import styles from './App.module.scss'
 import { IListResponse, INews, INewsBase, IParameters } from '../../../constants/interfaces'
 
@@ -209,12 +211,14 @@ const App: FC = () => {
             {ADMIN_MODE
             &&
                 <div>
-                    <AddNewsEntry
-                        siteId = {SITE_ID}
-                        tappId = {TAPP_ID}
-                        onPublish = {publish}
-                        now = {now} 
-                    />
+                    <AddNewsEntryErrorBoundary>
+                        <AddNewsEntry
+                            siteId = {SITE_ID}
+                            tappId = {TAPP_ID}
+                            onPublish = {publish}
+                            now = {now} 
+                        />
+                    </AddNewsEntryErrorBoundary>
                     <DeveloperTools 
                         siteId = {SITE_ID}
                         tappId = {TAPP_ID}
@@ -249,14 +253,16 @@ const App: FC = () => {
                                     &&
                                         <div>Param {URLparam.M}</div>
                                     }
-                                    <NewsList
-                                        siteId = {SITE_ID} 
-                                        tappId = {TAPP_ID} 
-                                        news = {news} 
-                                        now = {now} 
-                                        onPatch = {publish} 
-                                        onDelete = {deleteEntry} 
-                                    /> 
+                                    <NewsListErrorBoundary>
+                                        <NewsList
+                                            siteId = {SITE_ID} 
+                                            tappId = {TAPP_ID} 
+                                            news = {news} 
+                                            now = {now} 
+                                            onPatch = {publish} 
+                                            onDelete = {deleteEntry} 
+                                        />
+                                    </NewsListErrorBoundary>
                                     { !URLparam?.M
                                     ?
                                         <div className = {styles.btContainer}>
