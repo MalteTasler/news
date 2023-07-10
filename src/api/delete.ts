@@ -1,8 +1,11 @@
-export const deleteNewsEntry = async (fetchUrlWithParameters : string, tobitAccessToken : string) : Promise<Response> =>
+export const deleteNewsEntry = async (
+    fetchUrlWithParameters: string,
+    tobitAccessToken: string
+): Promise<Response> =>
     fetch(fetchUrlWithParameters, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
-            "Content-type": "application/json; charset=UTF-8",
-            "Authorization" : `bearer ${tobitAccessToken}`
-        }
-    })
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `bearer ${tobitAccessToken}`,
+        },
+    });

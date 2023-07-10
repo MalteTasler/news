@@ -24,5 +24,5 @@ export interface INewsBase {
     tappId: number;
 }
 export interface IParameters {
-    M: string | boolean
+    M: string | boolean;
 }

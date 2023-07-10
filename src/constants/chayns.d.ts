@@ -21,11 +21,16 @@ declare namespace chayns {
 
     function getWindowMetrics(): Promise<any>;
 
-    function addAdminSwitchListener(cb: (event: { mode: number }) => void): Promise<void>;
+    function addAdminSwitchListener(
+        cb: (event: { mode: number }) => void
+    ): Promise<void>;
 
     function invokeCall(value: string | any): Promise<void>;
 
-    function appendUrlParameter(parameters: Record<string, string>, override?: boolean): Promise<void>;
+    function appendUrlParameter(
+        parameters: Record<string, string>,
+        override?: boolean
+    ): Promise<void>;
 
     type WebViewOptions = {
         bounces?: boolean;
@@ -37,25 +42,27 @@ declare namespace chayns {
 
     function hideWaitCursor(): Promise<void>;
 
-    type ChaynsScrollEvent = {
-        event: {
-            scrollX: number;
-            scrollY: number;
-            timeStamp: number;
-            type: 'scroll';
-        };
-        windowMetrics: {
-            AvailHeight: number;
-            WindowInnerHeight: number;
-            WindowInnerWidth: number;
-            coverHeight: number;
-            frameX: number;
-            frameY: number;
-            menuHeight: number;
-            offsetTop: number;
-            pageYOffset: number;
-        };
-    } | { };
+    type ChaynsScrollEvent =
+        | {
+              event: {
+                  scrollX: number;
+                  scrollY: number;
+                  timeStamp: number;
+                  type: 'scroll';
+              };
+              windowMetrics: {
+                  AvailHeight: number;
+                  WindowInnerHeight: number;
+                  WindowInnerWidth: number;
+                  coverHeight: number;
+                  frameX: number;
+                  frameY: number;
+                  menuHeight: number;
+                  offsetTop: number;
+                  pageYOffset: number;
+              };
+          }
+        | {};
 
     function addScrollListener(cb: (event: ChaynsScrollEvent) => void): void;
 
@@ -74,7 +81,7 @@ declare namespace chayns {
     function disallowRefreshScroll(): Promise<void>;
 
     function hideFloatingButton(): void;
-    
+
     function closeUrl(): void;
 
     type SetHeightParam = {
@@ -83,7 +90,7 @@ declare namespace chayns {
         fullViewport?: boolean;
         addJSONParam?: object;
         full?: boolean;
-    }
+    };
 
     function setHeight(param: SetHeightParam): Promise<void>;
 
@@ -97,9 +104,9 @@ declare namespace chayns {
         const isChaynsWeb: boolean;
 
         const isApp: boolean;
-        
+
         const isIOS: boolean;
-        
+
         const isAndroid: boolean;
 
         const os: string;
@@ -171,11 +178,11 @@ declare namespace chayns {
     }
 
     namespace storage {
-        function set(key: string, value: any): Promise<void>
+        function set(key: string, value: any): Promise<void>;
         function get(key: string): Promise<null | {
-            object: any
-        }>
-        function remove(key: string): Promise<void>
+            object: any;
+        }>;
+        function remove(key: string): Promise<void>;
     }
 
     namespace dialog {
@@ -213,7 +220,9 @@ declare namespace chayns {
             }[];
         };
 
-        function advancedDate(options: AdvancedDateOptions): Promise<AdvancedDateOptionsResponse>;
+        function advancedDate(
+            options: AdvancedDateOptions
+        ): Promise<AdvancedDateOptionsResponse>;
 
         function sendData(data: any): Promise<void>;
 
@@ -224,7 +233,9 @@ declare namespace chayns {
 
         function addDialogDataListener(cb: (data: any) => void): Promise<void>;
 
-        function removeDialogDataListener(cb: (data: any) => void): Promise<void>;
+        function removeDialogDataListener(
+            cb: (data: any) => void
+        ): Promise<void>;
 
         type DialogButton = {
             text: string;
@@ -248,11 +259,20 @@ declare namespace chayns {
             value: any;
         };
 
-        function iFrame(options: IFrameDialogOptions): Promise<IFrameDialogResponse>;
+        function iFrame(
+            options: IFrameDialogOptions
+        ): Promise<IFrameDialogResponse>;
 
-        function alert(title: string | undefined, description?: string) : Promise<number>;
+        function alert(
+            title: string | undefined,
+            description?: string
+        ): Promise<number>;
 
-        function confirm(title: string | undefined, description?: string, buttons?: DialogButton[]) : Promise<number>;
+        function confirm(
+            title: string | undefined,
+            description?: string,
+            buttons?: DialogButton[]
+        ): Promise<number>;
 
         type SelectDialogItem<T> = {
             name: string;
@@ -266,7 +286,7 @@ declare namespace chayns {
         type SelectDialogOptions<T> = {
             title?: string;
             message?: string;
-            list: SelectDialogItem<T>[],
+            list: SelectDialogItem<T>[];
             multiselect?: boolean;
             quickfind?: boolean;
             type?: selectType;
@@ -276,11 +296,13 @@ declare namespace chayns {
         };
 
         type SelectDialogResponse<T> = {
-            buttonType: buttonType | number
+            buttonType: buttonType | number;
             selection: SelectDialogItem<T>[];
         };
 
-        function select<T = any>(options: SelectDialogOptions<T>) : Promise<SelectDialogResponse<T>>;
+        function select<T = any>(
+            options: SelectDialogOptions<T>
+        ): Promise<SelectDialogResponse<T>>;
 
         type InputDialogOptions = {
             title?: string;
@@ -296,11 +318,13 @@ declare namespace chayns {
         };
 
         type InputDialogResponse = {
-            buttonType: buttonType,
+            buttonType: buttonType;
             text: string;
         };
 
-        function input<T = any>(options: InputDialogOptions) : Promise<InputDialogResponse>;
+        function input<T = any>(
+            options: InputDialogOptions
+        ): Promise<InputDialogResponse>;
 
         type DateDialogOptions = {
             dateType: dateType;
@@ -353,9 +377,13 @@ declare namespace chayns {
     namespace utils {
         function isNumber(value: number | any): value is number;
 
-        function isObject(value: Record<any, any> | any): value is Record<any, any>;
+        function isObject(
+            value: Record<any, any> | any
+        ): value is Record<any, any>;
 
-        function isPresent<T>(value: T | null | undefined): value is Exclude<T, null | undefined>;
+        function isPresent<T>(
+            value: T | null | undefined
+        ): value is Exclude<T, null | undefined>;
 
         function isFunction(value: any): value is (...args: any[]) => any;
 
@@ -369,7 +397,11 @@ declare namespace chayns {
 
         function isUrl(value: any): value is string;
 
-        function mixColor(color1: string, color2: string, weight: number): string;
+        function mixColor(
+            color1: string,
+            color2: string,
+            weight: number
+        ): string;
 
         function getJwtPayload(jwt: string): Record<string, any>;
 
@@ -464,20 +496,20 @@ declare namespace chayns {
             'secondary-407': string;
             'secondary-408': string;
             'secondary-409': string;
-            'primary': string;
-            'secondary': string;
-            'headline': string;
+            primary: string;
+            secondary: string;
+            headline: string;
             'headline-1': string;
             'headline-2': string;
             'headline-3': string;
             'headline-4': string;
             'headline-5': string;
-            'text': string;
-            'footer': string;
+            text: string;
+            footer: string;
             'cw-body-background': string;
-            'red': string;
-            'green': string;
-            'wrong': string;
+            red: string;
+            green: string;
+            wrong: string;
             'depend-on-brightness': string;
             'red-1': string;
             'red-2': string;
@@ -496,7 +528,7 @@ declare namespace chayns {
         namespace colors {
             function getAvailableColorList(): (keyof ColorNames)[];
             function get(): string;
-            function getColorFromPalette(value: (keyof ColorNames)): string;
+            function getColorFromPalette(value: keyof ColorNames): string;
         }
 
         namespace ls {
@@ -519,7 +551,7 @@ declare namespace chayns {
         FACEBOOK,
         T_WEB,
         CANCEL,
-        ALREADY_LOGGED_IN
+        ALREADY_LOGGED_IN,
     }
 
     type SelectTappConfig = {
@@ -531,13 +563,16 @@ declare namespace chayns {
         params?: string;
     };
 
-    function selectTapp(tapp: chayns.SelectTappConfig, parameter?: string | string[]): Promise<any>;
+    function selectTapp(
+        tapp: chayns.SelectTappConfig,
+        parameter?: string | string[]
+    ): Promise<any>;
 
     function scrollToY(position: number): Promise<any>;
 
-    function addAccessTokenChangeListener(func: ()=>void);
+    function addAccessTokenChangeListener(func: () => void);
 
-    function removeAccessTokenChangeListener(func: ()=>void);
+    function removeAccessTokenChangeListener(func: () => void);
 
     function addOnActivateListener(callback: (value: unknown) => any): void;
 
@@ -559,9 +594,9 @@ declare namespace chayns {
         accuracy: number;
     };
 
-    function getGeoLocation() : Promise<GeoLocationResponse>;
+    function getGeoLocation(): Promise<GeoLocationResponse>;
 
-    function hideBackButton() : void;
+    function hideBackButton(): void;
 
     type ShowFloatingButtonOptions = {
         color?: string;
@@ -577,7 +612,10 @@ declare namespace chayns {
         };
         badge?: string;
     };
-    function showFloatingButton(caption: ShowFloatingButtonOptions, callback: () => any): void;
+    function showFloatingButton(
+        caption: ShowFloatingButtonOptions,
+        callback: () => any
+    ): void;
 
     type SetSubTappOptions = {
         sortID?: number;

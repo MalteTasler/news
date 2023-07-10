@@ -1,45 +1,46 @@
 {
-  "name": "newsmt",
-  "version": "1.0.0",
-  "private": true,
-  "description": "A web frontend application written in React and TypeScript, useable as a pagemaker plugin for chayns®, that provides the creation and updating of news entries with multimedia content",
-  "keywords": [
-    "chayns",
-    "chayns-toolkit",
-    "react"
-  ],
-  "scripts": {
-    "build": "chayns-toolkit build",
-    "dev": "chayns-toolkit dev",
-    "start": "chayns-toolkit dev",
-    "format": "prettier . --write",
-    "lint": "chayns-toolkit lint"
-  },
-  "prettier": {
-    "proseWrap": "always",
-    "singleQuote": true,
-    "tabWidth": 4
-  },
-  "eslintConfig": {
-    "extends": "@chayns-toolkit"
-  },
-  "dependencies": {
-    "@reduxjs/toolkit": "^1.9.5",
-    "chayns-api": "^1.0.20",
-    "chayns-components": "^4.29.4",
-    "prop-types": "^15.8.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-redux": "^8.0.5"
-  },
-  "devDependencies": {
-    "@types/react": "^18.2.6",
-    "@types/react-dom": "^18.2.4",
-    "chayns-doc": "^1.6.1",
-    "chayns-toolkit": "^2.0.7",
-    "prettier": "^2.8.8",
-    "prettier-plugin-packagejson": "^2.4.3",
-    "typescript": "^5.0.4",
-    "typings-for-css-modules-loader": "^1.7.0"
-  }
+    "name": "newsmt",
+    "version": "1.0.0",
+    "private": true,
+    "description": "A web frontend application written in React and TypeScript, useable as a pagemaker plugin for chayns®, that provides the creation and updating of news entries with multimedia content",
+    "keywords": [
+        "chayns",
+        "chayns-toolkit",
+        "react"
+    ],
+    "scripts": {
+        "build": "chayns-toolkit build",
+        "dev": "chayns-toolkit dev",
+        "format": "prettier . --write",
+        "lint": "chayns-toolkit lint",
+        "start": "chayns-toolkit dev"
+    },
+    "prettier": {
+        "proseWrap": "always",
+        "singleQuote": true,
+        "tabWidth": 4
+    },
+    "eslintConfig": {
+        "extends": "@chayns-toolkit"
+    },
+    "dependencies": {
+        "@reduxjs/toolkit": "^1.9.5",
+        "chayns-api": "^1.0.20",
+        "chayns-components": "^4.29.4",
+        "eslint-config-prettier": "^8.8.0",
+        "prop-types": "^15.8.1",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-redux": "^8.0.5"
+    },
+    "devDependencies": {
+        "@types/react": "^18.2.6",
+        "@types/react-dom": "^18.2.4",
+        "chayns-doc": "^1.6.1",
+        "chayns-toolkit": "^2.0.7",
+        "prettier": "2.8.8",
+        "prettier-plugin-packagejson": "^2.4.3",
+        "typescript": "^5.0.4",
+        "typings-for-css-modules-loader": "^1.7.0"
+    }
 }

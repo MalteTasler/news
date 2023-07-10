@@ -3,5 +3,5 @@ declare const styles: {
     newsEntryFooter: string | undefined;
     readonly timeDisplay: string;
     readonly newsFooter: string;
-}
-export default styles
+};
+export default styles;

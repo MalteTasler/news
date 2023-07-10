@@ -7,5 +7,5 @@ declare const styles: {
     readonly loading: string;
     readonly app: string;
     readonly newsContainer: string;
-}
-export default styles
+};
+export default styles;
