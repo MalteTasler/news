@@ -1,0 +1,20 @@
+.editNewsEntry {
+    &__titleInputFrame {
+        display: flex;
+        margin-top: 14px;
+        margin-bottom: 7px;
+        justify-content: space-between;
+        width: 100%;
+    }
+    &__btPublishContainer {
+        margin-top: 39px;
+        margin-bottom: 19px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        &__btPublish {
+            margin-left: 14px;
+        }
+    }
+}

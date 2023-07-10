@@ -1,13 +1,13 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { NewsListProps } from "constants/types"
-import NewsEntry from "./NewsEntry/NewsEntry"
+import NewsEntry from "./news-entry/NewsEntry"
 
 require('../../../../../constants/chayns.d')
 require('../../../../../constants/chayns-components.d')
 
 const NewsList = ({ siteId, tappId, news, now, onPatch, onDelete } : NewsListProps) =>
-    <div id = "news_list">
+    <div className = "newsList">
         {
             news.map((element) =>
             {
@@ -40,7 +40,7 @@ NewsList.propTypes = {
     siteId: PropTypes.string.isRequired,
     tappId: PropTypes.number.isRequired,
     news: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.number
+        id: PropTypes.number // try use INews[] instead
     })).isRequired,
     now: PropTypes.shape({}).isRequired,
     onPatch: PropTypes.func.isRequired,

@@ -5,21 +5,20 @@ import { getTimeAgo } from "utils/date"
 import { ContextMenuItem, NewsEntryProps } from "constants/types"
 import { MAX_MESSAGE_LENGTH } from "constants/config"
 import { INewsBase } from "constants/interfaces"
-import Footer from './Footer/Footer'
-import stylesNewsEntry from './NewsEntry.module.scss'
-import EditNewsEntry from "../../../../../shared/EditNewsEntry/EditNewsEntry"
+import Footer from './footer/Footer'
+import stylesNewsEntry from './newsEntry.module.scss'
+import EditNewsEntry from "../../../../../shared/edit-news-entry/EditNewsEntry"
 
 require('../../../../../../constants/chayns.d')
 require('../../../../../../constants/chayns-components.d')
 
 const NewsEntry = ({ id, siteId, tappId, title, message, imageList, publishTime, publishTimestamp, onPatch, onDelete, now, hidden } : NewsEntryProps) =>
 {
-    // console.log("render news entry ....................... ", publishTime, typeof publishTime)
-    let messageIsLong = false
+    let isMessageLong = false
     let cutMessage
     
-    const [editMode, setEditMode] = useState(false)
-    const [messageIsExtended, setMessageIsExtended] = useState(false)
+    const [isEditMode, setEditMode] = useState(false)
+    const [IsMessageExtended, setMessageIsExtended] = useState(false)
 
     const handleDelete = async() => {
         await chayns.dialog.confirm('Confirm', 'Are you sure you want to delete that new entry?', [
@@ -42,7 +41,7 @@ const NewsEntry = ({ id, siteId, tappId, title, message, imageList, publishTime,
     }
     const handlePublish = (data : INewsBase) => {
         // console.log("++++++++ patching...#################################", data)
-        setEditMode(!editMode)
+        setEditMode(!isEditMode)
         onPatch(data)
     }
     const handleHide = (shouldBeHidden : boolean) => {
@@ -70,7 +69,7 @@ const NewsEntry = ({ id, siteId, tappId, title, message, imageList, publishTime,
             edit: {
                 className: null,
                 onClick: () => {
-                    setEditMode(!editMode)
+                    setEditMode(!isEditMode)
                 },
                 text: "Edit",
                 icon: "fa fa-edit"
@@ -78,7 +77,7 @@ const NewsEntry = ({ id, siteId, tappId, title, message, imageList, publishTime,
             view: {
                 className: null,
                 onClick: () => {
-                    setEditMode(!editMode)
+                    setEditMode(!isEditMode)
                 },
                 text: "View",
                 icon: "fa fa-check"
@@ -101,9 +100,9 @@ const NewsEntry = ({ id, siteId, tappId, title, message, imageList, publishTime,
             }
         }
     
-    if(message.length >= MAX_MESSAGE_LENGTH && !messageIsExtended)
+    if(message.length >= MAX_MESSAGE_LENGTH && !IsMessageExtended)
     {
-        messageIsLong = true
+        isMessageLong = true
         const truncated = message.substr(0, MAX_MESSAGE_LENGTH)
         const lastSpaceIndex = truncated.lastIndexOf(" ")
         const substring = truncated.substr(0, lastSpaceIndex)
@@ -124,7 +123,7 @@ const NewsEntry = ({ id, siteId, tappId, title, message, imageList, publishTime,
     function buildContextMenuItems() : ContextMenuItem[] {
         const array : ContextMenuItem[] = []
         array.push(contextMenuItems.delete)
-        if(editMode)
+        if(isEditMode)
             array.push(contextMenuItems.view)
         else
             array.push(contextMenuItems.edit)
@@ -136,28 +135,28 @@ const NewsEntry = ({ id, siteId, tappId, title, message, imageList, publishTime,
     }
      
     return(
-        <div>
+        <div className = {stylesNewsEntry.newsEntry}>
             {(chayns.env.user.adminMode || !hidden)
             &&
-                <div className = {stylesNewsEntry.newsEntryFrame}>
+                <div>
                     <div 
                         className = "content__card" 
                         id = {`news_entry_${id}`}
                     >
                         {chayns.env.user.adminMode &&
-                            <div className = {stylesNewsEntry.newsEntryHeader}>
-                                {hidden && <div className = {stylesNewsEntry.labelOnHide}>Ausgeblendet</div>}
-                                <div className = {stylesNewsEntry.contextMenuFrame}>
+                            <div className = {stylesNewsEntry.newsEntry__header}>
+                                {hidden && <div className = {stylesNewsEntry.newsEntry__header__hideDisplayLabel}>Ausgeblendet</div>}
+                                <div className = {stylesNewsEntry.newsEntry__header__contextMenuFrame}>
                                     <ContextMenu
                                         items = {
                                             buildContextMenuItems()
                                         }
-                                        className = {stylesNewsEntry.contextMenu}
+                                        className = {stylesNewsEntry.newsEntry__header__contextMenuFrame__contextMenu}
                                     />
                                 </div>
                             </div>
                         }
-                        {(chayns.env.user.adminMode && editMode)
+                        {(chayns.env.user.adminMode && isEditMode)
                         ?   
                             <div>
                                 <EditNewsEntry
@@ -183,8 +182,8 @@ const NewsEntry = ({ id, siteId, tappId, title, message, imageList, publishTime,
                                 <h2>
                                     {title}
                                 </h2>
-                                <div className = {stylesNewsEntry.message}>
-                                    {messageIsLong 
+                                <div className = {stylesNewsEntry.newsEntry__message}>
+                                    {isMessageLong 
                                     ?
                                         cutMessage 
                                     : 

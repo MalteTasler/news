@@ -2,13 +2,12 @@ import React, { useState } from "react"
 import PropTypes from "prop-types"
 import { Accordion, SelectButton, Checkbox } from 'chayns-components'
 import { DeveloperToolsProps } from "constants/types"
-import stylesDeveloperTools from "./DeveloperTools.module.scss"
+import stylesDeveloperTools from "./developerTools.module.scss"
 
 require('../../../../constants/chayns.d')
 require('../../../../constants/chayns-components.d')
 
 const DeveloperTools = ({ siteId, tappId, numberOfDisplayedNews, numberOfFetchedNews, numberOfDatabaseNews, numberOfDatabaseUnhiddenNews, showNews, cbShowNewsOnChange, useBackend, setUseBackend } : DeveloperToolsProps) => {
-    // console.log("render dev tools, provides ", useBackend)
     const sbBackendList = [
             {
                 id: '0',
@@ -21,15 +20,15 @@ const DeveloperTools = ({ siteId, tappId, numberOfDisplayedNews, numberOfFetched
                 isSelected: useBackend === 1
             }
     ]
-    const [shouldCopiedSiteId, setShouldCopiedSiteId] = useState(false)
-    const [shouldCopiedTappId, setShouldCopiedTappId] = useState(false)
+    const [hasCopiedSiteId, setHasCopiedSiteId] = useState(false)
+    const [hasCopiedTappId, setHasCopiedTappId] = useState(false)
     const copySiteId = async() => {
         await navigator.clipboard.writeText(siteId)
-        setShouldCopiedSiteId(true)
+        setHasCopiedSiteId(true)
     }
     const copyTappId = async() => {
         await navigator.clipboard.writeText(`${tappId}`)
-        setShouldCopiedTappId(true)
+        setHasCopiedTappId(true)
     }
     return(
         <Accordion 
@@ -37,28 +36,28 @@ const DeveloperTools = ({ siteId, tappId, numberOfDisplayedNews, numberOfFetched
             open 
             dafaultOpened
         >
-            <div className = {stylesDeveloperTools.developerToolsFrame}>  
-                <div className = {stylesDeveloperTools.IdDisplay} onClick={() => copySiteId}>
-                    <div className = {stylesDeveloperTools.IdLabel}>    
+            <div className = {stylesDeveloperTools.developerTools}>  
+                <div className = {stylesDeveloperTools.developerTools__idDisplay} onClick={() => copySiteId}>
+                    <div className = {stylesDeveloperTools.developerTools__idDisplay__label}>    
                         SiteId = {siteId}
                     </div>
                     <i className = "fa fa-copy" />
                     {
-                        shouldCopiedSiteId &&
-                        <div className = {stylesDeveloperTools.IdCopiedLabel}>
+                        hasCopiedSiteId &&
+                        <div className = {stylesDeveloperTools.developerTools__idDisplay__copiedLabel}>
                             ✅ Copied to clipboard.
                         </div>
                     }
                     <br />
                 </div>
-                <div className = {stylesDeveloperTools.IdDisplay} onClick={() => copyTappId}>
-                    <div className = {stylesDeveloperTools.IdLabel}>    
+                <div className = {stylesDeveloperTools.developerTools__idDisplay} onClick={() => copyTappId}>
+                    <div className = {stylesDeveloperTools.developerTools__idDisplay__label}>    
                         TappId = {tappId}
                     </div>
                     <i className = "fa fa-copy" />
                     {
-                        shouldCopiedTappId &&
-                        <div className = {stylesDeveloperTools.IdCopiedLabel}>
+                        hasCopiedTappId &&
+                        <div className = {stylesDeveloperTools.developerTools__idDisplay__copiedLabel}>
                             ✅ Copied to clipboard.
                         </div>
                     }
@@ -69,7 +68,7 @@ const DeveloperTools = ({ siteId, tappId, numberOfDisplayedNews, numberOfFetched
                 Number of fetched News = {numberOfFetchedNews}<br />
                 Number of displayed News = {numberOfDisplayedNews}
                 <div 
-                    className = {stylesDeveloperTools.selectBackend}
+                    className = {stylesDeveloperTools.developerTools__selectBackend}
                 >
                     Backend:
                     <SelectButton
@@ -80,13 +79,13 @@ const DeveloperTools = ({ siteId, tappId, numberOfDisplayedNews, numberOfFetched
                         listValue = "name"
                         selectedFlag = "isSelected"
                         showSelection
-                        className = {stylesDeveloperTools.selectButton}
+                        className = {stylesDeveloperTools.developerTools__selectBackend__selectButton}
                     />
                 </div>
                 <Checkbox
                     checked = {showNews}
                     onChange = {cbShowNewsOnChange}
-                    className = {stylesDeveloperTools.cbShowMore}
+                    className = {stylesDeveloperTools.developerTools__cbShowMore}
                     title = "Show news"
                 />
                 <br />

@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import { Gallery, FileInput, Input, TextArea, Button } from 'chayns-components'
 import imageUpload from "chayns-components/lib/utils/imageUpload"
 import { EditNewsEntryProps } from "constants/types"
-import styles from "./EditNewsEntry.module.scss"
+import styles from "./editNewsEntry.module.scss"
 
 require('../../../constants/chayns.d')
 require('../../../constants/chayns-components.d')
@@ -20,9 +20,7 @@ const EditNewsEntry = ({ id, siteId, tappId, onPublish, initMessage, initTitle, 
     let imageURLs : string[] = [];
 
     async function handlePublish() {
-        // console.log("publishing#################################")
         await postImages()
-        // console.log("posted images#################################")
         onPublish(
             {
                 id,
@@ -34,7 +32,6 @@ const EditNewsEntry = ({ id, siteId, tappId, onPublish, initMessage, initTitle, 
                 hidden: isHidden
             }
         )
-        // console.log("on Publish executed#################################")
     }
     const onChange = useCallback(
         (validFiles: { map: (arg0: (f: any) => { file: any }) => ConcatArray<{ url: string }> }) => {
@@ -64,7 +61,6 @@ const EditNewsEntry = ({ id, siteId, tappId, onPublish, initMessage, initTitle, 
         setImages(images.concat(data.selection.map((url : string) => ({ url }))))
     }, [images, setImages])
     async function postImages() {
-        // console.log("images list ", images)
         setIsUploading(true)
         imageURLs = []
         await Promise.all(images.map(async (image) => {
@@ -80,7 +76,7 @@ const EditNewsEntry = ({ id, siteId, tappId, onPublish, initMessage, initTitle, 
         setIsUploading(false);
     }
     return(
-        <div>
+        <div className = {styles.editNewsEntry}>
             {images.length > 0 
             && 
                 <Gallery
@@ -110,14 +106,14 @@ const EditNewsEntry = ({ id, siteId, tappId, onPublish, initMessage, initTitle, 
                     },
                 ]}
             />
-            <div id = {styles.addNewsEntryInputFrame}>
+            <div id = {styles.editNewsEntry__titleInputFrame}>
                 <Input 
                     placeholder = "Title" 
                     value = {title}
                     onChange = {setTitle}
                 />
             </div>
-            <div id = {styles.addNewsEntryInputFrame}>
+            <div id = {styles.editNewsEntry__messageInputFrame}>
                 <TextArea
                     placeholder = "Enter your message here." 
                     value = {message}
@@ -125,9 +121,9 @@ const EditNewsEntry = ({ id, siteId, tappId, onPublish, initMessage, initTitle, 
                     autogrow
                 />
             </div>
-            <div className = {styles.btContainer}>
+            <div className = {styles.editNewsEntry__btPublishContainer}>
                 <Button 
-                    className = {styles.btPublish} 
+                    className = {styles.editNewsEntry__btPublishContainer__btPublish} 
                     onClick={() => handlePublish()}
                 >
                     Veröffentlichen

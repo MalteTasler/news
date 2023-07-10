@@ -6,19 +6,19 @@ import { postNewsEntry } from 'api/post'
 import { patchNewsEntry } from 'api/patch'
 import { deleteNewsEntry } from 'api/delete'
 import { BACKEND_URLS, FETCH_COUNT } from 'constants/config'
-import DeveloperTools from './DeveloperTools/DeveloperTools'
-import NewsListErrorBoundary from './NewsListErrorBoundary/NewsListErrorBoundary'
-import NewsList from './NewsListErrorBoundary/NewsList/NewsList'
-import AddNewsEntryErrorBoundary from './AddNewsEntryErrorBoundary/AddNewsEntryErrorBoundary'
-import AddNewsEntry from './AddNewsEntryErrorBoundary/AddNewsEntry/AddNewsEntry'
-import styles from './App.module.scss'
+import DeveloperTools from './developer-tools/DeveloperTools'
+import NewsListErrorBoundary from './news-list-error-boundary/NewsListErrorBoundary'
+import NewsList from './news-list-error-boundary/news-list/NewsList'
+import AddNewsEntryErrorBoundary from './add-news-entry-error-boundary/AddNewsEntryErrorBoundary'
+import AddNewsEntry from './add-news-entry-error-boundary/add-news-entry/AddNewsEntry'
+import styles from './app.module.scss'
 import { IListResponse, INews, INewsBase, IParameters } from '../../../constants/interfaces'
 
 require('../../../constants/chayns.d')
 require('../../../constants/chayns-components.d')
 
 const App: FC = () => {
-    const ADMIN_MODE : boolean = chayns.env.user.adminMode as boolean
+    const IS_ADMIN_MODE : boolean = chayns.env.user.adminMode as boolean
     const SITE_ID : string = chayns.env.site.id 
     const TAPP_ID : number = chayns.env.site.tapp.id 
     const TOBIT_ACCESS_TOKEN = chayns.env.user.tobitAccessToken 
@@ -27,16 +27,15 @@ const App: FC = () => {
     const [news, setNews] = useState<INews[]>([])
     const [useBackend, setUseBackend] = useState<number>(1)
     const [URLparam, setURLparam] = useState<IParameters>()
-    const [showNews, setShowNews] = useState<boolean>(true)
+    const [shouldShowNews, setShowNews] = useState<boolean>(true)
     const [, setCounter] = useState<number>(0)
     const [numberOfFetchedNews, setNumberOfFetchedNews] = useState<number>(0)
     const [numberOfDisplayedNews, setNumberOfDisplayedNews] = useState<number>(0)
     const [numberOfDatabaseNews, setNumberOfDatabaseNews] = useState<number | null>(null)
     const [numberOfDatabaseUnhiddenNews, setNumberOfDatabaseUnhiddenNews] = useState<number | null>(null)
-    const [loadMoreButtonIsEnabled, setLoadMoreButtonIsEnabled] = useState<boolean>(false)
+    const [IsLoadMoreButtonEnabled, setLoadMoreButtonEnabled] = useState<boolean>(false)
 
     const laodMore = async() => {
-        // console.log("trying to laod more")
         await fetchNews(true)
     }
     const navigateToAllNews = () => {
@@ -45,11 +44,9 @@ const App: FC = () => {
     function getTimestamp(newest = false):string | number {
         if(!news || !Array.isArray(news) || news.length <= 1 || newest) { 
             // if no news entries are loaded yet or the parmeter "newest" is set to true, just use the current timestamp (timestamp when the page was loaded) which can be done by setting it to 0
-            // console.log("give now time")
             return now.getTime()
         }
         //  if entries are already loaded take the timestamp of the oldest
-        // console.log("give oldest time")
         const oldestLoadedNewsEntry : INews = news[news.length-1]
         if (oldestLoadedNewsEntry)
             return (oldestLoadedNewsEntry.publishTimestamp)
@@ -60,13 +57,11 @@ const App: FC = () => {
     }
     const fetchNews = async(offset = false, param = URLparam) => {  
         // if offset is true, last value of current news array gets popped
-        // console.log("param m ", param, param?.M, (param?.M === null || param?.M === undefined || param?.M === false))
         if(!param?.M) 
         // if no parameter for a news entry is used in the URL, load multiple entries
         {
             // generate fetchURL with parameters
-            const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}?siteId=${SITE_ID}&tappId=${TAPP_ID}&timestamp=${getTimestamp(!offset)}&count=${FETCH_COUNT}&adminMode=${ADMIN_MODE as unknown as string}`
-            // console.log("URL for fetching ", fetchURLWithParameters)
+            const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}?siteId=${SITE_ID}&tappId=${TAPP_ID}&timestamp=${getTimestamp(!offset)}&count=${FETCH_COUNT}&adminMode=${IS_ADMIN_MODE as unknown as string}`
             const response = await getNews(fetchURLWithParameters, TOBIT_ACCESS_TOKEN)            
             switch(response.status)
             {
@@ -89,11 +84,9 @@ const App: FC = () => {
                 {
                     const parsedResponse = await response.json() as IListResponse
                     const { itemList, fullLength, length } = parsedResponse
-                    // console.log("fetched list of news ", parsedResponse)
                     setNews((prevState:INews[]):INews[] => {
                         if (offset)
                         {
-                            // console.log("as offset is true concat the list", itemList)
                             itemList.shift();
                             return (prevState.concat(itemList))
                         }
@@ -102,7 +95,6 @@ const App: FC = () => {
                     setNumberOfDatabaseNews(fullLength)
                     setNumberOfDatabaseUnhiddenNews(length)
                     const number = itemList.length; // number of new fetched entries
-                    // console.log(`fetched ${number} new entries`)
                     if(offset)
                     {
                         setNumberOfFetchedNews(prevState => prevState + number)
@@ -128,42 +120,32 @@ const App: FC = () => {
             const id : string = param?.M as unknown as string
             // generate fetchURL with parameters
             const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}/${id}`
-            // console.log("try to fetch one new entry with the following link. ", fetchURLWithParameters)
             const response = await getNews(fetchURLWithParameters, TOBIT_ACCESS_TOKEN)
             const parsedResponse = await response.json() as INews
-            // console.log("fetched data: ", parsedResponse)
             setNews([parsedResponse])
         }
     }
     const publish = async(data : INewsBase) => {
         // if the Id of the -entry to publish is already present in fetched data, do patch, otherwise do post
-        // console.log("App #####################publishing#####################")
-        // console.log(news.find((entry) => {return entry.id == data.id}))
         if(news.find((entry) => 
             entry.id === data.id
         ))
         {                        
             const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}/${data.id as number}`
-            // console.log("URL for fetching ", fetchURLWithParameters)
             await patchNewsEntry(fetchURLWithParameters, TOBIT_ACCESS_TOKEN, data)
-            // console.log("PATCH - Response: ", response)
         }
         else
         {
             const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}`
-            // console.log("URL for fetching ", fetchURLWithParameters)
-            await postNewsEntry(fetchURLWithParameters, TOBIT_ACCESS_TOKEN, data)
-            // console.log("POST - Response: ", response)        
+            await postNewsEntry(fetchURLWithParameters, TOBIT_ACCESS_TOKEN, data)            
         }
         setCounter(c => c+1)
         now = new Date()
         await fetchNews(false)
     }
     const deleteEntry = async(id : number) => {
-        const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}/${id}`
-        // console.log("URL for fetching ", fetchURLWithParameters)
-        await deleteNewsEntry(fetchURLWithParameters, TOBIT_ACCESS_TOKEN)
-        // console.log("DELETE - Response: ", response)
+        const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}/${id}`        
+        await deleteNewsEntry(fetchURLWithParameters, TOBIT_ACCESS_TOKEN)        
         setCounter(c => c+1)
         await fetchNews(false)
     }
@@ -174,8 +156,7 @@ const App: FC = () => {
         }
         const params : {
             [key: string]: string; [key: symbol]: string;
-        } = getParameters()
-        // console.log("received parameters:", params, (params.M !== undefined))
+        } = getParameters()        
         // check if paramters are valid
         if(params.M !== undefined)
             setURLparam({M : params.M})
@@ -183,9 +164,8 @@ const App: FC = () => {
             void getItems()       
     },
     [])
-    useEffect(() => {
-        // console.log((numberOfDisplayedNews < numberOfDatabaseNews))
-        setLoadMoreButtonIsEnabled(numberOfDatabaseUnhiddenNews ? (numberOfDisplayedNews < numberOfDatabaseUnhiddenNews) : false)
+    useEffect(() => {        
+        setLoadMoreButtonEnabled(numberOfDatabaseUnhiddenNews ? (numberOfDisplayedNews < numberOfDatabaseUnhiddenNews) : false)
     }, [numberOfDisplayedNews, numberOfDatabaseNews, numberOfDatabaseUnhiddenNews])
     useEffect(() => {
         const getItems = async() => {
@@ -203,12 +183,12 @@ const App: FC = () => {
     [useBackend])
 
     return (
-        <div className = {styles.main}>
+        <div className = {styles.app}>
             <AnimationWrapper>
                 <h1 id = "pageHeadline">Aktuelle News</h1>
                 <p id = "pageSubHeadline">Kurz, kompakt und immer wieder frisch informieren wir hier über aktuelle Themen und Aktionen.</p>
             </AnimationWrapper>
-            {ADMIN_MODE
+            {IS_ADMIN_MODE
             &&
                 <div>
                     <AddNewsEntryErrorBoundary>
@@ -226,7 +206,7 @@ const App: FC = () => {
                         numberOfFetchedNews = {numberOfFetchedNews}
                         numberOfDatabaseNews = {numberOfDatabaseNews || 0}
                         numberOfDatabaseUnhiddenNews = {numberOfDatabaseUnhiddenNews || 0}
-                        showNews = {showNews}
+                        showNews = {shouldShowNews}
                         cbShowNewsOnChange = {setShowNewsFunc}
                         useBackend = {useBackend}
                         setUseBackend = {setUseBackend}
@@ -235,12 +215,12 @@ const App: FC = () => {
             }
             <br />
             {
-                (showNews)
+                (shouldShowNews)
                 &&
                 <div>{
                     (numberOfDatabaseNews === null) 
                     ? 
-                        <div className = {styles.loading}>
+                        <div className = {styles.app__loading}>
                             <br />waiting for news...
                         </div>
                     :
@@ -248,7 +228,7 @@ const App: FC = () => {
                         {
                             (numberOfDatabaseNews && news && Array.isArray(news) && news.length > 0)
                             ?
-                                <div className = {styles.newsContainer}>
+                                <div className = {styles.app__newsListContainer}>
                                     {URLparam?.M
                                     &&
                                         <div>Param {URLparam.M}</div>
@@ -265,9 +245,9 @@ const App: FC = () => {
                                     </NewsListErrorBoundary>
                                     { !URLparam?.M
                                     ?
-                                        <div className = {styles.btContainer}>
+                                        <div className = {styles.app__newsListContainer__btLoadMoreContainer}>
                                             <Button 
-                                                disabled = {!loadMoreButtonIsEnabled} 
+                                                disabled = {!IsLoadMoreButtonEnabled} 
                                                 onClick = {() => laodMore()}
                                                 // title = "Mehr"
                                             >
@@ -276,7 +256,7 @@ const App: FC = () => {
                                         </div>
                                     :
                                         <div 
-                                            className = {styles.btContainer}
+                                            className = {styles.app__newsListContainer__btLoadMoreContainer}
                                         >
                                             <Button                                                  
                                                 onClick = {() => navigateToAllNews()}

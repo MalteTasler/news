@@ -1,9 +1,10 @@
-.timeDisplay {
-    cursor: default;
-}
-.newsFooter {
+.newsEntryFooter {
     padding-top: 9px;
     border-top: #5F5F5F solid 1px;
     display: flex;
     justify-content: space-between;
+    
+    &__timeDisplay {
+        cursor: default;
+    }
 }
