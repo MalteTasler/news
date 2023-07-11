@@ -263,6 +263,10 @@ declare namespace chayns {
             options: IFrameDialogOptions
         ): Promise<IFrameDialogResponse>;
 
+        function mediaSelect(
+            options: IFrameDialogOptions
+        ): Promise<IFrameDialogResponse>;
+
         function alert(
             title: string | undefined,
             description?: string

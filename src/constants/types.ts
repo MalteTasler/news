@@ -3,7 +3,7 @@ import { INews, INewsBase } from './interfaces';
 export type AddNewsEntryProps = {
     siteId: string;
     tappId: number;
-    onPublish: (data: INewsBase) => void;
+    onPublish: (object : {data: INewsBase}) => Promise<void>;
     now: Date;
 };
 export type DeveloperToolsProps = {
@@ -32,8 +32,8 @@ export type NewsEntryProps = {
     imageList: Array<string>;
     publishTime: string;
     publishTimestamp: number;
-    onPatch: (data: INewsBase) => Promise<void>;
-    onDelete: (id: number) => Promise<void>;
+    onPatch: (object : {data: INewsBase}) => Promise<void>;
+    onDelete: (object : {id: number}) => Promise<void>;
     now: Date;
     hidden: boolean;
 };
@@ -42,14 +42,14 @@ export type NewsListProps = {
     tappId: number;
     news: Array<INews>;
     now: Date;
-    onPatch: (data: INewsBase) => Promise<void>;
-    onDelete: (id: number) => Promise<void>;
+    onPatch: (object : {data: INewsBase}) => Promise<void>;
+    onDelete: (object: {id: number}) => Promise<void>;
 };
 export type EditNewsEntryProps = {
     id: number;
     siteId: string;
     tappId: number;
-    onPublish: (data: INewsBase) => void;
+    onPublish: (object : {data: INewsBase}) => void;
     now: Date;
     initMessage: string;
     initTitle: string;

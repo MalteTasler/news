@@ -50,17 +50,17 @@ const NewsEntry = ({
             )
             .then((result) => {
                 if (result === 1) {
-                    onDelete(id);
+                    void onDelete({ id });
                 }
             });
     };
-    const handlePublish = (data: INewsBase) => {
+    const handlePublish = ({ data } : { data: INewsBase }) => {
         // console.log("++++++++ patching...#################################", data)
         setEditMode(!isEditMode);
-        onPatch(data);
+        void onPatch({ data });
     };
-    const handleHide = (shouldBeHidden: boolean) => {
-        onPatch({
+    const handleHide = ({ shouldBeHidden } : { shouldBeHidden: boolean }) => {
+        void onPatch({ data:{
             id,
             siteId,
             tappId,
@@ -68,7 +68,7 @@ const NewsEntry = ({
             headline: title,
             message,
             hidden: shouldBeHidden,
-        });
+        }});
     };
 
     const contextMenuItems = {
@@ -99,7 +99,7 @@ const NewsEntry = ({
         hide: {
             className: null,
             onClick: () => {
-                handleHide(true);
+                handleHide({ shouldBeHidden: true });
             },
             text: 'Hide',
             icon: 'fa fa-eye-slash',
@@ -107,7 +107,7 @@ const NewsEntry = ({
         unhide: {
             className: null,
             onClick: () => {
-                handleHide(false);
+                handleHide({ shouldBeHidden: false });
             },
             text: 'Unhide',
             icon: 'fa fa-eye',
@@ -122,15 +122,13 @@ const NewsEntry = ({
         cutMessage = (
             <span>
                 {substring}... &nbsp;
-                <a className="btLoadWholeMessage" onClick={displayWholeMessage}>
+                <a className="btLoadWholeMessage" onClick={() => {setMessageIsExtended(true)}}>
                     Mehr
                 </a>
             </span>
         );
     }
-    function displayWholeMessage() {
-        setMessageIsExtended(true);
-    }
+
     function buildContextMenuItems(): ContextMenuItem[] {
         const array: ContextMenuItem[] = [];
         array.push(contextMenuItems.delete);

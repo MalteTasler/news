@@ -575,6 +575,22 @@ declare module 'chayns-components/lib/utils/selectFile' {
     ): Promise<File | null>;
 }
 
+declare module 'chayns-components/lib/utils/imageUpload' {
+    export default function imageUpload(
+        file: string | File | Blob,
+        referenceId?: string,
+        personId?: string,
+        siteId?: string,
+        url?: string
+    ): Promise<{
+        base: string;
+        key: string;
+        meta: {
+            preview: string;
+        };
+    }>;
+}
+
 declare module 'chayns-components/lib/utils/compressImage' {
     const compressImage: (
         file: File,

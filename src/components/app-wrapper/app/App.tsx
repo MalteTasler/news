@@ -1,10 +1,10 @@
 import React, { FC, useEffect, useState } from 'react';
 import { getParameters } from 'chayns-api';
 import { AnimationWrapper, Button } from 'chayns-components';
-import { getNews } from 'api/get';
-import { postNewsEntry } from 'api/post';
-import { patchNewsEntry } from 'api/patch';
-import { deleteNewsEntry } from 'api/delete';
+import { getNews } from 'api/news/get';
+import { postNewsEntry } from 'api/news/post';
+import { patchNewsEntry } from 'api/news/patch';
+import { deleteNewsEntry } from 'api/news/delete';
 import { BACKEND_URLS, FETCH_COUNT } from 'constants/config';
 import DeveloperTools from './developer-tools/DeveloperTools';
 import NewsListErrorBoundary from './news-list-error-boundary/NewsListErrorBoundary';
@@ -26,7 +26,6 @@ const App: FC = () => {
     const IS_ADMIN_MODE: boolean = chayns.env.user.adminMode as boolean;
     const SITE_ID: string = chayns.env.site.id;
     const TAPP_ID: number = chayns.env.site.tapp.id;
-    const TOBIT_ACCESS_TOKEN = chayns.env.user.tobitAccessToken;
     
     let now = new Date();
 
@@ -46,14 +45,11 @@ const App: FC = () => {
     const [IsLoadMoreButtonEnabled, setLoadMoreButtonEnabled] =
         useState(false);
 
-    const laodMore = async () => {
-        await fetchNews(true);
-    };
     const navigateToAllNews = () => {
         setURLparam({ M: false });
     };
     
-    const getTimestamp = (newest = false): string | number => {
+    const getTimestamp = ({ newest = false }): string | number => {
         if (!news || !Array.isArray(news) || news.length <= 1 || newest) {
             // if no news entries are loaded yet or the parmeter "newest" is set to true, 
             // just use the current timestamp (timestamp when the page was loaded) which can 
@@ -68,10 +64,8 @@ const App: FC = () => {
         
         return now.getTime();
     }
-    const setShowNewsFunc = (data: boolean) => {
-        setShowNews(data);
-    };
-    const fetchNews = async (offset = false, param = URLparam) => {
+
+    const fetchNews = async ({ offset = false, param = URLparam }) => {
         // if offset is true, last value of current news array gets popped
         if (!param?.M) {
             // if no parameter for a news entry is used in the URL, load multiple entries
@@ -79,13 +73,13 @@ const App: FC = () => {
             let fetchURLWithParameters = BACKEND_URLS[useBackend]
             fetchURLWithParameters += `?siteId=${SITE_ID}`
             fetchURLWithParameters += `&tappId=${TAPP_ID}`
-            fetchURLWithParameters += `&timestamp=${getTimestamp(!offset)}`
+            fetchURLWithParameters += `&timestamp=${getTimestamp({ newest: !offset })}`
             fetchURLWithParameters += `&count=${FETCH_COUNT}`
             fetchURLWithParameters += `&adminMode=${IS_ADMIN_MODE.toString()}`
 
             const response = await getNews(
                 {
-                    fetchURLWithParameters
+                    fetchUrlWithParameters : fetchURLWithParameters
                 }
             );
             switch (response.status) {
@@ -144,46 +138,52 @@ const App: FC = () => {
             const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}/${id}`;
             const response = await getNews(
                 {
-                    fetchURLWithParameters            
+                    fetchUrlWithParameters : fetchURLWithParameters            
                 }
             );
             const parsedResponse = (await response.json()) as INews;
             setNews([parsedResponse]);
         }
     };
-    const publish = async (data: INewsBase) => {
+    const publish = async ({ data } : { data: INewsBase }) => {
         // if the Id of the -entry to publish is already present in fetched data, do patch, otherwise do post
         if (news.find((entry) => entry.id === data.id)) {
-            const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}/${
+            const fetchUrlWithParameters = `${BACKEND_URLS[useBackend]}/${
                 data.id as number
             }`;
             await patchNewsEntry(
-                fetchURLWithParameters,
-                TOBIT_ACCESS_TOKEN,
-                data
+                {
+                    fetchUrlWithParameters,
+                    data
+                }
             );
         } else {
-            const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}`;
+            const fetchUrlWithParameters = `${BACKEND_URLS[useBackend]}`;
             await postNewsEntry(
-                fetchURLWithParameters,
-                TOBIT_ACCESS_TOKEN,
-                data
+                {
+                    fetchUrlWithParameters,
+                    data
+                }
             );
         }
         setCounter((prevState) => prevState + 1);
         now = new Date();
-        await fetchNews(false);
+        await fetchNews({ offset: false});
     };
-    const deleteEntry = async (id: number) => {
-        const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}/${id}`;
-        await deleteNewsEntry(fetchURLWithParameters, TOBIT_ACCESS_TOKEN);
+    const deleteEntry = async ({ id } : { id: number }) => {
+        const fetchUrlWithParameters = `${BACKEND_URLS[useBackend]}/${id}`;
+        await deleteNewsEntry(
+            {
+                fetchUrlWithParameters                
+            }
+        );
         setCounter((prevState) => prevState + 1);
-        await fetchNews(false);
+        await fetchNews({ offset: false });
     };
 
     useEffect(() => {
         const getItems = async () => {
-            await fetchNews(false);
+            await fetchNews({ offset: false });
         };
         const params: {
             [key: string]: string;
@@ -191,7 +191,7 @@ const App: FC = () => {
         } = getParameters();
         // check if paramters are valid
         if (params.M !== undefined) setURLparam({ M: params.M });
-        else void fetchNews(false);
+        else void fetchNews({ offset: false });
     }, []);
 
     useEffect(() => {
@@ -208,7 +208,7 @@ const App: FC = () => {
 
     useEffect(() => {
         const getItems = async () => {
-            await fetchNews(false);
+            await fetchNews({ offset: false });
         };
         void getItems();
     }, []);
@@ -216,7 +216,7 @@ const App: FC = () => {
     useEffect(() => {
         // ! redundancy? test
         const getItems = async () => {
-            await fetchNews(false);
+            await fetchNews({ offset: false });
         };
         void getItems();
     }, [useBackend]);
@@ -250,7 +250,7 @@ const App: FC = () => {
                             numberOfDatabaseUnhiddenNews || 0
                         }
                         showNews={shouldShowNews}
-                        cbShowNewsOnChange={setShowNewsFunc}
+                        cbShowNewsOnChange={setShowNews}
                         useBackend={useBackend}
                         setUseBackend={setUseBackend}
                     />
@@ -294,7 +294,7 @@ const App: FC = () => {
                                                 disabled={
                                                     !IsLoadMoreButtonEnabled
                                                 }
-                                                onClick={() => void laodMore()}
+                                                onClick={async() => {await fetchNews({ offset: true })}}
                                                 // title = "Mehr"
                                             >
                                                 Mehr

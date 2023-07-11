@@ -31,7 +31,7 @@ const EditNewsEntry = ({
 
     async function handlePublish() {
         await postImages();
-        onPublish({
+        onPublish({data: {
             id,
             siteId,
             tappId,
@@ -39,40 +39,49 @@ const EditNewsEntry = ({
             headline: title,
             message,
             hidden: isHidden,
-        });
+        }});
     }
-    const onChange = useCallback(
+
+    const onImageListChange = useCallback(
         (validFiles: {
             map: (
-                arg0: (f: any) => { file: any }
+                arg0: (f: unknown) => { file: unknown }
             ) => ConcatArray<{ url: string }>;
         }) => {
             if (!isUploading) {
-                setImages(images.concat(validFiles.map((f) => ({ file: f }))));
+                setImages(images.concat(
+                    validFiles.map(
+                        (f) => ({ file: f })
+                    )
+                ));
             }
         },
         [images, setImages, isUploading]
     );
-    const onDelete = useCallback(
-        (image, index) => {
+
+    const onImageListDelete = useCallback(
+        (_image: unknown, index: number) => {
             const img = images.slice();
             img.splice(index, 1);
             setImages(img);
         },
         [images, setImages]
     );
-    const onDragEnd = useCallback(
-        (imgs) => {
+
+    const onImageListDragEnd = useCallback(
+        (imgs: React.SetStateAction<{ url: string; }[]>) => {
             setImages(imgs);
         },
         [setImages]
     );
-    const onClick = useCallback(async () => {
+
+    const onImageListClick = useCallback(async () => {
         const data = await chayns.dialog.mediaSelect({ multiselect: true });
         setImages(
             images.concat(data.selection.map((url: string) => ({ url })))
         );
     }, [images, setImages]);
+
     async function postImages() {
         setIsUploading(true);
         imageURLs = [];
@@ -96,22 +105,22 @@ const EditNewsEntry = ({
                 <Gallery
                     images={images}
                     deleteMode
-                    onDelete={onDelete}
+                    onDelete={onImageListDelete}
                     dragMode
-                    onDragEnd={onDragEnd}
+                    onDragEnd={onImageListDragEnd}
                 />
             )}
             <FileInput
                 items={[
                     {
                         types: FileInput.typePresets.TSIMG_CLOUD, // only images are allowed
-                        maxFileSize: 4194304, // max file size is 4 MB
-                        maxNumberOfFiles: 0, // no limit for number of files
-                        onChange,
+                        maxFileSize: 4194304, // maximal file size is 4 MB
+                        maxNumberOfFiles: 100, // maximal number of files
+                        onChange: onImageListChange,
                         content: { text: 'Bild hochladen' },
                     },
                     {
-                        onClick,
+                        onClick: onImageListClick,
                         content: {
                             text: 'Bild auswählen',
                             icon: 'ts-image',
@@ -120,7 +129,11 @@ const EditNewsEntry = ({
                 ]}
             />
             <div id={styles.editNewsEntry__titleInputFrame}>
-                <Input placeholder="Title" value={title} onChange={setTitle} />
+                <Input 
+                    placeholder="Title" 
+                    value={title} 
+                    onChange={setTitle} 
+                />
             </div>
             <div id={styles.editNewsEntry__messageInputFrame}>
                 <TextArea
