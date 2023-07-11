@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { SharingBar, Tooltip } from 'chayns-components';
-import { FRONTEND_URLS } from 'constants/config';
 import { FooterProps } from 'constants/types';
 import './footer.scss';
+import { FrontendUrls } from 'constants/enums';
 
 require('../../../../../constants/chayns.d');
 require('../../../../../constants/chayns-components.d'); 
 
 const Footer = ({ date, dateAbsolute, id }: FooterProps) => (
     <div className="newsEntryFooter">
-        <SharingBar link={`${FRONTEND_URLS[0]}?M=${id}`} />
+        <SharingBar link={`${FrontendUrls[0]}?M=${id}`} />
         <Tooltip
             content={{
                 text: `${new Date(dateAbsolute).toLocaleDateString('de-DE', {

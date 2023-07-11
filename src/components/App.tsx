@@ -5,7 +5,7 @@ import { getNews } from 'api/news/get';
 import { postNewsEntry } from 'api/news/post';
 import { patchNewsEntry } from 'api/news/patch';
 import { deleteNewsEntry } from 'api/news/delete';
-import { BACKEND_URLS, FETCH_COUNT } from 'constants/config';
+import { FETCH_COUNT } from 'constants/config';
 import DeveloperTools from './developer-tools/DeveloperTools';
 import NewsListErrorBoundary from './news-list-error-boundary/NewsListErrorBoundary';
 import NewsList from './news-list-error-boundary/news-list/NewsList';
@@ -18,6 +18,7 @@ import {
     NewsBase,
     Parameters,
 } from '../constants/interfaces';
+import { BackendUrls } from 'constants/enums';
 
 require('../constants/chayns.d');
 require('../constants/chayns-components.d');
@@ -66,7 +67,7 @@ const App: FC = () => {
         if (newsEntryId === null) {
             // if no id parameter for a news entry is used, load multiple entries
             // generate fetchURL with parameters            
-            let fetchURLWithParameters = BACKEND_URLS[useBackend]
+            let fetchURLWithParameters = BackendUrls[useBackend]
             fetchURLWithParameters += `?siteId=${chayns.env.site.id}`
             fetchURLWithParameters += `&tappId=${chayns.env.site.tapp.id}`
             fetchURLWithParameters += `&timestamp=${getTimestamp({ newest: !offset })}`
@@ -141,7 +142,7 @@ const App: FC = () => {
         // otherwise fetch only the news entry with the id defined in parameter
         else {            
             // generate fetchURL with parameters
-            const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}/${newsEntryId}`;
+            const fetchURLWithParameters = `${BackendUrls[useBackend]}/${newsEntryId}`;
             const response = await getNews(
                 {
                     fetchUrlWithParameters : fetchURLWithParameters            
@@ -155,7 +156,7 @@ const App: FC = () => {
     const publish = async ({ data } : { data: NewsBase }) => {
         // if the Id of the -entry to publish is already present in fetched data, do patch, otherwise do post
         if (news.find((entry) => entry.id === data.id)) {
-            const fetchUrlWithParameters = `${BACKEND_URLS[useBackend]}/${
+            const fetchUrlWithParameters = `${BackendUrls[useBackend]}/${
                 data.id as number
             }`;
             await patchNewsEntry(
@@ -167,7 +168,7 @@ const App: FC = () => {
         } 
         
         else {
-            const fetchUrlWithParameters = `${BACKEND_URLS[useBackend]}`;
+            const fetchUrlWithParameters = `${BackendUrls[useBackend]}`;
             await postNewsEntry(
                 {
                     fetchUrlWithParameters,
@@ -180,7 +181,7 @@ const App: FC = () => {
     };
 
     const deleteEntry = async ({ id } : { id: number }) => {
-        const fetchUrlWithParameters = `${BACKEND_URLS[useBackend]}/${id}`;
+        const fetchUrlWithParameters = `${BackendUrls[useBackend]}/${id}`;
         await deleteNewsEntry(
             {
                 fetchUrlWithParameters                
