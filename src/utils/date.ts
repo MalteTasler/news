@@ -1,4 +1,3 @@
-export const getDate = () => {};
 export const getTimeAgo = (timestamp: number, now: Date) => {
     const diff = now.getTime() - timestamp;
 
@@ -16,6 +15,7 @@ export const getTimeAgo = (timestamp: number, now: Date) => {
     if (diff < minute) {
         return 'vor weniger als einer Minute';
     }
+    
     if (diff < hour) {
         const minutesAgo = Math.floor(diff / minute);
         return `vor ${minutesAgo} Minute${minutesAgo > 1 ? 'n' : ''}`;

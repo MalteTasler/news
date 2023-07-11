@@ -1,9 +1,17 @@
+import { getAccessToken } from "chayns-api";
+
+interface GetNewsOptions {
+    fetchURLWithParameters: string;
+}
+
 export const getNews = async (
-    fetchURLWithParameters: string,
-    tobitAccessToken: string
-): Promise<Response> =>
-    fetch(fetchURLWithParameters, {
+    {fetchURLWithParameters} : GetNewsOptions
+): Promise<Response> => {
+    const { accessToken } = await getAccessToken();
+    
+    return fetch(fetchURLWithParameters, {
         headers: {
-            Authorization: `bearer ${tobitAccessToken}`,
+            Authorization: `bearer ${accessToken || ""}`,
         },
     });
+}

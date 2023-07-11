@@ -27,23 +27,24 @@ const App: FC = () => {
     const SITE_ID: string = chayns.env.site.id;
     const TAPP_ID: number = chayns.env.site.tapp.id;
     const TOBIT_ACCESS_TOKEN = chayns.env.user.tobitAccessToken;
+    
     let now = new Date();
 
     const [news, setNews] = useState<INews[]>([]);
-    const [useBackend, setUseBackend] = useState<number>(1);
+    const [useBackend, setUseBackend] = useState(1);
     const [URLparam, setURLparam] = useState<IParameters>();
-    const [shouldShowNews, setShowNews] = useState<boolean>(true);
-    const [, setCounter] = useState<number>(0);
-    const [numberOfFetchedNews, setNumberOfFetchedNews] = useState<number>(0);
+    const [shouldShowNews, setShowNews] = useState(true);
+    const [, setCounter] = useState(0);
+    const [numberOfFetchedNews, setNumberOfFetchedNews] = useState(0);
     const [numberOfDisplayedNews, setNumberOfDisplayedNews] =
-        useState<number>(0);
+        useState(0);
     const [numberOfDatabaseNews, setNumberOfDatabaseNews] = useState<
         number | null
     >(null);
     const [numberOfDatabaseUnhiddenNews, setNumberOfDatabaseUnhiddenNews] =
         useState<number | null>(null);
     const [IsLoadMoreButtonEnabled, setLoadMoreButtonEnabled] =
-        useState<boolean>(false);
+        useState(false);
 
     const laodMore = async () => {
         await fetchNews(true);
@@ -51,15 +52,20 @@ const App: FC = () => {
     const navigateToAllNews = () => {
         setURLparam({ M: false });
     };
-    function getTimestamp(newest = false): string | number {
+    
+    const getTimestamp = (newest = false): string | number => {
         if (!news || !Array.isArray(news) || news.length <= 1 || newest) {
-            // if no news entries are loaded yet or the parmeter "newest" is set to true, just use the current timestamp (timestamp when the page was loaded) which can be done by setting it to 0
+            // if no news entries are loaded yet or the parmeter "newest" is set to true, 
+            // just use the current timestamp (timestamp when the page was loaded) which can 
+            // be done by setting it to 0
             return now.getTime();
         }
         //  if entries are already loaded take the timestamp of the oldest
         const oldestLoadedNewsEntry: INews = news[news.length - 1];
-        if (oldestLoadedNewsEntry)
+        if (oldestLoadedNewsEntry) {    
             return oldestLoadedNewsEntry.publishTimestamp;
+        }
+        
         return now.getTime();
     }
     const setShowNewsFunc = (data: boolean) => {
@@ -69,17 +75,18 @@ const App: FC = () => {
         // if offset is true, last value of current news array gets popped
         if (!param?.M) {
             // if no parameter for a news entry is used in the URL, load multiple entries
-            // generate fetchURL with parameters
-            const fetchURLWithParameters = `${
-                BACKEND_URLS[useBackend]
-            }?siteId=${SITE_ID}&tappId=${TAPP_ID}&timestamp=${getTimestamp(
-                !offset
-            )}&count=${FETCH_COUNT}&adminMode=${
-                IS_ADMIN_MODE as unknown as string
-            }`;
+            // generate fetchURL with parameters            
+            let fetchURLWithParameters = BACKEND_URLS[useBackend]
+            fetchURLWithParameters += `?siteId=${SITE_ID}`
+            fetchURLWithParameters += `&tappId=${TAPP_ID}`
+            fetchURLWithParameters += `&timestamp=${getTimestamp(!offset)}`
+            fetchURLWithParameters += `&count=${FETCH_COUNT}`
+            fetchURLWithParameters += `&adminMode=${IS_ADMIN_MODE.toString()}`
+
             const response = await getNews(
-                fetchURLWithParameters,
-                TOBIT_ACCESS_TOKEN
+                {
+                    fetchURLWithParameters
+                }
             );
             switch (response.status) {
                 // Bad Request
@@ -136,8 +143,9 @@ const App: FC = () => {
             // generate fetchURL with parameters
             const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}/${id}`;
             const response = await getNews(
-                fetchURLWithParameters,
-                TOBIT_ACCESS_TOKEN
+                {
+                    fetchURLWithParameters            
+                }
             );
             const parsedResponse = (await response.json()) as INews;
             setNews([parsedResponse]);
@@ -162,14 +170,14 @@ const App: FC = () => {
                 data
             );
         }
-        setCounter((c) => c + 1);
+        setCounter((prevState) => prevState + 1);
         now = new Date();
         await fetchNews(false);
     };
     const deleteEntry = async (id: number) => {
         const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}/${id}`;
         await deleteNewsEntry(fetchURLWithParameters, TOBIT_ACCESS_TOKEN);
-        setCounter((c) => c + 1);
+        setCounter((prevState) => prevState + 1);
         await fetchNews(false);
     };
 
@@ -183,8 +191,9 @@ const App: FC = () => {
         } = getParameters();
         // check if paramters are valid
         if (params.M !== undefined) setURLparam({ M: params.M });
-        else void getItems();
+        else void fetchNews(false);
     }, []);
+
     useEffect(() => {
         setLoadMoreButtonEnabled(
             numberOfDatabaseUnhiddenNews
@@ -194,14 +203,16 @@ const App: FC = () => {
     }, [
         numberOfDisplayedNews,
         numberOfDatabaseNews,
-        numberOfDatabaseUnhiddenNews,
+        numberOfDatabaseUnhiddenNews
     ]);
+
     useEffect(() => {
         const getItems = async () => {
             await fetchNews(false);
         };
         void getItems();
-    }, [URLparam]);
+    }, []);
+
     useEffect(() => {
         // ! redundancy? test
         const getItems = async () => {
@@ -283,7 +294,7 @@ const App: FC = () => {
                                                 disabled={
                                                     !IsLoadMoreButtonEnabled
                                                 }
-                                                onClick={() => laodMore()}
+                                                onClick={() => void laodMore()}
                                                 // title = "Mehr"
                                             >
                                                 Mehr
