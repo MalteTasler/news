@@ -16,19 +16,19 @@ const DeveloperTools = ({
     numberOfDatabaseUnhiddenNews,
     showNews,
     cbShowNewsOnChange,
-    useBackend,
-    setUseBackend,
+    activeBackend,
+    setActiveBackend,
 }: DeveloperToolsProps) => {
     const sbBackendList = [
         {
             id: '0',
             name: 'chayns.codes',
-            isSelected: useBackend === 0,
+            isSelected: activeBackend === 0,
         },
         {
             id: '1',
             name: 'ASP.NET lokal',
-            isSelected: useBackend === 1,
+            isSelected: activeBackend === 1,
         },
     ];
     const [hasCopiedSiteId, setHasCopiedSiteId] = useState(false);
@@ -41,7 +41,7 @@ const DeveloperTools = ({
         await navigator.clipboard.writeText(`${tappId}`);
         setHasCopiedTappId(true);
     };
-    
+
     return (
         <Accordion head="Developer Tools" open dafaultOpened>
             <div className="developerTools">
@@ -101,7 +101,7 @@ const DeveloperTools = ({
                         onSelect={(data: {
                             selection: Array<{ id: string }>;
                         }) =>
-                            setUseBackend(
+                            setActiveBackend(
                                 data.selection[0].id as unknown as number
                             )
                         }
@@ -178,8 +178,8 @@ DeveloperTools.propTypes = {
     numberOfDisplayedNews: PropTypes.number.isRequired,
     showNews: PropTypes.bool.isRequired,
     cbShowNewsOnChange: PropTypes.func.isRequired,
-    useBackend: PropTypes.number.isRequired,
-    setUseBackend: PropTypes.func.isRequired,
+    activeBackend: PropTypes.number.isRequired,
+    setActiveBackend: PropTypes.func.isRequired,
 };
 
 DeveloperTools.defaultProps = {
