@@ -4,7 +4,6 @@ export type AddNewsEntryProps = {
     siteId: string;
     tappId: number;
     onPublish: (object : {data: NewsBase}) => Promise<void>;
-    now: Date;
 };
 export type DeveloperToolsProps = {
     siteId: string;
@@ -34,14 +33,12 @@ export type NewsEntryProps = {
     publishTimestamp: number;
     onPatch: (object : {data: NewsBase}) => Promise<void>;
     onDelete: (object : {id: number}) => Promise<void>;
-    now: Date;
     hidden: boolean;
 };
 export type NewsListProps = {
     siteId: string;
     tappId: number;
     news: Array<News>;
-    now: Date;
     onPatch: (object : {data: NewsBase}) => Promise<void>;
     onDelete: (object: {id: number}) => Promise<void>;
 };
@@ -50,7 +47,6 @@ export type EditNewsEntryProps = {
     siteId: string;
     tappId: number;
     onPublish: (object : {data: NewsBase}) => void;
-    now: Date;
     initMessage: string;
     initTitle: string;
     initImageList: Array<string>;

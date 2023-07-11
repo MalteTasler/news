@@ -23,7 +23,6 @@ const NewsEntry = ({
     publishTimestamp,
     onPatch,
     onDelete,
-    now,
     hidden,
 }: NewsEntryProps) => {
     let isMessageLong = false;
@@ -132,10 +131,19 @@ const NewsEntry = ({
     function buildContextMenuItems(): ContextMenuItem[] {
         const array: ContextMenuItem[] = [];
         array.push(contextMenuItems.delete);
-        if (isEditMode) array.push(contextMenuItems.view);
-        else array.push(contextMenuItems.edit);
-        if (hidden) array.push(contextMenuItems.unhide);
-        else array.push(contextMenuItems.hide);
+        if (isEditMode) {
+            array.push(contextMenuItems.view);
+        }
+        else {
+            array.push(contextMenuItems.edit);
+        }
+        if (hidden) {
+            array.push(contextMenuItems.unhide);
+        }
+        else {
+            array.push(contextMenuItems.hide);
+        }
+
         return array;
     }
 
@@ -170,7 +178,6 @@ const NewsEntry = ({
                                     siteId={siteId}
                                     tappId={tappId}
                                     onPublish={handlePublish}
-                                    now={now}
                                     initMessage={message}
                                     initTitle={title}
                                     initImageList={imageList}
@@ -189,7 +196,7 @@ const NewsEntry = ({
                                     {isMessageLong ? cutMessage : message}
                                 </div>
                                 <Footer
-                                    date={getTimeAgo(publishTimestamp, now)}
+                                    date={getTimeAgo(publishTimestamp, new Date())}
                                     dateAbsolute={publishTime}
                                     id={id}
                                 />
@@ -213,9 +220,6 @@ NewsEntry.propTypes = {
     publishTimestamp: PropTypes.number.isRequired,
     onPatch: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
-    now: PropTypes.shape({
-        getTime: PropTypes.func,
-    }).isRequired,
     hidden: PropTypes.bool.isRequired,
 };
 

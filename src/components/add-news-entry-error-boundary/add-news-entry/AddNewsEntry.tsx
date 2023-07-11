@@ -11,8 +11,7 @@ require('../../../constants/chayns-components.d');
 const AddNewsEntry = ({
     siteId,
     tappId,
-    onPublish,
-    now,
+    onPublish
 }: AddNewsEntryProps) => (
     <Accordion head="Create News Entry">
         <div className="addNewsEntryFrame">
@@ -21,7 +20,6 @@ const AddNewsEntry = ({
                 siteId={siteId}
                 tappId={tappId}
                 onPublish={onPublish}
-                now={now}
                 initMessage=""
                 initTitle=""
                 initImageList={[]}
@@ -34,10 +32,7 @@ const AddNewsEntry = ({
 AddNewsEntry.propTypes = {
     siteId: PropTypes.string.isRequired,
     tappId: PropTypes.number.isRequired,
-    onPublish: PropTypes.func.isRequired,
-    now: PropTypes.shape({
-        getTime: PropTypes.func,
-    }).isRequired,
+    onPublish: PropTypes.func.isRequired
 };
 
 AddNewsEntry.DisplayName = 'AddNewsEntry';

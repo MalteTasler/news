@@ -20,21 +20,26 @@ export const getTimeAgo = (timestamp: number, now: Date) => {
         const minutesAgo = Math.floor(diff / minute);
         return `vor ${minutesAgo} Minute${minutesAgo > 1 ? 'n' : ''}`;
     }
+
     if (diff < day) {
         const hoursAgo = Math.floor(diff / hour);
         return `vor ${hoursAgo} Stunde${hoursAgo > 1 ? 'n' : ''}`;
     }
+
     if (diff < day * 2) {
         return 'gestern';
     }
+
     if (diff < week) {
         const daysAgo = Math.floor(diff / day);
         return `vor ${daysAgo} Tag${daysAgo > 1 ? 'en' : ''}`;
     }
+
     if (diff < month) {
         const weeksAgo = Math.floor(diff / week);
         return `vor ${weeksAgo} Woche${weeksAgo > 1 ? 'n' : ''}`;
     }
-    const monthsAgo = Math.floor(diff / month);
+
+    const monthsAgo = Math.floor(diff / month);    
     return `vor ${monthsAgo} Monat${monthsAgo > 1 ? 'en' : ''}`;
 };

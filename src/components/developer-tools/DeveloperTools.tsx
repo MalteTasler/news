@@ -41,6 +41,7 @@ const DeveloperTools = ({
         await navigator.clipboard.writeText(`${tappId}`);
         setHasCopiedTappId(true);
     };
+    
     return (
         <Accordion head="Developer Tools" open dafaultOpened>
             <div className="developerTools">

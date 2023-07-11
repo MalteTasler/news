@@ -23,15 +23,10 @@ require('../constants/chayns.d');
 require('../constants/chayns-components.d');
 
 const App: FC = () => { 
-    const IS_ADMIN_MODE: boolean = chayns.env.user.adminMode as boolean;
-    const SITE_ID: string = chayns.env.site.id;
-    const TAPP_ID: number = chayns.env.site.tapp.id;
-    
-    let now = new Date();
-
     const [news, setNews] = useState<News[]>([]);
     const [useBackend, setUseBackend] = useState(1);
     const [URLparam, setURLparam] = useState<Parameters>();
+    const [newsEntryId, setNewsEntryId] = useState<number | null>(null); // id of the news entry to display, if null display multiple news
     const [shouldShowNews, setShowNews] = useState(true);
     const [, setCounter] = useState(0);
     const [numberOfFetchedNews, setNumberOfFetchedNews] = useState(0);
@@ -46,7 +41,7 @@ const App: FC = () => {
         useState(false);
 
     const navigateToAllNews = () => {
-        setURLparam({ M: false });
+        setNewsEntryId(null);
     };
     
     const getTimestamp = ({ newest = false }): string | number => {
@@ -54,28 +49,29 @@ const App: FC = () => {
             // if no news entries are loaded yet or the parmeter "newest" is set to true, 
             // just use the current timestamp (timestamp when the page was loaded) which can 
             // be done by setting it to 0
-            return now.getTime();
+            return new Date().getTime();
         }
+
         //  if entries are already loaded take the timestamp of the oldest
         const oldestLoadedNewsEntry: News = news[news.length - 1];
         if (oldestLoadedNewsEntry) {    
             return oldestLoadedNewsEntry.publishTimestamp;
         }
         
-        return now.getTime();
+        return new Date().getTime();
     }
 
-    const fetchNews = async ({ offset = false, param = URLparam }) => {
+    const fetchNews = async ({ offset = false }) => {
         // if offset is true, last value of current news array gets popped
-        if (!param?.M) {
-            // if no parameter for a news entry is used in the URL, load multiple entries
+        if (newsEntryId === null) {
+            // if no id parameter for a news entry is used, load multiple entries
             // generate fetchURL with parameters            
             let fetchURLWithParameters = BACKEND_URLS[useBackend]
-            fetchURLWithParameters += `?siteId=${SITE_ID}`
-            fetchURLWithParameters += `&tappId=${TAPP_ID}`
+            fetchURLWithParameters += `?siteId=${chayns.env.site.id}`
+            fetchURLWithParameters += `&tappId=${chayns.env.site.tapp.id}`
             fetchURLWithParameters += `&timestamp=${getTimestamp({ newest: !offset })}`
             fetchURLWithParameters += `&count=${FETCH_COUNT}`
-            fetchURLWithParameters += `&adminMode=${IS_ADMIN_MODE.toString()}`
+            fetchURLWithParameters += `&adminMode=${(chayns.env.user.adminMode).toString()}`
 
             const response = await getNews(
                 {
@@ -103,8 +99,10 @@ const App: FC = () => {
                     setNews((prevState: News[]): News[] => {
                         if (offset) {
                             itemList.shift();
+
                             return prevState.concat(itemList);
                         }
+
                         return itemList;
                     });
                     setNumberOfDatabaseNews(fullLength);
@@ -114,28 +112,36 @@ const App: FC = () => {
                         setNumberOfFetchedNews(
                             (prevState) => prevState + number
                         );
-                        if (number > FETCH_COUNT)
+                        if (number > FETCH_COUNT) {
                             setNumberOfDisplayedNews(
                                 (prevState) => prevState + FETCH_COUNT
                             );
-                        else
+                        }
+                        else {
                             setNumberOfDisplayedNews(
                                 (prevState) => prevState + number
                             );
-                    } else {
+                        }
+                    }
+                    
+                    else {
                         setNumberOfFetchedNews(number);
-                        if (number > FETCH_COUNT)
+                        if (number > FETCH_COUNT) {
                             setNumberOfDisplayedNews(FETCH_COUNT);
-                        else setNumberOfDisplayedNews(number);
+                        }
+
+                        else {
+                            setNumberOfDisplayedNews(number);
+                        }
                     }
                 }
             }
         }
+        
         // otherwise fetch only the news entry with the id defined in parameter
-        else {
-            const id: string = param?.M as unknown as string;
+        else {            
             // generate fetchURL with parameters
-            const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}/${id}`;
+            const fetchURLWithParameters = `${BACKEND_URLS[useBackend]}/${newsEntryId}`;
             const response = await getNews(
                 {
                     fetchUrlWithParameters : fetchURLWithParameters            
@@ -145,6 +151,7 @@ const App: FC = () => {
             setNews([parsedResponse]);
         }
     };
+
     const publish = async ({ data } : { data: NewsBase }) => {
         // if the Id of the -entry to publish is already present in fetched data, do patch, otherwise do post
         if (news.find((entry) => entry.id === data.id)) {
@@ -157,7 +164,9 @@ const App: FC = () => {
                     data
                 }
             );
-        } else {
+        } 
+        
+        else {
             const fetchUrlWithParameters = `${BACKEND_URLS[useBackend]}`;
             await postNewsEntry(
                 {
@@ -167,9 +176,9 @@ const App: FC = () => {
             );
         }
         setCounter((prevState) => prevState + 1);
-        now = new Date();
         await fetchNews({ offset: false});
     };
+
     const deleteEntry = async ({ id } : { id: number }) => {
         const fetchUrlWithParameters = `${BACKEND_URLS[useBackend]}/${id}`;
         await deleteNewsEntry(
@@ -190,9 +199,20 @@ const App: FC = () => {
             [key: symbol]: string;
         } = getParameters();
         // check if paramters are valid
-        if (params.M !== undefined) setURLparam({ M: params.M });
-        else void fetchNews({ offset: false });
+        if (params.M !== undefined) 
+        {
+            setNewsEntryId(params.M as unknown as number);
+        }
+
+        else 
+        {
+            void fetchNews({ offset: false });
+        }
     }, []);
+
+    useEffect(() => {
+        void fetchNews({ offset: false });
+    }, [newsEntryId]);
 
     useEffect(() => {
         setLoadMoreButtonEnabled(
@@ -206,12 +226,12 @@ const App: FC = () => {
         numberOfDatabaseUnhiddenNews
     ]);
 
-    useEffect(() => {
+/*     useEffect(() => {
         const getItems = async () => {
             await fetchNews({ offset: false });
         };
         void getItems();
-    }, []);
+    }, []); */
 
     useEffect(() => {
         // ! redundancy? test
@@ -230,19 +250,18 @@ const App: FC = () => {
                     über aktuelle Themen und Aktionen.
                 </p>
             </AnimationWrapper>
-            {IS_ADMIN_MODE && (
+            {chayns.env.user.adminMode && (
                 <div>
                     <AddNewsEntryErrorBoundary>
                         <AddNewsEntry
-                            siteId={SITE_ID}
-                            tappId={TAPP_ID}
+                            siteId={chayns.env.site.id}
+                            tappId={chayns.env.site.tapp.id}
                             onPublish={publish}
-                            now={now}
                         />
                     </AddNewsEntryErrorBoundary>
                     <DeveloperTools
-                        siteId={SITE_ID}
-                        tappId={TAPP_ID}
+                        siteId={chayns.env.site.id}
+                        tappId={chayns.env.site.tapp.id}
                         numberOfDisplayedNews={numberOfDisplayedNews}
                         numberOfFetchedNews={numberOfFetchedNews}
                         numberOfDatabaseNews={numberOfDatabaseNews || 0}
@@ -271,20 +290,19 @@ const App: FC = () => {
                             Array.isArray(news) &&
                             news.length > 0 ? (
                                 <div className="app__newsListContainer">
-                                    {URLparam?.M && (
-                                        <div>Param {URLparam.M}</div>
+                                    {newsEntryId && (
+                                        <div>Id Parameter - {newsEntryId}</div>
                                     )}
                                     <NewsListErrorBoundary>
                                         <NewsList
-                                            siteId={SITE_ID}
-                                            tappId={TAPP_ID}
+                                            siteId={chayns.env.site.id}
+                                            tappId={chayns.env.site.tapp.id}
                                             news={news}
-                                            now={now}
                                             onPatch={publish}
                                             onDelete={deleteEntry}
                                         />
                                     </NewsListErrorBoundary>
-                                    {!URLparam?.M ? (
+                                    {!newsEntryId ? (
                                         <div
                                             className="app__newsListContainer__btLoadMoreContainer"
                                         >
@@ -293,7 +311,6 @@ const App: FC = () => {
                                                     !isLoadMoreButtonEnabled
                                                 }
                                                 onClick={async() => {await fetchNews({ offset: true })}}
-                                                // title = "Mehr"
                                             >
                                                 Mehr
                                             </Button>
@@ -306,7 +323,6 @@ const App: FC = () => {
                                                 onClick={() =>
                                                     navigateToAllNews()
                                                 }
-                                                // title = "Alle News anzeigen"
                                             >
                                                 Alle News anzeigen
                                             </Button>

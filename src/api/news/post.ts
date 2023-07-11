@@ -13,6 +13,7 @@ export const postNewsEntry = async (
     } : PostNewsOptions
 ): Promise<Response> => {
     const { accessToken } = await getAccessToken();
+    
     return fetch(fetchUrlWithParameters, {
         method: 'POST',
         body: JSON.stringify({

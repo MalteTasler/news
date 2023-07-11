@@ -10,13 +10,15 @@ const NewsList = ({
     siteId,
     tappId,
     news,
-    now,
     onPatch,
     onDelete,
 }: NewsListProps) => (
     <div className="newsList">
         {news.map((element) => {
-            if (!element) return 'no content';
+            if (!element) {
+                return 'no content';
+            }
+
             return (
                 element &&
                 element.id &&
@@ -33,7 +35,6 @@ const NewsList = ({
                         publishTimestamp={element.publishTimestamp}
                         onPatch={onPatch}
                         onDelete={onDelete}
-                        now={now}
                         hidden={element.hidden || false}
                     />
                 )
@@ -50,7 +51,6 @@ NewsList.propTypes = {
             id: PropTypes.number, // try use INews[] instead
         })
     ).isRequired,
-    now: PropTypes.shape({}).isRequired,
     onPatch: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
 };

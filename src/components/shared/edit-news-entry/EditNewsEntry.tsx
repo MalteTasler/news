@@ -99,6 +99,7 @@ const EditNewsEntry = ({
         );
         setIsUploading(false);
     }
+
     return (
         <div className="editNewsEntry">
             {images.length > 0 && (
@@ -160,9 +161,6 @@ EditNewsEntry.propTypes = {
     siteId: PropTypes.string.isRequired,
     tappId: PropTypes.number.isRequired,
     onPublish: PropTypes.func.isRequired,
-    now: PropTypes.shape({
-        getTime: PropTypes.func,
-    }).isRequired,
     initMessage: PropTypes.string.isRequired,
     initTitle: PropTypes.string.isRequired,
     initImageList: PropTypes.arrayOf(PropTypes.string).isRequired,
