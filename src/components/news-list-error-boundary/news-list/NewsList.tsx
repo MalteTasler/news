@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { NewsListProps } from 'constants/types';
 import NewsEntry from './news-entry/NewsEntry';
 
-require('../../../../../constants/chayns.d');
-require('../../../../../constants/chayns-components.d');
+require('../../../constants/chayns.d');
+require('../../../constants/chayns-components.d');
 
 const NewsList = ({
     siteId,

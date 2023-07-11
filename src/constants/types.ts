@@ -1,9 +1,9 @@
-import { INews, INewsBase } from './interfaces';
+import { News, NewsBase } from './interfaces';
 
 export type AddNewsEntryProps = {
     siteId: string;
     tappId: number;
-    onPublish: (object : {data: INewsBase}) => Promise<void>;
+    onPublish: (object : {data: NewsBase}) => Promise<void>;
     now: Date;
 };
 export type DeveloperToolsProps = {
@@ -32,7 +32,7 @@ export type NewsEntryProps = {
     imageList: Array<string>;
     publishTime: string;
     publishTimestamp: number;
-    onPatch: (object : {data: INewsBase}) => Promise<void>;
+    onPatch: (object : {data: NewsBase}) => Promise<void>;
     onDelete: (object : {id: number}) => Promise<void>;
     now: Date;
     hidden: boolean;
@@ -40,16 +40,16 @@ export type NewsEntryProps = {
 export type NewsListProps = {
     siteId: string;
     tappId: number;
-    news: Array<INews>;
+    news: Array<News>;
     now: Date;
-    onPatch: (object : {data: INewsBase}) => Promise<void>;
+    onPatch: (object : {data: NewsBase}) => Promise<void>;
     onDelete: (object: {id: number}) => Promise<void>;
 };
 export type EditNewsEntryProps = {
     id: number;
     siteId: string;
     tappId: number;
-    onPublish: (object : {data: INewsBase}) => void;
+    onPublish: (object : {data: NewsBase}) => void;
     now: Date;
     initMessage: string;
     initTitle: string;

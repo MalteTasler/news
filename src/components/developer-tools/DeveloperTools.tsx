@@ -4,8 +4,8 @@ import { Accordion, SelectButton, Checkbox } from 'chayns-components';
 import { DeveloperToolsProps } from 'constants/types';
 import stylesDeveloperTools from './developerTools.module.scss';
 
-require('../../../../constants/chayns.d');
-require('../../../../constants/chayns-components.d');
+require('../../constants/chayns.d');
+require('../../constants/chayns-components.d');
 
 const DeveloperTools = ({
     siteId,

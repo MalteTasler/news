@@ -1,9 +1,9 @@
 import { getAccessToken } from 'chayns-api';
-import { INewsBase } from '../../constants/interfaces';
+import { NewsBase } from '../../constants/interfaces';
 
 interface PostNewsOptions {
     fetchUrlWithParameters: string;
-    data: INewsBase;
+    data: NewsBase;
 }
 
 export const postNewsEntry = async (

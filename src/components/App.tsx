@@ -13,25 +13,25 @@ import AddNewsEntryErrorBoundary from './add-news-entry-error-boundary/AddNewsEn
 import AddNewsEntry from './add-news-entry-error-boundary/add-news-entry/AddNewsEntry';
 import styles from './app.module.scss';
 import {
-    IListResponse,
-    INews,
-    INewsBase,
-    IParameters,
-} from '../../../constants/interfaces';
+    ListResponse,
+    News,
+    NewsBase,
+    Parameters,
+} from '../constants/interfaces';
 
-require('../../../constants/chayns.d');
-require('../../../constants/chayns-components.d');
+require('../constants/chayns.d');
+require('../constants/chayns-components.d');
 
-const App: FC = () => {
+const App: FC = () => { 
     const IS_ADMIN_MODE: boolean = chayns.env.user.adminMode as boolean;
     const SITE_ID: string = chayns.env.site.id;
     const TAPP_ID: number = chayns.env.site.tapp.id;
     
     let now = new Date();
 
-    const [news, setNews] = useState<INews[]>([]);
+    const [news, setNews] = useState<News[]>([]);
     const [useBackend, setUseBackend] = useState(1);
-    const [URLparam, setURLparam] = useState<IParameters>();
+    const [URLparam, setURLparam] = useState<Parameters>();
     const [shouldShowNews, setShowNews] = useState(true);
     const [, setCounter] = useState(0);
     const [numberOfFetchedNews, setNumberOfFetchedNews] = useState(0);
@@ -42,7 +42,7 @@ const App: FC = () => {
     >(null);
     const [numberOfDatabaseUnhiddenNews, setNumberOfDatabaseUnhiddenNews] =
         useState<number | null>(null);
-    const [IsLoadMoreButtonEnabled, setLoadMoreButtonEnabled] =
+    const [isLoadMoreButtonEnabled, setLoadMoreButtonEnabled] =
         useState(false);
 
     const navigateToAllNews = () => {
@@ -57,7 +57,7 @@ const App: FC = () => {
             return now.getTime();
         }
         //  if entries are already loaded take the timestamp of the oldest
-        const oldestLoadedNewsEntry: INews = news[news.length - 1];
+        const oldestLoadedNewsEntry: News = news[news.length - 1];
         if (oldestLoadedNewsEntry) {    
             return oldestLoadedNewsEntry.publishTimestamp;
         }
@@ -98,9 +98,9 @@ const App: FC = () => {
                 }
                 default: {
                     const parsedResponse =
-                        (await response.json()) as IListResponse;
+                        (await response.json()) as ListResponse;
                     const { itemList, fullLength, length } = parsedResponse;
-                    setNews((prevState: INews[]): INews[] => {
+                    setNews((prevState: News[]): News[] => {
                         if (offset) {
                             itemList.shift();
                             return prevState.concat(itemList);
@@ -141,11 +141,11 @@ const App: FC = () => {
                     fetchUrlWithParameters : fetchURLWithParameters            
                 }
             );
-            const parsedResponse = (await response.json()) as INews;
+            const parsedResponse = (await response.json()) as News;
             setNews([parsedResponse]);
         }
     };
-    const publish = async ({ data } : { data: INewsBase }) => {
+    const publish = async ({ data } : { data: NewsBase }) => {
         // if the Id of the -entry to publish is already present in fetched data, do patch, otherwise do post
         if (news.find((entry) => entry.id === data.id)) {
             const fetchUrlWithParameters = `${BACKEND_URLS[useBackend]}/${
@@ -292,7 +292,7 @@ const App: FC = () => {
                                         >
                                             <Button
                                                 disabled={
-                                                    !IsLoadMoreButtonEnabled
+                                                    !isLoadMoreButtonEnabled
                                                 }
                                                 onClick={async() => {await fetchNews({ offset: true })}}
                                                 // title = "Mehr"

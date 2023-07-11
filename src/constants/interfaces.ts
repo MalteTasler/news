@@ -1,9 +1,9 @@
-export interface IListResponse {
-    itemList: INews[];
+export interface ListResponse {
+    itemList: News[];
     fullLength: number;
     length: number;
 }
-export interface INews {
+export interface News {
     headline: string;
     id: number | undefined;
     siteId: string;
@@ -14,7 +14,7 @@ export interface INews {
     publishTimestamp: number;
     hidden: boolean | undefined;
 }
-export interface INewsBase {
+export interface NewsBase {
     headline: string;
     id: number | undefined;
     message: string;
@@ -23,6 +23,6 @@ export interface INewsBase {
     siteId: string;
     tappId: number;
 }
-export interface IParameters {
+export interface Parameters {
     M: string | boolean;
 }

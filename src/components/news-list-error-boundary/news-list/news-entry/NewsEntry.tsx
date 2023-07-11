@@ -4,13 +4,13 @@ import { Gallery, ContextMenu } from 'chayns-components';
 import { getTimeAgo } from 'utils/date';
 import { ContextMenuItem, NewsEntryProps } from 'constants/types';
 import { MAX_MESSAGE_LENGTH } from 'constants/config';
-import { INewsBase } from 'constants/interfaces';
+import { NewsBase } from 'constants/interfaces';
 import Footer from './footer/Footer';
 import stylesNewsEntry from './newsEntry.module.scss';
-import EditNewsEntry from '../../../../../shared/edit-news-entry/EditNewsEntry';
+import EditNewsEntry from '../../../shared/edit-news-entry/EditNewsEntry';
 
-require('../../../../../../constants/chayns.d');
-require('../../../../../../constants/chayns-components.d');
+require('../../../../constants/chayns.d');
+require('../../../../constants/chayns-components.d');
 
 const NewsEntry = ({
     id,
@@ -54,7 +54,7 @@ const NewsEntry = ({
                 }
             });
     };
-    const handlePublish = ({ data } : { data: INewsBase }) => {
+    const handlePublish = ({ data } : { data: NewsBase }) => {
         // console.log("++++++++ patching...#################################", data)
         setEditMode(!isEditMode);
         void onPatch({ data });

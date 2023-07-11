@@ -1,9 +1,9 @@
 import { getAccessToken } from 'chayns-api';
-import { INewsBase } from '../../constants/interfaces';
+import { NewsBase } from '../../constants/interfaces';
 
 interface PatchNewsOptions {
     fetchUrlWithParameters: string;
-    data: INewsBase;
+    data: NewsBase;
 }
 
 export const patchNewsEntry = async (
