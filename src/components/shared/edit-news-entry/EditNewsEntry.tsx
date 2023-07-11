@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Gallery, FileInput, Input, TextArea, Button } from 'chayns-components';
 import imageUpload from 'chayns-components/lib/utils/imageUpload';
 import { EditNewsEntryProps } from 'constants/types';
-import styles from './editNewsEntry.module.scss';
+import './editNewsEntry.scss';
 
 require('../../../constants/chayns.d');
 require('../../../constants/chayns-components.d');
@@ -100,7 +100,7 @@ const EditNewsEntry = ({
         setIsUploading(false);
     }
     return (
-        <div className={styles.editNewsEntry}>
+        <div className="editNewsEntry">
             {images.length > 0 && (
                 <Gallery
                     images={images}
@@ -128,14 +128,14 @@ const EditNewsEntry = ({
                     },
                 ]}
             />
-            <div id={styles.editNewsEntry__titleInputFrame}>
+            <div className="editNewsEntry__titleInputFrame">
                 <Input 
                     placeholder="Title" 
                     value={title} 
                     onChange={setTitle} 
                 />
             </div>
-            <div id={styles.editNewsEntry__messageInputFrame}>
+            <div className="editNewsEntry__messageInputFrame">
                 <TextArea
                     placeholder="Enter your message here."
                     value={message}
@@ -143,11 +143,9 @@ const EditNewsEntry = ({
                     autogrow
                 />
             </div>
-            <div className={styles.editNewsEntry__btPublishContainer}>
+            <div className="editNewsEntry__btPublishContainer">
                 <Button
-                    className={
-                        styles.editNewsEntry__btPublishContainer__btPublish
-                    }
+                    className="editNewsEntry__btPublishContainer__btPublish"
                     onClick={() => handlePublish()}
                 >
                     Veröffentlichen

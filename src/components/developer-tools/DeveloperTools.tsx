@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, SelectButton, Checkbox } from 'chayns-components';
 import { DeveloperToolsProps } from 'constants/types';
-import stylesDeveloperTools from './developerTools.module.scss';
+import './developerTools.scss';
 
 require('../../constants/chayns.d');
 require('../../constants/chayns-components.d');
@@ -43,24 +43,20 @@ const DeveloperTools = ({
     };
     return (
         <Accordion head="Developer Tools" open dafaultOpened>
-            <div className={stylesDeveloperTools.developerTools}>
+            <div className="developerTools">
                 <div
-                    className={stylesDeveloperTools.developerTools__idDisplay}
+                    className="developerTools__idDisplay"
                     onClick={() => copySiteId}
                 >
                     <div
-                        className={
-                            stylesDeveloperTools.developerTools__idDisplay__label
-                        }
+                        className="developerTools__idDisplay__label"
                     >
                         SiteId = {siteId}
                     </div>
                     <i className="fa fa-copy" />
                     {hasCopiedSiteId && (
                         <div
-                            className={
-                                stylesDeveloperTools.developerTools__idDisplay__copiedLabel
-                            }
+                            className="developerTools__idDisplay__copiedLabel"
                         >
                             ✅ Copied to clipboard.
                         </div>
@@ -68,22 +64,18 @@ const DeveloperTools = ({
                     <br />
                 </div>
                 <div
-                    className={stylesDeveloperTools.developerTools__idDisplay}
+                    className="developerTools__idDisplay"
                     onClick={() => copyTappId}
                 >
                     <div
-                        className={
-                            stylesDeveloperTools.developerTools__idDisplay__label
-                        }
+                        className="developerTools__idDisplay__label"
                     >
                         TappId = {tappId}
                     </div>
                     <i className="fa fa-copy" />
                     {hasCopiedTappId && (
                         <div
-                            className={
-                                stylesDeveloperTools.developerTools__idDisplay__copiedLabel
-                            }
+                            className="developerTools__idDisplay__copiedLabel"
                         >
                             ✅ Copied to clipboard.
                         </div>
@@ -99,9 +91,7 @@ const DeveloperTools = ({
                 <br />
                 Number of displayed News = {numberOfDisplayedNews}
                 <div
-                    className={
-                        stylesDeveloperTools.developerTools__selectBackend
-                    }
+                    className="developerTools__selectBackend"
                 >
                     Backend:
                     <SelectButton
@@ -118,15 +108,13 @@ const DeveloperTools = ({
                         listValue="name"
                         selectedFlag="isSelected"
                         showSelection
-                        className={
-                            stylesDeveloperTools.developerTools__selectBackend__selectButton
-                        }
+                        className="developerTools__selectBackend__selectButton"
                     />
                 </div>
                 <Checkbox
                     checked={showNews}
                     onChange={cbShowNewsOnChange}
-                    className={stylesDeveloperTools.developerTools__cbShowMore}
+                    className="developerTools__cbShowMore"
                     title="Show news"
                 />
                 <br />

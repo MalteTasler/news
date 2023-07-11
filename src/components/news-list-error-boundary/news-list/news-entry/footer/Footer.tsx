@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import { SharingBar, Tooltip } from 'chayns-components';
 import { FRONTEND_URLS } from 'constants/config';
 import { FooterProps } from 'constants/types';
-import stylesFooter from './footer.module.scss';
+import './footer.scss';
 
 require('../../../../../constants/chayns.d');
 require('../../../../../constants/chayns-components.d'); 
 
 const Footer = ({ date, dateAbsolute, id }: FooterProps) => (
-    <div className={stylesFooter.newsEntryFooter}>
+    <div className="newsEntryFooter">
         <SharingBar link={`${FRONTEND_URLS[0]}?M=${id}`} />
         <Tooltip
             content={{
@@ -23,7 +23,7 @@ const Footer = ({ date, dateAbsolute, id }: FooterProps) => (
             minWidth={200}
             bindListeners
         >
-            <div className={stylesFooter.newsEntryFooter__timeDisplay}>
+            <div className="newsEntryFooter__timeDisplay">
                 {date}
             </div>
         </Tooltip>

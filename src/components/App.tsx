@@ -11,7 +11,7 @@ import NewsListErrorBoundary from './news-list-error-boundary/NewsListErrorBound
 import NewsList from './news-list-error-boundary/news-list/NewsList';
 import AddNewsEntryErrorBoundary from './add-news-entry-error-boundary/AddNewsEntryErrorBoundary';
 import AddNewsEntry from './add-news-entry-error-boundary/add-news-entry/AddNewsEntry';
-import styles from './app.module.scss';
+import './app.scss';
 import {
     ListResponse,
     News,
@@ -222,7 +222,7 @@ const App: FC = () => {
     }, [useBackend]);
 
     return (
-        <div className={styles.app}>
+        <div className="app">
             <AnimationWrapper>
                 <h1 id="pageHeadline">Aktuelle News</h1>
                 <p id="pageSubHeadline">
@@ -260,7 +260,7 @@ const App: FC = () => {
             {shouldShowNews && (
                 <div>
                     {numberOfDatabaseNews === null ? (
-                        <div className={styles.app__loading}>
+                        <div className="app__loading">
                             <br />
                             waiting for news...
                         </div>
@@ -270,7 +270,7 @@ const App: FC = () => {
                             news &&
                             Array.isArray(news) &&
                             news.length > 0 ? (
-                                <div className={styles.app__newsListContainer}>
+                                <div className="app__newsListContainer">
                                     {URLparam?.M && (
                                         <div>Param {URLparam.M}</div>
                                     )}
@@ -286,9 +286,7 @@ const App: FC = () => {
                                     </NewsListErrorBoundary>
                                     {!URLparam?.M ? (
                                         <div
-                                            className={
-                                                styles.app__newsListContainer__btLoadMoreContainer
-                                            }
+                                            className="app__newsListContainer__btLoadMoreContainer"
                                         >
                                             <Button
                                                 disabled={
@@ -302,9 +300,7 @@ const App: FC = () => {
                                         </div>
                                     ) : (
                                         <div
-                                            className={
-                                                styles.app__newsListContainer__btLoadMoreContainer
-                                            }
+                                            className="app__newsListContainer__btLoadMoreContainer"
                                         >
                                             <Button
                                                 onClick={() =>

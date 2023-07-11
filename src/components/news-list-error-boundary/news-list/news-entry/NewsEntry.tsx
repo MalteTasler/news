@@ -6,7 +6,7 @@ import { ContextMenuItem, NewsEntryProps } from 'constants/types';
 import { MAX_MESSAGE_LENGTH } from 'constants/config';
 import { NewsBase } from 'constants/interfaces';
 import Footer from './footer/Footer';
-import stylesNewsEntry from './newsEntry.module.scss';
+import './newsEntry.scss';
 import EditNewsEntry from '../../../shared/edit-news-entry/EditNewsEntry';
 
 require('../../../../constants/chayns.d');
@@ -140,31 +140,25 @@ const NewsEntry = ({
     }
 
     return (
-        <div className={stylesNewsEntry.newsEntry}>
+        <div className="newsEntry">
             {(chayns.env.user.adminMode || !hidden) && (
                 <div>
                     <div className="content__card" id={`news_entry_${id}`}>
                         {chayns.env.user.adminMode && (
-                            <div className={stylesNewsEntry.newsEntry__header}>
+                            <div className="newsEntry__header">
                                 {hidden && (
                                     <div
-                                        className={
-                                            stylesNewsEntry.newsEntry__header__hideDisplayLabel
-                                        }
+                                        className="newsEntry__header__hideDisplayLabel"
                                     >
                                         Ausgeblendet
                                     </div>
                                 )}
                                 <div
-                                    className={
-                                        stylesNewsEntry.newsEntry__header__contextMenuFrame
-                                    }
+                                    className="newsEntry__header__contextMenuFrame"
                                 >
                                     <ContextMenu
                                         items={buildContextMenuItems()}
-                                        className={
-                                            stylesNewsEntry.newsEntry__header__contextMenuFrame__contextMenu
-                                        }
+                                        className="newsEntry__header__contextMenuFrame__contextMenu"
                                     />
                                 </div>
                             </div>
@@ -190,9 +184,7 @@ const NewsEntry = ({
                                 )}
                                 <h2>{title}</h2>
                                 <div
-                                    className={
-                                        stylesNewsEntry.newsEntry__message
-                                    }
+                                    className="newsEntry__message"
                                 >
                                     {isMessageLong ? cutMessage : message}
                                 </div>
