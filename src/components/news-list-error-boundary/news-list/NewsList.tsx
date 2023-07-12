@@ -33,7 +33,7 @@ const NewsList = ({
                         imageList={element.imageList}
                         publishTime={element.publishTime}
                         publishTimestamp={element.publishTimestamp}
-                        hidden={element.hidden || false}
+                        isHidden={element.isHidden || false}
                         activeBackend={activeBackend}
                         fetchNews={fetchNews}
                     />

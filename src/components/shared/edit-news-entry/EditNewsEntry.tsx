@@ -46,7 +46,7 @@ const EditNewsEntry = ({
                         imageList: imageURLs,
                         headline: title,
                         message,
-                        hidden: isHidden,
+                        isHidden: isHidden,
                     },
                     fetchUrlWithParameters
                 }
@@ -64,7 +64,7 @@ const EditNewsEntry = ({
                         imageList: imageURLs,
                         headline: title,
                         message,
-                        hidden: isHidden,
+                        isHidden: isHidden,
                     },
                     fetchUrlWithParameters
                 }

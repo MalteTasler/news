@@ -5,7 +5,7 @@ interface NewsBase {
     id: number | undefined;
     message: string;
     imageList: Array<string>;
-    hidden: boolean | undefined;
+    isHidden: boolean | undefined;
     siteId: string;
     tappId: number;
 }
@@ -31,7 +31,7 @@ export const postNewsEntry = async (
             imageList: data.imageList,
             headline: data.headline,
             message: data.message,
-            hidden: data.hidden,
+            isHidden: data.hidden,
         }),
         headers: {
             'Content-type': 'application/json; charset=UTF-8',

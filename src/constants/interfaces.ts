@@ -12,5 +12,5 @@ export interface News {
     imageList: Array<string>;
     publishTime: string;
     publishTimestamp: number;
-    hidden: boolean | undefined;
+    isHidden: boolean | undefined;
 }

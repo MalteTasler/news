@@ -5,7 +5,7 @@ interface NewsBase {
     id: number | undefined;
     message: string;
     imageList: Array<string>;
-    hidden: boolean | undefined;
+    isHidden: boolean | undefined;
     siteId: string;
     tappId: number;
 }

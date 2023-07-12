@@ -32,7 +32,7 @@ export type NewsEntryProps = {
     imageList: Array<string>;
     publishTime: string;
     publishTimestamp: number;
-    hidden: boolean;
+    isHidden: boolean;
     activeBackend: number;
     fetchNews: ({ offset }: { offset?: boolean | undefined; }) => Promise<void>;
 };

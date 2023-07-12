@@ -23,7 +23,7 @@ const NewsEntry = ({
     imageList,
     publishTime,
     publishTimestamp,
-    hidden,
+    isHidden,
     activeBackend,
     fetchNews
 }: NewsEntryProps) => {
@@ -78,7 +78,7 @@ const NewsEntry = ({
                     imageList,
                     headline: title,
                     message,
-                    hidden: shouldBeHidden,
+                    isHidden: shouldBeHidden,
                 },
                 fetchUrlWithParameters
             }
@@ -153,7 +153,7 @@ const NewsEntry = ({
         else {
             array.push(contextMenuItems.edit);
         }
-        if (hidden) {
+        if (isHidden) {
             array.push(contextMenuItems.unhide);
         }
         else {
@@ -165,12 +165,12 @@ const NewsEntry = ({
 
     return (
         <div className="newsEntry">
-            {(chayns.env.user.adminMode || !hidden) && (
+            {(chayns.env.user.adminMode || !isHidden) && (
                 <div>
                     <div className="content__card" id={`news_entry_${id}`}>
                         {chayns.env.user.adminMode && (
                             <div className="newsEntry__header">
-                                {hidden && (
+                                {isHidden && (
                                     <div
                                         className="newsEntry__header__hideDisplayLabel"
                                     >
@@ -197,7 +197,7 @@ const NewsEntry = ({
                                     initMessage={message}
                                     initTitle={title}
                                     initImageList={imageList}
-                                    initIsHidden={hidden}
+                                    initIsHidden={isHidden}
                                     activeBackend={activeBackend}
                                 />
                             </div>
@@ -235,7 +235,7 @@ NewsEntry.propTypes = {
     imageList: PropTypes.arrayOf(PropTypes.string),
     publishTime: PropTypes.string.isRequired,
     publishTimestamp: PropTypes.number.isRequired,
-    hidden: PropTypes.bool.isRequired,
+    isHidden: PropTypes.bool.isRequired,
     activeBackend: PropTypes.number.isRequired,
     fetchNews: PropTypes.func.isRequired
 };
