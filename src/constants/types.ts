@@ -14,8 +14,8 @@ export type DeveloperToolsProps = {
     numberOfDatabaseUnhiddenNews: number;
     showNews: boolean;
     cbShowNewsOnChange: (value: boolean) => void;
-    useBackend: number;
-    setUseBackend: (value: number) => void;
+    activeBackend: number;
+    setActiveBackend: (value: number) => void;
 };
 export type FooterProps = {
     date: string;
