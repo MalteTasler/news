@@ -65,9 +65,9 @@ const NewsEntry = ({
         void fetchNews({ shouldLoadMore: false });
     };
 
-    const handleHide = ({ shouldBeHidden }: { shouldBeHidden: boolean }) => {
+    const handleHide = async({ shouldBeHidden }: { shouldBeHidden: boolean }) => {
         const fetchUrlWithParameters = `${BackendUrls[activeBackend]}/${id}`;
-        void patchNewsEntry({
+        await patchNewsEntry({
             data: {
                 id,
                 siteId,
@@ -109,16 +109,16 @@ const NewsEntry = ({
         },
         hide: {
             className: null,
-            onClick: () => {
-                handleHide({ shouldBeHidden: true });
+            onClick: async() => {
+                await handleHide({ shouldBeHidden: true });
             },
             text: 'Hide',
             icon: 'fa fa-eye-slash',
         },
         unhide: {
             className: null,
-            onClick: () => {
-                handleHide({ shouldBeHidden: false });
+            onClick: async() => {
+                await handleHide({ shouldBeHidden: false });
             },
             text: 'Unhide',
             icon: 'fa fa-eye',
