@@ -20,7 +20,7 @@ interface ContextMenuItem {
     onClick: () => void | Promise<void> | void;
     text: string;
     icon: string;
-};
+}
 
 const NewsEntry = ({
     newsElement,
@@ -29,7 +29,15 @@ const NewsEntry = ({
 }: NewsEntryProps) => {
     let isMessageLong = false;
     let cutMessage;
-    const { id, imageList, message, publishTime, publishTimestamp, headline, isHidden } = newsElement;
+    const {
+        id,
+        imageList,
+        message,
+        publishTime,
+        publishTimestamp,
+        headline,
+        isHidden,
+    } = newsElement;
 
     const [isEditMode, setEditMode] = useState(false);
     const [IsMessageExtended, setMessageIsExtended] = useState(false);
@@ -66,7 +74,11 @@ const NewsEntry = ({
         void fetchNews({ shouldLoadMore: false });
     };
 
-    const handleHide = async({ shouldBeHidden }: { shouldBeHidden: boolean }) => {
+    const handleHide = async ({
+        shouldBeHidden,
+    }: {
+        shouldBeHidden: boolean;
+    }) => {
         const fetchUrlWithParameters = `${BackendUrls[activeBackend]}/${id}`;
         await patchNewsEntry({
             data: {
@@ -110,7 +122,7 @@ const NewsEntry = ({
         },
         hide: {
             className: null,
-            onClick: async() => {
+            onClick: async () => {
                 await handleHide({ shouldBeHidden: true });
             },
             text: 'Hide',
@@ -118,7 +130,7 @@ const NewsEntry = ({
         },
         unhide: {
             className: null,
-            onClick: async() => {
+            onClick: async () => {
                 await handleHide({ shouldBeHidden: false });
             },
             text: 'Unhide',

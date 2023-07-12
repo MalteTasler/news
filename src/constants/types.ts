@@ -2,7 +2,11 @@ import { News } from './interfaces';
 
 export type AddNewsEntryProps = {
     activeBackend: number;
-    fetchNews: ({ shouldLoadMore }: { shouldLoadMore?: boolean | undefined }) => Promise<void>;
+    fetchNews: ({
+        shouldLoadMore,
+    }: {
+        shouldLoadMore?: boolean | undefined;
+    }) => Promise<void>;
 };
 export type DeveloperToolsProps = {
     numberOfDisplayedNews: number;
@@ -22,12 +26,20 @@ export type FooterProps = {
 export type NewsEntryProps = {
     newsElement: News;
     activeBackend: number;
-    fetchNews: ({ shouldLoadMore }: { shouldLoadMore?: boolean | undefined }) => Promise<void>;
+    fetchNews: ({
+        shouldLoadMore,
+    }: {
+        shouldLoadMore?: boolean | undefined;
+    }) => Promise<void>;
 };
 export type NewsListProps = {
     news: Array<News>;
     activeBackend: number;
-    fetchNews: ({ shouldLoadMore }: { shouldLoadMore?: boolean | undefined }) => Promise<void>;
+    fetchNews: ({
+        shouldLoadMore,
+    }: {
+        shouldLoadMore?: boolean | undefined;
+    }) => Promise<void>;
 };
 export type EditNewsEntryProps = {
     id: number;

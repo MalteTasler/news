@@ -6,11 +6,7 @@ import NewsEntry from './news-entry/NewsEntry';
 require('../../../constants/chayns.d');
 require('../../../constants/chayns-components.d');
 
-const NewsList = ({
-    news,
-    activeBackend,
-    fetchNews,
-}: NewsListProps) => (
+const NewsList = ({ news, activeBackend, fetchNews }: NewsListProps) => (
     <div className="newsList">
         {news.map((element) => {
             if (!element) {

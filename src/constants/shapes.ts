@@ -7,5 +7,5 @@ export const NEWS_ELEMENT_SHAPE = {
     imageList: PropTypes.arrayOf(PropTypes.string).isRequired,
     publishTime: PropTypes.string.isRequired,
     publishTimestamp: PropTypes.number.isRequired,
-    isHidden: PropTypes.bool.isRequired
-}
+    isHidden: PropTypes.bool.isRequired,
+};

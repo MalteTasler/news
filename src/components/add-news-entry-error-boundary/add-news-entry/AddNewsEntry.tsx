@@ -8,10 +8,7 @@ import './addNewsEntry.scss';
 require('../../../constants/chayns.d');
 require('../../../constants/chayns-components.d');
 
-const AddNewsEntry = ({
-    activeBackend,
-    fetchNews,
-}: AddNewsEntryProps) => {
+const AddNewsEntry = ({ activeBackend, fetchNews }: AddNewsEntryProps) => {
     const handlePublish = () => {
         void fetchNews({});
     };
