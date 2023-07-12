@@ -4,6 +4,9 @@ import { Gallery, FileInput, Input, TextArea, Button } from 'chayns-components';
 import imageUpload from 'chayns-components/lib/utils/imageUpload';
 import { EditNewsEntryProps } from 'constants/types';
 import './editNewsEntry.scss';
+import { BackendUrls } from 'constants/enums';
+import { patchNewsEntry } from 'api/news/patch';
+import { postNewsEntry } from 'api/news/post';
 
 require('../../../constants/chayns.d');
 require('../../../constants/chayns-components.d');
@@ -17,6 +20,7 @@ const EditNewsEntry = ({
     initTitle,
     initImageList,
     initIsHidden,
+    activeBackend
 }: EditNewsEntryProps) => {
     const [message, setMessage] = useState<string>(initMessage);
     const [title, setTitle] = useState<string>(initTitle);
@@ -31,15 +35,43 @@ const EditNewsEntry = ({
 
     async function handlePublish() {
         await postImages();
-        onPublish({data: {
-            id,
-            siteId,
-            tappId,
-            imageList: imageURLs,
-            headline: title,
-            message,
-            hidden: isHidden,
-        }});
+        if (id) {
+            const fetchUrlWithParameters = `${BackendUrls[activeBackend]}/${id}`;
+            await patchNewsEntry(
+                { 
+                    data: {
+                        id,
+                        siteId,
+                        tappId,
+                        imageList: imageURLs,
+                        headline: title,
+                        message,
+                        hidden: isHidden,
+                    },
+                    fetchUrlWithParameters
+                }
+            );
+        }
+
+        else {
+            const fetchUrlWithParameters = `${BackendUrls[activeBackend]}`;
+            await postNewsEntry(
+                {
+                    data: {
+                        id,
+                        siteId,
+                        tappId,
+                        imageList: imageURLs,
+                        headline: title,
+                        message,
+                        hidden: isHidden,
+                    },
+                    fetchUrlWithParameters
+                }
+            );
+        }
+        
+        onPublish();
     }
 
     const onImageListChange = useCallback(
@@ -165,6 +197,7 @@ EditNewsEntry.propTypes = {
     initTitle: PropTypes.string.isRequired,
     initImageList: PropTypes.arrayOf(PropTypes.string).isRequired,
     initIsHidden: PropTypes.bool.isRequired,
+    activeBackend: PropTypes.number.isRequired
 };
 
 EditNewsEntry.DisplayName = 'EditNewsEntry';

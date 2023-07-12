@@ -11,28 +11,37 @@ require('../../../constants/chayns-components.d');
 const AddNewsEntry = ({
     siteId,
     tappId,
-    onPublish
-}: AddNewsEntryProps) => (
-    <Accordion head="Create News Entry">
-        <div className="addNewsEntryFrame">
-            <EditNewsEntry
-                id={0}
-                siteId={siteId}
-                tappId={tappId}
-                onPublish={onPublish}
-                initMessage=""
-                initTitle=""
-                initImageList={[]}
-                initIsHidden={false}
-            />
-        </div>
-    </Accordion>
-);
+    activeBackend,
+    fetchNews
+}: AddNewsEntryProps) => {
+    const handlePublish = () => {
+        void fetchNews({});
+    }
+
+    return (
+        <Accordion head="Create News Entry">
+            <div className="addNewsEntryFrame">
+                <EditNewsEntry
+                    id={0}
+                    siteId={siteId}
+                    tappId={tappId}
+                    initMessage=""
+                    initTitle=""
+                    initImageList={[]}
+                    initIsHidden={false}
+                    onPublish={handlePublish}
+                    activeBackend={activeBackend}
+                />
+            </div>
+        </Accordion>
+    );
+}
 
 AddNewsEntry.propTypes = {
     siteId: PropTypes.string.isRequired,
     tappId: PropTypes.number.isRequired,
-    onPublish: PropTypes.func.isRequired
+    activeBackend: PropTypes.number.isRequired,
+    fetchNews: PropTypes.func.isRequired
 };
 
 AddNewsEntry.DisplayName = 'AddNewsEntry';

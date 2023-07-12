@@ -14,15 +14,3 @@ export interface News {
     publishTimestamp: number;
     hidden: boolean | undefined;
 }
-export interface NewsBase {
-    headline: string;
-    id: number | undefined;
-    message: string;
-    imageList: Array<string>;
-    hidden: boolean | undefined;
-    siteId: string;
-    tappId: number;
-}
-export interface Parameters {
-    M: string | boolean;
-}

@@ -1,5 +1,14 @@
 import { getAccessToken } from 'chayns-api';
-import { NewsBase } from '../../constants/interfaces';
+
+interface NewsBase {
+    headline: string;
+    id: number | undefined;
+    message: string;
+    imageList: Array<string>;
+    hidden: boolean | undefined;
+    siteId: string;
+    tappId: number;
+}
 
 interface PostNewsOptions {
     fetchUrlWithParameters: string;

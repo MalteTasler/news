@@ -4,9 +4,11 @@ import { Gallery, ContextMenu } from 'chayns-components';
 import { getTimeAgo } from 'utils/date';
 import { ContextMenuItem, NewsEntryProps } from 'constants/types';
 import { MAX_MESSAGE_LENGTH } from 'constants/config';
-import { NewsBase } from 'constants/interfaces';
-import Footer from './footer/Footer';
 import './newsEntry.scss';
+import { BackendUrls } from 'constants/enums';
+import { patchNewsEntry } from 'api/news/patch';
+import { deleteNewsEntry } from 'api/news/delete';
+import Footer from './footer/Footer';
 import EditNewsEntry from '../../../shared/edit-news-entry/EditNewsEntry';
 
 require('../../../../constants/chayns.d');
@@ -21,9 +23,9 @@ const NewsEntry = ({
     imageList,
     publishTime,
     publishTimestamp,
-    onPatch,
-    onDelete,
     hidden,
+    activeBackend,
+    fetchNews
 }: NewsEntryProps) => {
     let isMessageLong = false;
     let cutMessage;
@@ -47,27 +49,41 @@ const NewsEntry = ({
                     },
                 ]
             )
-            .then((result) => {
+            .then(async(result) => {
                 if (result === 1) {
-                    void onDelete({ id });
+                    const fetchUrlWithParameters = `${BackendUrls[activeBackend]}/${id}`;
+                    await deleteNewsEntry(
+                        {
+                            fetchUrlWithParameters                
+                        }
+                    );
+                    void fetchNews({ offset: false });
                 }
             });
     };
-    const handlePublish = ({ data } : { data: NewsBase }) => {
-        // console.log("++++++++ patching...#################################", data)
+
+    const handlePublish = () => {
         setEditMode(!isEditMode);
-        void onPatch({ data });
+        void fetchNews({ offset: false });
     };
+    
     const handleHide = ({ shouldBeHidden } : { shouldBeHidden: boolean }) => {
-        void onPatch({ data:{
-            id,
-            siteId,
-            tappId,
-            imageList,
-            headline: title,
-            message,
-            hidden: shouldBeHidden,
-        }});
+        const fetchUrlWithParameters = `${BackendUrls[activeBackend]}/${id}`;
+        void patchNewsEntry(
+            { 
+                data: {
+                    id,
+                    siteId,
+                    tappId,
+                    imageList,
+                    headline: title,
+                    message,
+                    hidden: shouldBeHidden,
+                },
+                fetchUrlWithParameters
+            }
+        );
+        void fetchNews({ offset: false });
     };
 
     const contextMenuItems = {
@@ -182,6 +198,7 @@ const NewsEntry = ({
                                     initTitle={title}
                                     initImageList={imageList}
                                     initIsHidden={hidden}
+                                    activeBackend={activeBackend}
                                 />
                             </div>
                         ) : (
@@ -218,9 +235,9 @@ NewsEntry.propTypes = {
     imageList: PropTypes.arrayOf(PropTypes.string),
     publishTime: PropTypes.string.isRequired,
     publishTimestamp: PropTypes.number.isRequired,
-    onPatch: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
     hidden: PropTypes.bool.isRequired,
+    activeBackend: PropTypes.number.isRequired,
+    fetchNews: PropTypes.func.isRequired
 };
 
 NewsEntry.defaultProps = {

@@ -1,9 +1,10 @@
-import { News, NewsBase } from './interfaces';
+import { News } from './interfaces';
 
 export type AddNewsEntryProps = {
     siteId: string;
     tappId: number;
-    onPublish: (object : {data: NewsBase}) => Promise<void>;
+    activeBackend: number;
+    fetchNews: ({ offset }: { offset?: boolean | undefined; }) => Promise<void>;
 };
 export type DeveloperToolsProps = {
     siteId: string;
@@ -31,26 +32,27 @@ export type NewsEntryProps = {
     imageList: Array<string>;
     publishTime: string;
     publishTimestamp: number;
-    onPatch: (object : {data: NewsBase}) => Promise<void>;
-    onDelete: (object : {id: number}) => Promise<void>;
     hidden: boolean;
+    activeBackend: number;
+    fetchNews: ({ offset }: { offset?: boolean | undefined; }) => Promise<void>;
 };
 export type NewsListProps = {
     siteId: string;
     tappId: number;
     news: Array<News>;
-    onPatch: (object : {data: NewsBase}) => Promise<void>;
-    onDelete: (object: {id: number}) => Promise<void>;
+    activeBackend: number;
+    fetchNews: ({ offset }: { offset?: boolean | undefined; }) => Promise<void>;
 };
 export type EditNewsEntryProps = {
     id: number;
     siteId: string;
     tappId: number;
-    onPublish: (object : {data: NewsBase}) => void;
+    onPublish: () => void;
     initMessage: string;
     initTitle: string;
     initImageList: Array<string>;
     initIsHidden: boolean;
+    activeBackend: number;
 };
 export type ContextMenuItem = {
     className: string | null | undefined;

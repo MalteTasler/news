@@ -10,8 +10,8 @@ const NewsList = ({
     siteId,
     tappId,
     news,
-    onPatch,
-    onDelete,
+    activeBackend,
+    fetchNews
 }: NewsListProps) => (
     <div className="newsList">
         {news.map((element) => {
@@ -33,9 +33,9 @@ const NewsList = ({
                         imageList={element.imageList}
                         publishTime={element.publishTime}
                         publishTimestamp={element.publishTimestamp}
-                        onPatch={onPatch}
-                        onDelete={onDelete}
                         hidden={element.hidden || false}
+                        activeBackend={activeBackend}
+                        fetchNews={fetchNews}
                     />
                 )
             );
@@ -51,8 +51,8 @@ NewsList.propTypes = {
             id: PropTypes.number, // try use INews[] instead
         })
     ).isRequired,
-    onPatch: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
+    activeBackend: PropTypes.number.isRequired,
+    fetchNews: PropTypes.func.isRequired
 };
 
 NewsList.DisplayName = 'NewsList';

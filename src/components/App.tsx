@@ -2,9 +2,6 @@ import React, { FC, useEffect, useRef, useState } from 'react';
 import { getParameters } from 'chayns-api';
 import { AnimationWrapper, Button } from 'chayns-components';
 import { getNews } from 'api/news/get';
-import { postNewsEntry } from 'api/news/post';
-import { patchNewsEntry } from 'api/news/patch';
-import { deleteNewsEntry } from 'api/news/delete';
 import { FETCH_COUNT } from 'constants/config';
 import { BackendUrls } from 'constants/enums';
 import DeveloperTools from './developer-tools/DeveloperTools';
@@ -15,9 +12,7 @@ import AddNewsEntry from './add-news-entry-error-boundary/add-news-entry/AddNews
 import './app.scss';
 import {
     ListResponse,
-    News,
-    NewsBase,
-    Parameters,
+    News
 } from '../constants/interfaces';
 
 require('../constants/chayns.d');
@@ -28,7 +23,6 @@ const App: FC = () => {
     const [activeBackend, setActiveBackend] = useState(1);
     const [newsEntryId, setNewsEntryId] = useState<number | null>(null); // id of the news entry to display, if null display multiple news
     const [shouldShowNews, setShowNews] = useState(true);
-    const [, setCounter] = useState(0);
     const [numberOfFetchedNews, setNumberOfFetchedNews] = useState(0);
     const [numberOfDisplayedNews, setNumberOfDisplayedNews] =
         useState(0);
@@ -72,7 +66,7 @@ const App: FC = () => {
             fetchURLWithParameters += `&tappId=${chayns.env.site.tapp.id}`
             fetchURLWithParameters += `&timestamp=${getTimestamp({ newest: !offset })}`
             fetchURLWithParameters += `&count=${FETCH_COUNT}`
-            fetchURLWithParameters += `&adminMode=${(chayns.env.user.adminMode).toString()}`
+            fetchURLWithParameters += `&adminMode=${(chayns.env.user.adminMode || false).toString()}`
 
             const response = await getNews(
                 {
@@ -138,45 +132,7 @@ const App: FC = () => {
             const parsedResponse = (await response.json()) as News;
             setNews([parsedResponse]);
         }
-    };
-
-    const publish = async ({ data } : { data: NewsBase }) => {
-        // if the Id of the -entry to publish is already present in fetched data, do patch, otherwise do post
-        if (news.find((entry) => entry.id === data.id)) {
-            const fetchUrlWithParameters = `${BackendUrls[activeBackend]}/${
-                data.id as number
-            }`;
-            await patchNewsEntry(
-                {
-                    fetchUrlWithParameters,
-                    data
-                }
-            );
-        } 
-        
-        else {
-            const fetchUrlWithParameters = `${BackendUrls[activeBackend]}`;
-            await postNewsEntry(
-                {
-                    fetchUrlWithParameters,
-                    data
-                }
-            );
-        }
-        setCounter((prevState) => prevState + 1);
-        await fetchNews({ offset: false});
-    };
-
-    const deleteEntry = async ({ id } : { id: number }) => {
-        const fetchUrlWithParameters = `${BackendUrls[activeBackend]}/${id}`;
-        await deleteNewsEntry(
-            {
-                fetchUrlWithParameters                
-            }
-        );
-        setCounter((prevState) => prevState + 1);
-        await fetchNews({ offset: false });
-    };
+    };    
 
     useEffect(() => {
         const params: {
@@ -242,7 +198,8 @@ const App: FC = () => {
                         <AddNewsEntry
                             siteId={chayns.env.site.id}
                             tappId={chayns.env.site.tapp.id}
-                            onPublish={publish}
+                            activeBackend={activeBackend}
+                            fetchNews={fetchNews}
                         />
                     </AddNewsEntryErrorBoundary>
                     <DeveloperTools
@@ -284,8 +241,8 @@ const App: FC = () => {
                                             siteId={chayns.env.site.id}
                                             tappId={chayns.env.site.tapp.id}
                                             news={news}
-                                            onPatch={publish}
-                                            onDelete={deleteEntry}
+                                            activeBackend={activeBackend}
+                                            fetchNews={fetchNews}
                                         />
                                     </NewsListErrorBoundary>
                                     {!newsEntryId ? (
