@@ -20,7 +20,7 @@ const EditNewsEntry = ({
     initTitle,
     initImageList,
     initIsHidden,
-    activeBackend
+    activeBackend,
 }: EditNewsEntryProps) => {
     const [message, setMessage] = useState<string>(initMessage);
     const [title, setTitle] = useState<string>(initTitle);
@@ -37,40 +37,34 @@ const EditNewsEntry = ({
         await postImages();
         if (id) {
             const fetchUrlWithParameters = `${BackendUrls[activeBackend]}/${id}`;
-            await patchNewsEntry(
-                { 
-                    data: {
-                        id,
-                        siteId,
-                        tappId,
-                        imageList: imageURLs,
-                        headline: title,
-                        message,
-                        isHidden,
-                    },
-                    fetchUrlWithParameters
-                }
-            );
+            await patchNewsEntry({
+                data: {
+                    id,
+                    siteId,
+                    tappId,
+                    imageList: imageURLs,
+                    headline: title,
+                    message,
+                    isHidden,
+                },
+                fetchUrlWithParameters,
+            });
+        } else {
+            const fetchUrlWithParameters = `${BackendUrls[activeBackend]}`;
+            await postNewsEntry({
+                data: {
+                    id,
+                    siteId,
+                    tappId,
+                    imageList: imageURLs,
+                    headline: title,
+                    message,
+                    isHidden,
+                },
+                fetchUrlWithParameters,
+            });
         }
 
-        else {
-            const fetchUrlWithParameters = `${BackendUrls[activeBackend]}`;
-            await postNewsEntry(
-                {
-                    data: {
-                        id,
-                        siteId,
-                        tappId,
-                        imageList: imageURLs,
-                        headline: title,
-                        message,
-                        isHidden,
-                    },
-                    fetchUrlWithParameters
-                }
-            );
-        }
-        
         onPublish();
     }
 
@@ -81,11 +75,7 @@ const EditNewsEntry = ({
             ) => ConcatArray<{ url: string }>;
         }) => {
             if (!isUploading) {
-                setImages(images.concat(
-                    validFiles.map(
-                        (f) => ({ file: f })
-                    )
-                ));
+                setImages(images.concat(validFiles.map((f) => ({ file: f }))));
             }
         },
         [images, setImages, isUploading]
@@ -101,7 +91,7 @@ const EditNewsEntry = ({
     );
 
     const onImageListDragEnd = useCallback(
-        (imgs: React.SetStateAction<{ url: string; }[]>) => {
+        (imgs: React.SetStateAction<{ url: string }[]>) => {
             setImages(imgs);
         },
         [setImages]
@@ -162,11 +152,7 @@ const EditNewsEntry = ({
                 ]}
             />
             <div className="editNewsEntry__titleInputFrame">
-                <Input 
-                    placeholder="Title" 
-                    value={title} 
-                    onChange={setTitle} 
-                />
+                <Input placeholder="Title" value={title} onChange={setTitle} />
             </div>
             <div className="editNewsEntry__messageInputFrame">
                 <TextArea
@@ -197,7 +183,7 @@ EditNewsEntry.propTypes = {
     initTitle: PropTypes.string.isRequired,
     initImageList: PropTypes.arrayOf(PropTypes.string).isRequired,
     initIsHidden: PropTypes.bool.isRequired,
-    activeBackend: PropTypes.number.isRequired
+    activeBackend: PropTypes.number.isRequired,
 };
 
 EditNewsEntry.DisplayName = 'EditNewsEntry';

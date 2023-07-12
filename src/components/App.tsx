@@ -10,69 +10,66 @@ import NewsList from './news-list-error-boundary/news-list/NewsList';
 import AddNewsEntryErrorBoundary from './add-news-entry-error-boundary/AddNewsEntryErrorBoundary';
 import AddNewsEntry from './add-news-entry-error-boundary/add-news-entry/AddNewsEntry';
 import './app.scss';
-import {
-    ListResponse,
-    News
-} from '../constants/interfaces';
+import { ListResponse, News } from '../constants/interfaces';
 
 require('../constants/chayns.d');
 require('../constants/chayns-components.d');
 
-const App: FC = () => { 
+const App: FC = () => {
     const [news, setNews] = useState<News[]>([]);
     const [activeBackend, setActiveBackend] = useState(1);
     const [newsEntryId, setNewsEntryId] = useState<number | null>(null); // id of the news entry to display, if null display multiple news
     const [shouldShowNews, setShowNews] = useState(true);
     const [numberOfFetchedNews, setNumberOfFetchedNews] = useState(0);
-    const [numberOfDisplayedNews, setNumberOfDisplayedNews] =
-        useState(0);
+    const [numberOfDisplayedNews, setNumberOfDisplayedNews] = useState(0);
     const [numberOfDatabaseNews, setNumberOfDatabaseNews] = useState<
         number | null
     >(null);
     const [numberOfDatabaseUnhiddenNews, setNumberOfDatabaseUnhiddenNews] =
         useState<number | null>(null);
-    const [isLoadMoreButtonEnabled, setLoadMoreButtonEnabled] =
-        useState(false);
+    const [isLoadMoreButtonEnabled, setLoadMoreButtonEnabled] = useState(false);
     const isFirstRender = useRef(true);
 
     const navigateToAllNews = () => {
         setNewsEntryId(null);
     };
-    
+
     const getTimestamp = ({ newest = false }): string | number => {
         if (!news || !Array.isArray(news) || news.length <= 1 || newest) {
-            // if no news entries are loaded yet or the parmeter "newest" is set to true, 
-            // just use the current timestamp (timestamp when the page was loaded) which can 
+            // if no news entries are loaded yet or the parmeter "newest" is set to true,
+            // just use the current timestamp (timestamp when the page was loaded) which can
             // be done by setting it to 0
             return new Date().getTime();
         }
 
         //  if entries are already loaded take the timestamp of the oldest
         const oldestLoadedNewsEntry: News = news[news.length - 1];
-        if (oldestLoadedNewsEntry) {    
+        if (oldestLoadedNewsEntry) {
             return oldestLoadedNewsEntry.publishTimestamp;
         }
-        
+
         return new Date().getTime();
-    }
+    };
 
     const fetchNews = async ({ offset = false }) => {
         // if offset is true, last value of current news array gets popped
         if (newsEntryId === null) {
             // if no id parameter for a news entry is used, load multiple entries
-            // generate fetchURL with parameters            
-            let fetchURLWithParameters = BackendUrls[activeBackend]
-            fetchURLWithParameters += `?siteId=${chayns.env.site.id}`
-            fetchURLWithParameters += `&tappId=${chayns.env.site.tapp.id}`
-            fetchURLWithParameters += `&timestamp=${getTimestamp({ newest: !offset })}`
-            fetchURLWithParameters += `&count=${FETCH_COUNT}`
-            fetchURLWithParameters += `&adminMode=${(chayns.env.user.adminMode || false).toString()}`
+            // generate fetchURL with parameters
+            let fetchURLWithParameters = BackendUrls[activeBackend];
+            fetchURLWithParameters += `?siteId=${chayns.env.site.id}`;
+            fetchURLWithParameters += `&tappId=${chayns.env.site.tapp.id}`;
+            fetchURLWithParameters += `&timestamp=${getTimestamp({
+                newest: !offset,
+            })}`;
+            fetchURLWithParameters += `&count=${FETCH_COUNT}`;
+            fetchURLWithParameters += `&adminMode=${(
+                chayns.env.user.adminMode || false
+            ).toString()}`;
 
-            const response = await getNews(
-                {
-                    fetchUrlWithParameters : fetchURLWithParameters
-                }
-            );
+            const response = await getNews({
+                fetchUrlWithParameters: fetchURLWithParameters,
+            });
             switch (response.status) {
                 // Bad Request
                 case 400: {
@@ -102,37 +99,32 @@ const App: FC = () => {
                     });
                     setNumberOfDatabaseNews(fullLength);
                     setNumberOfDatabaseUnhiddenNews(length);
-                    const number = itemList.length; // number of new fetched entries                   
-                    setNumberOfFetchedNews(
-                        (prevState) => prevState + number
-                    );
+                    const number = itemList.length; // number of new fetched entries
+                    setNumberOfFetchedNews((prevState) => prevState + number);
                     if (number > FETCH_COUNT) {
                         setNumberOfDisplayedNews(
                             (prevState) => prevState + FETCH_COUNT
                         );
-                    }
-                    else {
+                    } else {
                         setNumberOfDisplayedNews(
                             (prevState) => prevState + number
                         );
-                    }                    
+                    }
                 }
             }
         }
-        
+
         // otherwise fetch only the news entry with the id defined in parameter
-        else {            
+        else {
             // generate fetchURL with parameters
             const fetchURLWithParameters = `${BackendUrls[activeBackend]}/${newsEntryId}`;
-            const response = await getNews(
-                {
-                    fetchUrlWithParameters : fetchURLWithParameters            
-                }
-            );
+            const response = await getNews({
+                fetchUrlWithParameters: fetchURLWithParameters,
+            });
             const parsedResponse = (await response.json()) as News;
             setNews([parsedResponse]);
         }
-    };    
+    };
 
     useEffect(() => {
         const params: {
@@ -140,13 +132,9 @@ const App: FC = () => {
             [key: symbol]: string;
         } = getParameters();
         // check if paramters are valid
-        if (params.M !== undefined) 
-        {
+        if (params.M !== undefined) {
             setNewsEntryId(params.M as unknown as number);
-        }
-
-        else 
-        {
+        } else {
             void fetchNews({ offset: false });
         }
     }, []);
@@ -154,13 +142,11 @@ const App: FC = () => {
     useEffect(() => {
         if (isFirstRender.current) {
             // Markiere den ersten Render als abgeschlossen
-        } 
-        else {
+        } else {
             void fetchNews({ offset: false });
         }
     }, [newsEntryId]);
-   
-    
+
     useEffect(() => {
         setLoadMoreButtonEnabled(
             numberOfDatabaseUnhiddenNews
@@ -170,15 +156,14 @@ const App: FC = () => {
     }, [
         numberOfDisplayedNews,
         numberOfDatabaseNews,
-        numberOfDatabaseUnhiddenNews
+        numberOfDatabaseUnhiddenNews,
     ]);
 
     useEffect(() => {
         if (isFirstRender.current) {
             // Markiere den ersten Render als abgeschlossen
             isFirstRender.current = false;
-        }
-        else {         
+        } else {
             void fetchNews({ offset: false });
         }
     }, [activeBackend]);
@@ -246,22 +231,22 @@ const App: FC = () => {
                                         />
                                     </NewsListErrorBoundary>
                                     {!newsEntryId ? (
-                                        <div
-                                            className="app__newsListContainer__btLoadMoreContainer"
-                                        >
+                                        <div className="app__newsListContainer__btLoadMoreContainer">
                                             <Button
                                                 disabled={
                                                     !isLoadMoreButtonEnabled
                                                 }
-                                                onClick={async() => {await fetchNews({ offset: true })}}
+                                                onClick={async () => {
+                                                    await fetchNews({
+                                                        offset: true,
+                                                    });
+                                                }}
                                             >
                                                 Mehr
                                             </Button>
                                         </div>
                                     ) : (
-                                        <div
-                                            className="app__newsListContainer__btLoadMoreContainer"
-                                        >
+                                        <div className="app__newsListContainer__btLoadMoreContainer">
                                             <Button
                                                 onClick={() =>
                                                     navigateToAllNews()

@@ -6,7 +6,7 @@ import './footer.scss';
 import { FrontendUrls } from 'constants/enums';
 
 require('../../../../../constants/chayns.d');
-require('../../../../../constants/chayns-components.d'); 
+require('../../../../../constants/chayns-components.d');
 
 const Footer = ({ date, dateAbsolute, id }: FooterProps) => (
     <div className="newsEntryFooter">
@@ -23,9 +23,7 @@ const Footer = ({ date, dateAbsolute, id }: FooterProps) => (
             minWidth={200}
             bindListeners
         >
-            <div className="newsEntryFooter__timeDisplay">
-                {date}
-            </div>
+            <div className="newsEntryFooter__timeDisplay">{date}</div>
         </Tooltip>
     </div>
 );

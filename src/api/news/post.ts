@@ -15,14 +15,12 @@ interface PostNewsOptions {
     data: NewsBase;
 }
 
-export const postNewsEntry = async (
-    { 
-        fetchUrlWithParameters,
-        data
-    } : PostNewsOptions
-): Promise<Response> => {
+export const postNewsEntry = async ({
+    fetchUrlWithParameters,
+    data,
+}: PostNewsOptions): Promise<Response> => {
     const { accessToken } = await getAccessToken();
-    
+
     return fetch(fetchUrlWithParameters, {
         method: 'POST',
         body: JSON.stringify({
@@ -35,7 +33,7 @@ export const postNewsEntry = async (
         }),
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
-            Authorization: `bearer ${accessToken || ""}`,
+            Authorization: `bearer ${accessToken || ''}`,
         },
     });
-}
+};

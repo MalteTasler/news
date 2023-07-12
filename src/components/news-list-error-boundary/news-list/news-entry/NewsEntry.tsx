@@ -25,7 +25,7 @@ const NewsEntry = ({
     publishTimestamp,
     isHidden,
     activeBackend,
-    fetchNews
+    fetchNews,
 }: NewsEntryProps) => {
     let isMessageLong = false;
     let cutMessage;
@@ -49,14 +49,12 @@ const NewsEntry = ({
                     },
                 ]
             )
-            .then(async(result) => {
+            .then(async (result) => {
                 if (result === 1) {
                     const fetchUrlWithParameters = `${BackendUrls[activeBackend]}/${id}`;
-                    await deleteNewsEntry(
-                        {
-                            fetchUrlWithParameters                
-                        }
-                    );
+                    await deleteNewsEntry({
+                        fetchUrlWithParameters,
+                    });
                     void fetchNews({ offset: false });
                 }
             });
@@ -66,23 +64,21 @@ const NewsEntry = ({
         setEditMode(!isEditMode);
         void fetchNews({ offset: false });
     };
-    
-    const handleHide = ({ shouldBeHidden } : { shouldBeHidden: boolean }) => {
+
+    const handleHide = ({ shouldBeHidden }: { shouldBeHidden: boolean }) => {
         const fetchUrlWithParameters = `${BackendUrls[activeBackend]}/${id}`;
-        void patchNewsEntry(
-            { 
-                data: {
-                    id,
-                    siteId,
-                    tappId,
-                    imageList,
-                    headline: title,
-                    message,
-                    isHidden: shouldBeHidden,
-                },
-                fetchUrlWithParameters
-            }
-        );
+        void patchNewsEntry({
+            data: {
+                id,
+                siteId,
+                tappId,
+                imageList,
+                headline: title,
+                message,
+                isHidden: shouldBeHidden,
+            },
+            fetchUrlWithParameters,
+        });
         void fetchNews({ offset: false });
     };
 
@@ -137,7 +133,12 @@ const NewsEntry = ({
         cutMessage = (
             <span>
                 {substring}... &nbsp;
-                <a className="btLoadWholeMessage" onClick={() => {setMessageIsExtended(true)}}>
+                <a
+                    className="btLoadWholeMessage"
+                    onClick={() => {
+                        setMessageIsExtended(true);
+                    }}
+                >
                     Mehr
                 </a>
             </span>
@@ -149,14 +150,12 @@ const NewsEntry = ({
         array.push(contextMenuItems.delete);
         if (isEditMode) {
             array.push(contextMenuItems.view);
-        }
-        else {
+        } else {
             array.push(contextMenuItems.edit);
         }
         if (isHidden) {
             array.push(contextMenuItems.unhide);
-        }
-        else {
+        } else {
             array.push(contextMenuItems.hide);
         }
 
@@ -171,15 +170,11 @@ const NewsEntry = ({
                         {chayns.env.user.adminMode && (
                             <div className="newsEntry__header">
                                 {isHidden && (
-                                    <div
-                                        className="newsEntry__header__hideDisplayLabel"
-                                    >
+                                    <div className="newsEntry__header__hideDisplayLabel">
                                         Ausgeblendet
                                     </div>
                                 )}
-                                <div
-                                    className="newsEntry__header__contextMenuFrame"
-                                >
+                                <div className="newsEntry__header__contextMenuFrame">
                                     <ContextMenu
                                         items={buildContextMenuItems()}
                                         className="newsEntry__header__contextMenuFrame__contextMenu"
@@ -207,13 +202,14 @@ const NewsEntry = ({
                                     <Gallery images={imageList} />
                                 )}
                                 <h2>{title}</h2>
-                                <div
-                                    className="newsEntry__message"
-                                >
+                                <div className="newsEntry__message">
                                     {isMessageLong ? cutMessage : message}
                                 </div>
                                 <Footer
-                                    date={getTimeAgo(publishTimestamp, new Date())}
+                                    date={getTimeAgo(
+                                        publishTimestamp,
+                                        new Date()
+                                    )}
                                     dateAbsolute={publishTime}
                                     id={id}
                                 />
@@ -237,7 +233,7 @@ NewsEntry.propTypes = {
     publishTimestamp: PropTypes.number.isRequired,
     isHidden: PropTypes.bool.isRequired,
     activeBackend: PropTypes.number.isRequired,
-    fetchNews: PropTypes.func.isRequired
+    fetchNews: PropTypes.func.isRequired,
 };
 
 NewsEntry.defaultProps = {

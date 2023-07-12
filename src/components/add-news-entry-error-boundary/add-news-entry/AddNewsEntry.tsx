@@ -12,11 +12,11 @@ const AddNewsEntry = ({
     siteId,
     tappId,
     activeBackend,
-    fetchNews
+    fetchNews,
 }: AddNewsEntryProps) => {
     const handlePublish = () => {
         void fetchNews({});
-    }
+    };
 
     return (
         <Accordion head="Create News Entry">
@@ -35,13 +35,13 @@ const AddNewsEntry = ({
             </div>
         </Accordion>
     );
-}
+};
 
 AddNewsEntry.propTypes = {
     siteId: PropTypes.string.isRequired,
     tappId: PropTypes.number.isRequired,
     activeBackend: PropTypes.number.isRequired,
-    fetchNews: PropTypes.func.isRequired
+    fetchNews: PropTypes.func.isRequired,
 };
 
 AddNewsEntry.DisplayName = 'AddNewsEntry';

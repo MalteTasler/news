@@ -15,7 +15,7 @@ export const getTimeAgo = (timestamp: number, now: Date) => {
     if (diff < minute) {
         return 'vor weniger als einer Minute';
     }
-    
+
     if (diff < hour) {
         const minutesAgo = Math.floor(diff / minute);
         return `vor ${minutesAgo} Minute${minutesAgo > 1 ? 'n' : ''}`;
@@ -40,6 +40,6 @@ export const getTimeAgo = (timestamp: number, now: Date) => {
         return `vor ${weeksAgo} Woche${weeksAgo > 1 ? 'n' : ''}`;
     }
 
-    const monthsAgo = Math.floor(diff / month);    
+    const monthsAgo = Math.floor(diff / month);
     return `vor ${monthsAgo} Monat${monthsAgo > 1 ? 'en' : ''}`;
 };

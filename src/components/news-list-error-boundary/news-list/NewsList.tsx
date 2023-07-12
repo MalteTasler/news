@@ -11,7 +11,7 @@ const NewsList = ({
     tappId,
     news,
     activeBackend,
-    fetchNews
+    fetchNews,
 }: NewsListProps) => (
     <div className="newsList">
         {news.map((element) => {
@@ -52,7 +52,7 @@ NewsList.propTypes = {
         })
     ).isRequired,
     activeBackend: PropTypes.number.isRequired,
-    fetchNews: PropTypes.func.isRequired
+    fetchNews: PropTypes.func.isRequired,
 };
 
 NewsList.DisplayName = 'NewsList';

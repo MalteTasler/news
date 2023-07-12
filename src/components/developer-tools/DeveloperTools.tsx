@@ -49,16 +49,12 @@ const DeveloperTools = ({
                     className="developerTools__idDisplay"
                     onClick={() => copySiteId}
                 >
-                    <div
-                        className="developerTools__idDisplay__label"
-                    >
+                    <div className="developerTools__idDisplay__label">
                         SiteId = {siteId}
                     </div>
                     <i className="fa fa-copy" />
                     {hasCopiedSiteId && (
-                        <div
-                            className="developerTools__idDisplay__copiedLabel"
-                        >
+                        <div className="developerTools__idDisplay__copiedLabel">
                             ✅ Copied to clipboard.
                         </div>
                     )}
@@ -68,16 +64,12 @@ const DeveloperTools = ({
                     className="developerTools__idDisplay"
                     onClick={() => copyTappId}
                 >
-                    <div
-                        className="developerTools__idDisplay__label"
-                    >
+                    <div className="developerTools__idDisplay__label">
                         TappId = {tappId}
                     </div>
                     <i className="fa fa-copy" />
                     {hasCopiedTappId && (
-                        <div
-                            className="developerTools__idDisplay__copiedLabel"
-                        >
+                        <div className="developerTools__idDisplay__copiedLabel">
                             ✅ Copied to clipboard.
                         </div>
                     )}
@@ -91,9 +83,7 @@ const DeveloperTools = ({
                 Number of fetched News = {numberOfFetchedNews}
                 <br />
                 Number of displayed News = {numberOfDisplayedNews}
-                <div
-                    className="developerTools__selectBackend"
-                >
+                <div className="developerTools__selectBackend">
                     Backend:
                     <SelectButton
                         title="Select the backend"

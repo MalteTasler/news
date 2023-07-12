@@ -3,6 +3,6 @@ export enum FrontendUrls {
     'http://localhost:1234' = 1,
 }
 export enum BackendUrls {
-    'https://run.chayns.codes/f11828e3/api' = 0,    
-    'https://localhost:7106/news' = 1
+    'https://run.chayns.codes/f11828e3/api' = 0,
+    'https://localhost:7106/news' = 1,
 }

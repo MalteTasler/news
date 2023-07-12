@@ -15,12 +15,10 @@ interface PatchNewsOptions {
     data: NewsBase;
 }
 
-export const patchNewsEntry = async (
-    { 
-        fetchUrlWithParameters,
-        data
-    } : PatchNewsOptions
-): Promise<Response> => {
+export const patchNewsEntry = async ({
+    fetchUrlWithParameters,
+    data,
+}: PatchNewsOptions): Promise<Response> => {
     const { accessToken } = await getAccessToken();
 
     return fetch(fetchUrlWithParameters, {
@@ -28,7 +26,7 @@ export const patchNewsEntry = async (
         body: JSON.stringify(data),
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
-            Authorization: `bearer ${accessToken || ""}`,
+            Authorization: `bearer ${accessToken || ''}`,
         },
     });
-}
+};
