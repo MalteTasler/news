@@ -23,8 +23,6 @@ interface ContextMenuItem {
 
 const NewsEntry = ({
     id,
-    siteId,
-    tappId,
     title,
     message,
     imageList,
@@ -77,8 +75,8 @@ const NewsEntry = ({
         await patchNewsEntry({
             data: {
                 id,
-                siteId,
-                tappId,
+                siteId: chayns.env.site.id,
+                tappId: chayns.env.site.tapp.id,
                 imageList,
                 headline: title,
                 message,
@@ -193,8 +191,6 @@ const NewsEntry = ({
                             <div>
                                 <EditNewsEntry
                                     id={id}
-                                    siteId={siteId}
-                                    tappId={tappId}
                                     onPublish={handlePublish}
                                     initMessage={message}
                                     initTitle={title}
@@ -231,8 +227,6 @@ const NewsEntry = ({
 
 NewsEntry.propTypes = {
     id: PropTypes.number.isRequired,
-    siteId: PropTypes.string.isRequired,
-    tappId: PropTypes.number.isRequired,
     title: PropTypes.string,
     message: PropTypes.string.isRequired,
     imageList: PropTypes.arrayOf(PropTypes.string),

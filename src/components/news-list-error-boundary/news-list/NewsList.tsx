@@ -7,8 +7,6 @@ require('../../../constants/chayns.d');
 require('../../../constants/chayns-components.d');
 
 const NewsList = ({
-    siteId,
-    tappId,
     news,
     activeBackend,
     fetchNews,
@@ -26,8 +24,6 @@ const NewsList = ({
                     <NewsEntry
                         key={element.id}
                         id={element.id}
-                        siteId={siteId}
-                        tappId={tappId}
                         title={element.headline}
                         message={element.message}
                         imageList={element.imageList}
@@ -44,8 +40,6 @@ const NewsList = ({
 );
 
 NewsList.propTypes = {
-    siteId: PropTypes.string.isRequired,
-    tappId: PropTypes.number.isRequired,
     news: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.number, // try use INews[] instead

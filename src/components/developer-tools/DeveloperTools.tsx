@@ -8,8 +8,6 @@ require('../../constants/chayns.d');
 require('../../constants/chayns-components.d');
 
 const DeveloperTools = ({
-    siteId,
-    tappId,
     numberOfDisplayedNews,
     numberOfFetchedNews,
     numberOfDatabaseNews,
@@ -34,11 +32,11 @@ const DeveloperTools = ({
     const [hasCopiedSiteId, setHasCopiedSiteId] = useState(false);
     const [hasCopiedTappId, setHasCopiedTappId] = useState(false);
     const copySiteId = async () => {
-        await navigator.clipboard.writeText(siteId);
+        await navigator.clipboard.writeText(chayns.env.site.id);
         setHasCopiedSiteId(true);
     };
     const copyTappId = async () => {
-        await navigator.clipboard.writeText(`${tappId}`);
+        await navigator.clipboard.writeText(`${chayns.env.site.tapp.id}`);
         setHasCopiedTappId(true);
     };
 
@@ -50,7 +48,7 @@ const DeveloperTools = ({
                     onClick={() => copySiteId}
                 >
                     <div className="developerTools__idDisplay__label">
-                        SiteId = {siteId}
+                        SiteId = {chayns.env.site.id}
                     </div>
                     <i className="fa fa-copy" />
                     {hasCopiedSiteId && (
@@ -65,7 +63,7 @@ const DeveloperTools = ({
                     onClick={() => copyTappId}
                 >
                     <div className="developerTools__idDisplay__label">
-                        TappId = {tappId}
+                        TappId = {chayns.env.site.tapp.id}
                     </div>
                     <i className="fa fa-copy" />
                     {hasCopiedTappId && (
@@ -160,8 +158,6 @@ const DeveloperTools = ({
 };
 
 DeveloperTools.propTypes = {
-    siteId: PropTypes.string.isRequired,
-    tappId: PropTypes.number.isRequired,
     numberOfDatabaseNews: PropTypes.number,
     numberOfDatabaseUnhiddenNews: PropTypes.number.isRequired,
     numberOfFetchedNews: PropTypes.number.isRequired,

@@ -13,8 +13,6 @@ require('../../../constants/chayns-components.d');
 
 const EditNewsEntry = ({
     id,
-    siteId,
-    tappId,
     onPublish,
     initMessage,
     initTitle,
@@ -40,8 +38,8 @@ const EditNewsEntry = ({
             await patchNewsEntry({
                 data: {
                     id,
-                    siteId,
-                    tappId,
+                    siteId: chayns.env.site.id,
+                    tappId: chayns.env.site.tapp.id,
                     imageList: imageURLs,
                     headline: title,
                     message,
@@ -54,8 +52,8 @@ const EditNewsEntry = ({
             await postNewsEntry({
                 data: {
                     id,
-                    siteId,
-                    tappId,
+                    siteId: chayns.env.site.id,
+                    tappId: chayns.env.site.tapp.id,
                     imageList: imageURLs,
                     headline: title,
                     message,
@@ -113,7 +111,7 @@ const EditNewsEntry = ({
                     image.file || image.url,
                     'componentsTestUpload',
                     chayns.env.user.personId,
-                    siteId
+                    chayns.env.site.id
                 );
                 imageURLs.push(`${result.base}/${result.key}`);
                 setDisplayPath(`${displayPath}${result.base}/${result.key}\n`);
@@ -176,8 +174,6 @@ const EditNewsEntry = ({
 
 EditNewsEntry.propTypes = {
     id: PropTypes.number.isRequired,
-    siteId: PropTypes.string.isRequired,
-    tappId: PropTypes.number.isRequired,
     onPublish: PropTypes.func.isRequired,
     initMessage: PropTypes.string.isRequired,
     initTitle: PropTypes.string.isRequired,

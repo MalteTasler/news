@@ -1,14 +1,10 @@
 import { News } from './interfaces';
 
 export type AddNewsEntryProps = {
-    siteId: string;
-    tappId: number;
     activeBackend: number;
     fetchNews: ({ shouldLoadMore }: { shouldLoadMore?: boolean | undefined }) => Promise<void>;
 };
 export type DeveloperToolsProps = {
-    siteId: string;
-    tappId: number;
     numberOfDisplayedNews: number;
     numberOfFetchedNews: number;
     numberOfDatabaseNews: number;
@@ -25,8 +21,6 @@ export type FooterProps = {
 };
 export type NewsEntryProps = {
     id: number;
-    siteId: string;
-    tappId: number;
     title: string;
     message: string;
     imageList: Array<string>;
@@ -37,16 +31,12 @@ export type NewsEntryProps = {
     fetchNews: ({ shouldLoadMore }: { shouldLoadMore?: boolean | undefined }) => Promise<void>;
 };
 export type NewsListProps = {
-    siteId: string;
-    tappId: number;
     news: Array<News>;
     activeBackend: number;
     fetchNews: ({ shouldLoadMore }: { shouldLoadMore?: boolean | undefined }) => Promise<void>;
 };
 export type EditNewsEntryProps = {
     id: number;
-    siteId: string;
-    tappId: number;
     onPublish: () => void;
     initMessage: string;
     initTitle: string;

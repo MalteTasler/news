@@ -189,15 +189,11 @@ const App: FC = () => {
                 <div>
                     <AddNewsEntryErrorBoundary>
                         <AddNewsEntry
-                            siteId={chayns.env.site.id}
-                            tappId={chayns.env.site.tapp.id}
                             activeBackend={activeBackend}
                             fetchNews={fetchNews}
                         />
                     </AddNewsEntryErrorBoundary>
                     <DeveloperTools
-                        siteId={chayns.env.site.id}
-                        tappId={chayns.env.site.tapp.id}
                         numberOfDisplayedNews={numberOfDisplayedNews}
                         numberOfFetchedNews={numberOfFetchedNews}
                         numberOfDatabaseNews={numberOfDatabaseNews || 0}
@@ -229,8 +225,6 @@ const App: FC = () => {
                                     )}
                                     <NewsListErrorBoundary>
                                         <NewsList
-                                            siteId={chayns.env.site.id}
-                                            tappId={chayns.env.site.tapp.id}
                                             news={news}
                                             activeBackend={activeBackend}
                                             fetchNews={fetchNews}
