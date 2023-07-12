@@ -213,9 +213,7 @@ const App: FC = () => {
                         </div>
                     ) : (
                         <div>
-                            {numberOfDatabaseNews &&
-                            news &&
-                            Array.isArray(news) &&
+                            {numberOfDatabaseNews &&                                                        
                             news.length > 0 ? (
                                 <div className="app__newsListContainer">
                                     {newsEntryId && (
