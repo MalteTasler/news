@@ -23,13 +23,7 @@ const NewsList = ({
                 element.publishTime && (
                     <NewsEntry
                         key={element.id}
-                        id={element.id}
-                        title={element.headline}
-                        message={element.message}
-                        imageList={element.imageList}
-                        publishTime={element.publishTime}
-                        publishTimestamp={element.publishTimestamp}
-                        isHidden={element.isHidden}
+                        newsElement={element}
                         activeBackend={activeBackend}
                         fetchNews={fetchNews}
                     />

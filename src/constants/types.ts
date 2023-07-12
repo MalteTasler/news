@@ -20,13 +20,7 @@ export type FooterProps = {
     id: number;
 };
 export type NewsEntryProps = {
-    id: number;
-    title: string;
-    message: string;
-    imageList: Array<string>;
-    publishTime: string;
-    publishTimestamp: number;
-    isHidden: boolean;
+    newsElement: News;
     activeBackend: number;
     fetchNews: ({ shouldLoadMore }: { shouldLoadMore?: boolean | undefined }) => Promise<void>;
 };

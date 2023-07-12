@@ -8,6 +8,7 @@ import './newsEntry.scss';
 import { BackendUrls } from 'constants/enums';
 import { patchNewsEntry } from 'api/news/patch';
 import { deleteNewsEntry } from 'api/news/delete';
+import { NEWS_ELEMENT_SHAPE } from 'constants/shapes';
 import Footer from './footer/Footer';
 import EditNewsEntry from '../../../shared/edit-news-entry/EditNewsEntry';
 
@@ -22,18 +23,13 @@ interface ContextMenuItem {
 };
 
 const NewsEntry = ({
-    id,
-    title,
-    message,
-    imageList,
-    publishTime,
-    publishTimestamp,
-    isHidden,
+    newsElement,
     activeBackend,
     fetchNews,
 }: NewsEntryProps) => {
     let isMessageLong = false;
     let cutMessage;
+    const { id, imageList, message, publishTime, publishTimestamp, headline, isHidden } = newsElement;
 
     const [isEditMode, setEditMode] = useState(false);
     const [IsMessageExtended, setMessageIsExtended] = useState(false);
@@ -78,7 +74,7 @@ const NewsEntry = ({
                 siteId: chayns.env.site.id,
                 tappId: chayns.env.site.tapp.id,
                 imageList,
-                headline: title,
+                headline,
                 message,
                 isHidden: shouldBeHidden,
             },
@@ -193,7 +189,7 @@ const NewsEntry = ({
                                     id={id}
                                     onPublish={handlePublish}
                                     initMessage={message}
-                                    initTitle={title}
+                                    initTitle={headline}
                                     initImageList={imageList}
                                     initIsHidden={isHidden}
                                     activeBackend={activeBackend}
@@ -204,7 +200,7 @@ const NewsEntry = ({
                                 {imageList && imageList.length !== 0 && (
                                     <Gallery images={imageList} />
                                 )}
-                                <h2>{title}</h2>
+                                <h2>{headline}</h2>
                                 <div className="newsEntry__message">
                                     {isMessageLong ? cutMessage : message}
                                 </div>
@@ -226,20 +222,9 @@ const NewsEntry = ({
 };
 
 NewsEntry.propTypes = {
-    id: PropTypes.number.isRequired,
-    title: PropTypes.string,
-    message: PropTypes.string.isRequired,
-    imageList: PropTypes.arrayOf(PropTypes.string),
-    publishTime: PropTypes.string.isRequired,
-    publishTimestamp: PropTypes.number.isRequired,
-    isHidden: PropTypes.bool.isRequired,
+    newsElement: PropTypes.shape(NEWS_ELEMENT_SHAPE).isRequired,
     activeBackend: PropTypes.number.isRequired,
     fetchNews: PropTypes.func.isRequired,
-};
-
-NewsEntry.defaultProps = {
-    title: '',
-    imageList: [],
 };
 
 NewsEntry.DisplayName = 'NewsEntry';
