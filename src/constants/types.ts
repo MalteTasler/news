@@ -54,9 +54,3 @@ export type EditNewsEntryProps = {
     initIsHidden: boolean;
     activeBackend: number;
 };
-export type ContextMenuItem = {
-    className: string | null | undefined;
-    onClick: () => void | Promise<void> | void;
-    text: string;
-    icon: string;
-};

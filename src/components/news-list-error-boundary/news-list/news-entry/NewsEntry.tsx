@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Gallery, ContextMenu } from 'chayns-components';
 import { getTimeAgo } from 'utils/date';
-import { ContextMenuItem, NewsEntryProps } from 'constants/types';
+import { NewsEntryProps } from 'constants/types';
 import { MAX_MESSAGE_LENGTH } from 'constants/config';
 import './newsEntry.scss';
 import { BackendUrls } from 'constants/enums';
@@ -13,6 +13,13 @@ import EditNewsEntry from '../../../shared/edit-news-entry/EditNewsEntry';
 
 require('../../../../constants/chayns.d');
 require('../../../../constants/chayns-components.d');
+
+interface ContextMenuItem {
+    className: string | null | undefined;
+    onClick: () => void | Promise<void> | void;
+    text: string;
+    icon: string;
+};
 
 const NewsEntry = ({
     id,
