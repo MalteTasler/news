@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { getParameters } from 'chayns-api';
 import { AnimationWrapper, Button } from 'chayns-components';
 import { getNews } from 'api/news/get';
@@ -39,6 +39,7 @@ const App: FC = () => {
         useState<number | null>(null);
     const [isLoadMoreButtonEnabled, setLoadMoreButtonEnabled] =
         useState(false);
+    const isFirstRender = useRef(true);
 
     const navigateToAllNews = () => {
         setNewsEntryId(null);
@@ -107,33 +108,20 @@ const App: FC = () => {
                     });
                     setNumberOfDatabaseNews(fullLength);
                     setNumberOfDatabaseUnhiddenNews(length);
-                    const number = itemList.length; // number of new fetched entries
-                    if (offset) {
-                        setNumberOfFetchedNews(
+                    const number = itemList.length; // number of new fetched entries                   
+                    setNumberOfFetchedNews(
+                        (prevState) => prevState + number
+                    );
+                    if (number > FETCH_COUNT) {
+                        setNumberOfDisplayedNews(
+                            (prevState) => prevState + FETCH_COUNT
+                        );
+                    }
+                    else {
+                        setNumberOfDisplayedNews(
                             (prevState) => prevState + number
                         );
-                        if (number > FETCH_COUNT) {
-                            setNumberOfDisplayedNews(
-                                (prevState) => prevState + FETCH_COUNT
-                            );
-                        }
-                        else {
-                            setNumberOfDisplayedNews(
-                                (prevState) => prevState + number
-                            );
-                        }
-                    }
-                    
-                    else {
-                        setNumberOfFetchedNews(number);
-                        if (number > FETCH_COUNT) {
-                            setNumberOfDisplayedNews(FETCH_COUNT);
-                        }
-
-                        else {
-                            setNumberOfDisplayedNews(number);
-                        }
-                    }
+                    }                    
                 }
             }
         }
@@ -191,9 +179,6 @@ const App: FC = () => {
     };
 
     useEffect(() => {
-        const getItems = async () => {
-            await fetchNews({ offset: false });
-        };
         const params: {
             [key: string]: string;
             [key: symbol]: string;
@@ -211,9 +196,15 @@ const App: FC = () => {
     }, []);
 
     useEffect(() => {
-        void fetchNews({ offset: false });
+        if (isFirstRender.current) {
+            // Markiere den ersten Render als abgeschlossen
+        } 
+        else {
+            void fetchNews({ offset: false });
+        }
     }, [newsEntryId]);
-
+   
+    
     useEffect(() => {
         setLoadMoreButtonEnabled(
             numberOfDatabaseUnhiddenNews
@@ -226,19 +217,14 @@ const App: FC = () => {
         numberOfDatabaseUnhiddenNews
     ]);
 
-/*     useEffect(() => {
-        const getItems = async () => {
-            await fetchNews({ offset: false });
-        };
-        void getItems();
-    }, []); */
-
     useEffect(() => {
-        // ! redundancy? test
-        const getItems = async () => {
-            await fetchNews({ offset: false });
-        };
-        void getItems();
+        if (isFirstRender.current) {
+            // Markiere den ersten Render als abgeschlossen
+            isFirstRender.current = false;
+        }
+        else {         
+            void fetchNews({ offset: false });
+        }
     }, [activeBackend]);
 
     return (
