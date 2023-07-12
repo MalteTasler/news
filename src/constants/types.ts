@@ -4,7 +4,7 @@ export type AddNewsEntryProps = {
     siteId: string;
     tappId: number;
     activeBackend: number;
-    fetchNews: ({ offset }: { offset?: boolean | undefined }) => Promise<void>;
+    fetchNews: ({ shouldLoadMore }: { shouldLoadMore?: boolean | undefined }) => Promise<void>;
 };
 export type DeveloperToolsProps = {
     siteId: string;
@@ -34,14 +34,14 @@ export type NewsEntryProps = {
     publishTimestamp: number;
     isHidden: boolean;
     activeBackend: number;
-    fetchNews: ({ offset }: { offset?: boolean | undefined }) => Promise<void>;
+    fetchNews: ({ shouldLoadMore }: { shouldLoadMore?: boolean | undefined }) => Promise<void>;
 };
 export type NewsListProps = {
     siteId: string;
     tappId: number;
     news: Array<News>;
     activeBackend: number;
-    fetchNews: ({ offset }: { offset?: boolean | undefined }) => Promise<void>;
+    fetchNews: ({ shouldLoadMore }: { shouldLoadMore?: boolean | undefined }) => Promise<void>;
 };
 export type EditNewsEntryProps = {
     id: number;

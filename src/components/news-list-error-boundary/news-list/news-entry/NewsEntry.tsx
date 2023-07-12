@@ -55,14 +55,14 @@ const NewsEntry = ({
                     await deleteNewsEntry({
                         fetchUrlWithParameters,
                     });
-                    void fetchNews({ offset: false });
+                    void fetchNews({ shouldLoadMore: false });
                 }
             });
     };
 
     const handlePublish = () => {
         setEditMode(!isEditMode);
-        void fetchNews({ offset: false });
+        void fetchNews({ shouldLoadMore: false });
     };
 
     const handleHide = ({ shouldBeHidden }: { shouldBeHidden: boolean }) => {
@@ -79,7 +79,7 @@ const NewsEntry = ({
             },
             fetchUrlWithParameters,
         });
-        void fetchNews({ offset: false });
+        void fetchNews({ shouldLoadMore: false });
     };
 
     const contextMenuItems = {

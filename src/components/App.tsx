@@ -51,16 +51,22 @@ const App: FC = () => {
         return new Date().getTime();
     };
 
-    const fetchNews = async ({ offset = false }) => {
-        // if offset is true, last value of current news array gets popped
+    const fetchNews = async ({ shouldLoadMore = false }) => {
+
+        // if no id parameter for a news entry is used, load multiple entries
         if (newsEntryId === null) {
-            // if no id parameter for a news entry is used, load multiple entries
+            // reset local counter variables if shouldLoadMore is false
+            if (!shouldLoadMore) {
+                setNumberOfFetchedNews(0);
+                setNumberOfDisplayedNews(0);                
+            }
+
             // generate fetchURL with parameters
             let fetchURLWithParameters = BackendUrls[activeBackend];
             fetchURLWithParameters += `?siteId=${chayns.env.site.id}`;
             fetchURLWithParameters += `&tappId=${chayns.env.site.tapp.id}`;
             fetchURLWithParameters += `&timestamp=${getTimestamp({
-                newest: !offset,
+                newest: !shouldLoadMore,
             })}`;
             fetchURLWithParameters += `&count=${FETCH_COUNT}`;
             fetchURLWithParameters += `&adminMode=${(
@@ -89,7 +95,9 @@ const App: FC = () => {
                         (await response.json()) as ListResponse;
                     const { itemList, fullLength, length } = parsedResponse;
                     setNews((prevState: News[]): News[] => {
-                        if (offset) {
+                        // if shouldLoadMore is true, 
+                        // last value of news itemList array gets popped (offset of one)
+                        if (shouldLoadMore) {
                             itemList.shift();
 
                             return prevState.concat(itemList);
@@ -135,7 +143,7 @@ const App: FC = () => {
         if (params.M !== undefined) {
             setNewsEntryId(params.M as unknown as number);
         } else {
-            void fetchNews({ offset: false });
+            void fetchNews({ shouldLoadMore: false });
         }
     }, []);
 
@@ -143,7 +151,7 @@ const App: FC = () => {
         if (isFirstRender.current) {
             // Markiere den ersten Render als abgeschlossen
         } else {
-            void fetchNews({ offset: false });
+            void fetchNews({ shouldLoadMore: false });
         }
     }, [newsEntryId]);
 
@@ -164,7 +172,7 @@ const App: FC = () => {
             // Markiere den ersten Render als abgeschlossen
             isFirstRender.current = false;
         } else {
-            void fetchNews({ offset: false });
+            void fetchNews({ shouldLoadMore: false });
         }
     }, [activeBackend]);
 
@@ -235,9 +243,7 @@ const App: FC = () => {
                                                     !isLoadMoreButtonEnabled
                                                 }
                                                 onClick={async () => {
-                                                    await fetchNews({
-                                                        offset: true,
-                                                    });
+                                                    await fetchNews({ shouldLoadMore: true });
                                                 }}
                                             >
                                                 Mehr
