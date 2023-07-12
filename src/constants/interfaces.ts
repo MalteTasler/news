@@ -5,12 +5,12 @@ export interface ListResponse {
 }
 export interface News {
     headline: string;
-    id: number | undefined;
+    id: number;
     siteId: string;
     tappId: number;
     message: string;
     imageList: Array<string>;
     publishTime: string;
     publishTimestamp: number;
-    isHidden: boolean | undefined;
+    isHidden: boolean;
 }

@@ -31,7 +31,7 @@ export const postNewsEntry = async (
             imageList: data.imageList,
             headline: data.headline,
             message: data.message,
-            isHidden: data.hidden,
+            isHidden: data.isHidden,
         }),
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
