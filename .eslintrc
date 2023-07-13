@@ -1,17 +1,12 @@
 {
-  "extends": [
-    "@chayns-toolkit"
-  ],
-  "rules": {
-    "no-param-reassign": [
-      "error",
-      {
-        "props": true,
-        "ignorePropertyModificationsFor": [
-          "state"
+    "extends": ["@chayns-toolkit"],
+    "rules": {
+        "no-param-reassign": [
+            "error",
+            {
+                "props": true,
+                "ignorePropertyModificationsFor": ["state"]
+            }
         ]
-      }
-    ]
-  }
+    }
 }
-

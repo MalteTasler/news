@@ -1,0 +1,16 @@
+.newsEntry {
+    margin-top: 15px;
+
+    &__header {
+        display: flex;
+        padding-top: 2px;
+        padding-bottom: 7px;
+
+        &__contextMenuFrame {
+            margin-left: auto;
+        }
+    }
+    &__message {
+        margin-bottom: 19px;
+    }
+}

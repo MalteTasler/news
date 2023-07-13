@@ -1,0 +1,21 @@
+.app {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    &__loading {
+        margin-top: 19px;
+    }
+    &__newsListContainer {
+        margin-top: 19px;
+        display: flex;
+        flex-direction: column;
+
+        &__btLoadMoreContainer {
+            margin: 49px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}

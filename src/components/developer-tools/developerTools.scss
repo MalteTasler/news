@@ -1,0 +1,28 @@
+.developerTools {
+    display: flex;
+    flex-direction: column;
+    padding: 19px;
+
+    &__idDisplay {
+        display: flex;
+        cursor: pointer;
+
+        &__label {
+            margin-right: 12px;
+        }
+        &__copiedLabel {
+            margin-left: 12px;
+        }
+    }
+    &__selectBackend {
+        display: flex;
+        margin-top: 19px;
+
+        &__selectButton {
+            margin-left: 17px;
+        }
+    }
+    &__cbShowMore {
+        margin-top: 19px;
+    }
+}

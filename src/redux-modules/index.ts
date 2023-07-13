@@ -1,8 +1,8 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import { counterReducer } from './counter/slice';
+import { counterReducer } from './newsList/slice';
 
 const rootReducer = combineReducers({
-    counter: counterReducer
+    counter: counterReducer,
 });
 
 const Store = configureStore({
