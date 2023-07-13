@@ -6,13 +6,18 @@ import DeveloperTools from './developer-tools/DeveloperTools';
 import AddNewsEntryErrorBoundary from './add-news-entry/add-news-entry-error-boundary/AddNewsEntryErrorBoundary';
 import AddNewsEntry from './add-news-entry/AddNewsEntry';
 
-const AdminControls = ({ newsNumbers, activeBackend, setActiveBackend, loadNews, shouldShowNews, setShowNews } : AdminControlsProps) => (
-    <div className="admin-controls">        
+const AdminControls = ({
+    newsNumbers,
+    activeBackend,
+    setActiveBackend,
+    loadNews,
+    shouldShowNews,
+    setShowNews,
+}: AdminControlsProps) => (
+    
+    <div className="admin-controls">
         <AddNewsEntryErrorBoundary>
-            <AddNewsEntry
-                activeBackend={activeBackend}
-                loadNews={loadNews}
-            />
+            <AddNewsEntry activeBackend={activeBackend} loadNews={loadNews} />
         </AddNewsEntryErrorBoundary>
         <DeveloperTools
             newsNumbers={newsNumbers}

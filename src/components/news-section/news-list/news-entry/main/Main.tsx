@@ -1,19 +1,18 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import { Gallery } from "chayns-components";
-import EditNewsEntry from "components/shared/edit-news-entry/EditNewsEntry";
-import { MainProps } from "constants/types";
-import { NEWS_ELEMENT_SHAPE } from "constants/shapes";
-import { MAX_MESSAGE_LENGTH } from "constants/config";
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { Gallery } from 'chayns-components';
+import EditNewsEntry from 'components/shared/edit-news-entry/EditNewsEntry';
+import { MainProps } from 'constants/types';
+import { NEWS_ELEMENT_SHAPE } from 'constants/shapes';
+import { MAX_MESSAGE_LENGTH } from 'constants/config';
 
-const Main = ({ isEditMode, newsElement, activeBackend, handlePublish } : MainProps) => {
-    const {
-        id,
-        imageList,
-        message,
-        headline,
-        isHidden,
-    } = newsElement;
+const Main = ({
+    isEditMode,
+    newsElement,
+    activeBackend,
+    handlePublish,
+}: MainProps) => {
+    const { id, imageList, message, headline, isHidden } = newsElement;
 
     let isMessageLong = false;
     let cutMessage;
@@ -62,11 +61,11 @@ const Main = ({ isEditMode, newsElement, activeBackend, handlePublish } : MainPr
                     <h2>{headline}</h2>
                     <div className="newsEntry__message">
                         {isMessageLong ? cutMessage : message}
-                    </div>                    
+                    </div>
                 </div>
             )}
         </div>
-    )
+    );
 };
 
 Main.propTypes = {

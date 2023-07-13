@@ -10,7 +10,7 @@ require('../../../constants/chayns.d');
 require('../../../constants/chayns-components.d');
 
 const AddNewsEntry = ({ activeBackend, loadNews }: AddNewsEntryProps) => {
-    const handlePublish = async() => {
+    const handlePublish = async () => {
         await loadNews({});
     };
 

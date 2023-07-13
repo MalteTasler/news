@@ -47,7 +47,11 @@ export type HeaderProps = {
     isEditMode: boolean;
     activeBackend: number;
     setEditMode: (value: boolean) => void;
-    handleHide: ({shouldBeHidden,} : {shouldBeHidden: boolean}) => Promise<void>;
+    handleHide: ({
+        shouldBeHidden,
+    }: {
+        shouldBeHidden: boolean;
+    }) => Promise<void>;
     loadNews: ({
         shouldLoadMore,
     }: {

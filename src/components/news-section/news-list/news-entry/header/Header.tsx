@@ -1,9 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { ContextMenu } from "chayns-components";
-import { HeaderProps } from "constants/types";
-import { deleteNewsEntry } from "api/news/delete";
-import { BackendUrls } from "constants/enums";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { ContextMenu } from 'chayns-components';
+import { HeaderProps } from 'constants/types';
+import { deleteNewsEntry } from 'api/news/delete';
+import { BackendUrls } from 'constants/enums';
 
 interface ContextMenuItem {
     className: string | null | undefined;
@@ -12,7 +12,15 @@ interface ContextMenuItem {
     icon: string;
 }
 
-const Header = ({ id, isHidden, isEditMode, setEditMode, handleHide, loadNews, activeBackend } : HeaderProps ) => {
+const Header = ({
+    id,
+    isHidden,
+    isEditMode,
+    setEditMode,
+    handleHide,
+    loadNews,
+    activeBackend,
+}: HeaderProps) => {
     const contextMenuItems = {
         delete: {
             className: null,
@@ -56,7 +64,7 @@ const Header = ({ id, isHidden, isEditMode, setEditMode, handleHide, loadNews, a
             icon: 'fa fa-eye',
         },
     };
-    
+
     function buildContextMenuItems(): ContextMenuItem[] {
         const array: ContextMenuItem[] = [];
         array.push(contextMenuItems.delete);
@@ -95,7 +103,7 @@ const Header = ({ id, isHidden, isEditMode, setEditMode, handleHide, loadNews, a
                     const fetchUrlWithParameters = `${BackendUrls[activeBackend]}/${id}`;
                     await deleteNewsEntry({
                         fetchUrlWithParameters,
-                    });                
+                    });
                 }
             });
     };

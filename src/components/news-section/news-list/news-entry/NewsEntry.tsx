@@ -17,7 +17,7 @@ const NewsEntry = ({
     newsElement,
     activeBackend,
     loadNews,
-}: NewsEntryProps) => {    
+}: NewsEntryProps) => {
     const {
         id,
         imageList,
@@ -28,14 +28,14 @@ const NewsEntry = ({
         isHidden,
     } = newsElement;
 
-    const [isEditMode, setEditMode] = useState(false);    
+    const [isEditMode, setEditMode] = useState(false);
 
-    const handlePublish = async() => {
+    const handlePublish = async () => {
         setEditMode(!isEditMode);
         await loadNews({ shouldLoadMore: false });
     };
 
-    const handleHide = async({
+    const handleHide = async ({
         shouldBeHidden,
     }: {
         shouldBeHidden: boolean;
@@ -76,14 +76,11 @@ const NewsEntry = ({
                             isEditMode={isEditMode}
                             newsElement={newsElement}
                             activeBackend={activeBackend}
-                            handlePublish={handlePublish}                           
+                            handlePublish={handlePublish}
                         />
-                        {!isEditMode && (                            
+                        {!isEditMode && (
                             <Footer
-                                date={getTimeAgo(
-                                    publishTimestamp,
-                                    new Date()
-                                )}
+                                date={getTimeAgo(publishTimestamp, new Date())}
                                 dateAbsolute={publishTime}
                                 id={id}
                             />
