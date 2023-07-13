@@ -89,9 +89,9 @@ export const fetchNews = async ({
     if (!shouldLoadSingleNewsEntry) {
         // reset local counter variables if shouldLoadMore is false
         if (!shouldLoadMore) {
-            numbersAfterFetch.numberOfDatabaseNews = 0;
-            numbersAfterFetch.numberOfDatabaseUnhiddenNews = 0;
-            numbersAfterFetch.numberOfFetchedNews = 0;
+            numbersBeforeFetch.numberOfDatabaseUnhiddenNews = 0;
+            numbersBeforeFetch.numberOfFetchedNews = 0;
+            numbersBeforeFetch.numberOfDatabaseNews = 0;
         }
 
         // generate fetchURL with parameters
@@ -132,8 +132,11 @@ export const fetchNews = async ({
                 if (shouldLoadMore) {
                     // last value of news itemList array gets popped (offset of one)
                     itemList.shift();
+                    newsAfterFetch = newsBeforeFetch.concat(itemList);
                 }
-                newsAfterFetch = newsBeforeFetch.concat(itemList);
+                else {
+                    newsAfterFetch = itemList;
+                }
                 numbersAfterFetch.numberOfDatabaseNews = fullLength;
                 numbersAfterFetch.numberOfDatabaseUnhiddenNews = length;
                 numbersAfterFetch.numberOfFetchedNews =
@@ -149,6 +152,11 @@ export const fetchNews = async ({
         const parsedResponse = (await response.json()) as News;
         newsAfterFetch = [parsedResponse];
     }
+
+    console.log(`
+        ******** FETCH NEWS END ********\n       
+    `,
+    numbersAfterFetch, newsAfterFetch)
 
     return {
         news: newsAfterFetch,

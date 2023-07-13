@@ -33,7 +33,7 @@ const App: FC = () => {
     };
 
     const loadNews = async ({ shouldLoadMore = false }) => {
-        const fetchedNews : {
+        const fetchResult : {
             news: News[];
             numbers: {
                 numberOfDatabaseNews: number;
@@ -50,11 +50,11 @@ const App: FC = () => {
             numberOfFetchedNews: numberOfFetchedNews || 0,
             newsEntryId: newsEntryId || 0,
         })
-        setNews(fetchedNews.news);
-        setNumberOfDatabaseNews(fetchedNews.numbers.numberOfDatabaseNews);
-        setNumberOfDatabaseUnhiddenNews(fetchedNews.numbers.numberOfDatabaseUnhiddenNews);
-        setNumberOfFetchedNews(fetchedNews.numbers.numberOfFetchedNews);
-        setNumberOfDisplayedNews(fetchedNews.numbers.numberOfFetchedNews);
+        setNews(fetchResult.news);
+        setNumberOfDatabaseNews(fetchResult.numbers.numberOfDatabaseNews);
+        setNumberOfDatabaseUnhiddenNews(fetchResult.numbers.numberOfDatabaseUnhiddenNews);
+        setNumberOfFetchedNews(fetchResult.numbers.numberOfFetchedNews);
+        setNumberOfDisplayedNews(fetchResult.numbers.numberOfFetchedNews);
     };
 
     useEffect(() => {
