@@ -1,14 +1,11 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { getParameters } from 'chayns-api';
-import { AnimationWrapper, Button } from 'chayns-components';
-import { fetchNews } from 'utils/fetch';
-import DeveloperTools from './developer-tools/DeveloperTools';
-import NewsListErrorBoundary from './news-list-error-boundary/NewsListErrorBoundary';
-import NewsList from './news-list-error-boundary/news-list/NewsList';
-import AddNewsEntryErrorBoundary from './add-news-entry-error-boundary/AddNewsEntryErrorBoundary';
-import AddNewsEntry from './add-news-entry-error-boundary/add-news-entry/AddNewsEntry';
+import { processNews } from 'utils/fetch';
 import './app.scss';
 import { News, NewsNumbers } from '../constants/interfaces';
+import Head from './head/Head';
+import AdminControls from './admin-controls/AdminControls';
+import NewsSection from './news-section/NewsSection';
 
 require('../constants/chayns.d');
 require('../constants/chayns-components.d');
@@ -30,7 +27,7 @@ const App: FC = () => {
         const fetchResult: {
             news: News[];
             numbers: NewsNumbers;
-        } = await fetchNews({
+        } = await processNews({
             shouldLoadMore,
             activeBackend,
             news,
@@ -86,86 +83,28 @@ const App: FC = () => {
 
     return (
         <div className="app">
-            <AnimationWrapper>
-                <h1 id="pageHeadline">Aktuelle News</h1>
-                <p id="pageSubHeadline">
-                    Kurz, kompakt und immer wieder frisch informieren wir hier
-                    über aktuelle Themen und Aktionen.
-                </p>
-            </AnimationWrapper>
+            <Head />
             {chayns.env.user.adminMode && (
-                <div>
-                    <AddNewsEntryErrorBoundary>
-                        <AddNewsEntry
-                            activeBackend={activeBackend}
-                            fetchNews={loadNews}
-                        />
-                    </AddNewsEntryErrorBoundary>
-                    <DeveloperTools
-                        newsNumbers={newsNumbers}
-                        showNews={shouldShowNews}
-                        cbShowNewsOnChange={setShowNews}
-                        activeBackend={activeBackend}
-                        setActiveBackend={setActiveBackend}
-                    />
-                </div>
+                <AdminControls
+                    newsNumbers={newsNumbers}
+                    activeBackend={activeBackend}
+                    setActiveBackend={setActiveBackend}
+                    loadNews={loadNews}
+                    shouldShowNews={shouldShowNews}
+                    setShowNews={setShowNews}
+                />
             )}
             <br />
             {shouldShowNews && (
-                <div>
-                    {newsNumbers.numberOfDatabaseNews === null ? (
-                        <div className="app__loading">
-                            <br />
-                            waiting for news...
-                        </div>
-                    ) : (
-                        <div>
-                            {newsNumbers.numberOfDatabaseNews &&
-                            news.length > 0 ? (
-                                <div className="app__newsListContainer">
-                                    {newsEntryId && (
-                                        <div>Id Parameter - {newsEntryId}</div>
-                                    )}
-                                    <NewsListErrorBoundary>
-                                        <NewsList
-                                            news={news}
-                                            activeBackend={activeBackend}
-                                            fetchNews={loadNews}
-                                        />
-                                    </NewsListErrorBoundary>
-                                    {!newsEntryId ? (
-                                        <div className="app__newsListContainer__btLoadMoreContainer">
-                                            <Button
-                                                disabled={
-                                                    !isLoadMoreButtonEnabled
-                                                }
-                                                onClick={async () => {
-                                                    await loadNews({
-                                                        shouldLoadMore: true,
-                                                    });
-                                                }}
-                                            >
-                                                Mehr
-                                            </Button>
-                                        </div>
-                                    ) : (
-                                        <div className="app__newsListContainer__btLoadMoreContainer">
-                                            <Button
-                                                onClick={() =>
-                                                    setNewsEntryId(null)
-                                                }
-                                            >
-                                                Alle News anzeigen
-                                            </Button>
-                                        </div>
-                                    )}
-                                </div>
-                            ) : (
-                                'no news available.'
-                            )}
-                        </div>
-                    )}
-                </div>
+                <NewsSection
+                    news={news}
+                    newsNumbers={newsNumbers}
+                    activeBackend={activeBackend}
+                    loadNews={loadNews}
+                    newsEntryId={newsEntryId || 0}
+                    setNewsEntryId={setNewsEntryId}
+                    isLoadMoreButtonEnabled={isLoadMoreButtonEnabled}
+                />
             )}
         </div>
     );

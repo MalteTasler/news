@@ -5,13 +5,13 @@ import { DeveloperToolsProps } from 'constants/types';
 import './developerTools.scss';
 import { NEWS_NUMBERS_SHAPE } from 'constants/shapes';
 
-require('../../constants/chayns.d');
-require('../../constants/chayns-components.d');
+require('../../../constants/chayns.d');
+require('../../../constants/chayns-components.d');
 
 const DeveloperTools = ({
     newsNumbers,
     showNews,
-    cbShowNewsOnChange,
+    setShowNews,
     activeBackend,
     setActiveBackend,
 }: DeveloperToolsProps) => {
@@ -99,7 +99,7 @@ const DeveloperTools = ({
                 </div>
                 <Checkbox
                     checked={showNews}
-                    onChange={cbShowNewsOnChange}
+                    onChange={setShowNews}
                     className="developerTools__cbShowMore"
                 >
                     Show news
@@ -158,7 +158,7 @@ const DeveloperTools = ({
 DeveloperTools.propTypes = {
     newsNumbers: PropTypes.shape(NEWS_NUMBERS_SHAPE).isRequired,
     showNews: PropTypes.bool.isRequired,
-    cbShowNewsOnChange: PropTypes.func.isRequired,
+    setShowNews: PropTypes.func.isRequired,
     activeBackend: PropTypes.number.isRequired,
     setActiveBackend: PropTypes.func.isRequired,
 };

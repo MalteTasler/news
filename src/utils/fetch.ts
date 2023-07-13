@@ -32,7 +32,7 @@ const getTimestamp = ({
     return new Date().getTime();
 };
 
-export const fetchNews = async ({
+export const processNews = async ({
     shouldLoadMore,
     activeBackend,
     news,
