@@ -9,3 +9,9 @@ export const NEWS_ELEMENT_SHAPE = {
     publishTimestamp: PropTypes.number.isRequired,
     isHidden: PropTypes.bool.isRequired,
 };
+
+export const NEWS_NUMBERS_SHAPE = {
+    numberOfDatabaseNews: PropTypes.number,
+    numberOfDatabaseUnhiddenNews: PropTypes.number,
+    numberOfFetchedNews: PropTypes.number,
+};

@@ -14,3 +14,9 @@ export interface News {
     publishTimestamp: number;
     isHidden: boolean;
 }
+
+export interface NewsNumbers {
+    numberOfDatabaseNews: number | null;
+    numberOfDatabaseUnhiddenNews: number | null;
+    numberOfFetchedNews: number;
+}

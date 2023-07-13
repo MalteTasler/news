@@ -8,7 +8,7 @@ import NewsList from './news-list-error-boundary/news-list/NewsList';
 import AddNewsEntryErrorBoundary from './add-news-entry-error-boundary/AddNewsEntryErrorBoundary';
 import AddNewsEntry from './add-news-entry-error-boundary/add-news-entry/AddNewsEntry';
 import './app.scss';
-import { News } from '../constants/interfaces';
+import { News, NewsNumbers } from '../constants/interfaces';
 
 require('../constants/chayns.d');
 require('../constants/chayns-components.d');
@@ -18,43 +18,27 @@ const App: FC = () => {
     const [activeBackend, setActiveBackend] = useState(1);
     const [newsEntryId, setNewsEntryId] = useState<number | null>(null); // id of the news entry to display, if null display multiple news
     const [shouldShowNews, setShowNews] = useState(true);
-    const [numberOfFetchedNews, setNumberOfFetchedNews] = useState(0);
-    const [numberOfDisplayedNews, setNumberOfDisplayedNews] = useState(0);
-    const [numberOfDatabaseNews, setNumberOfDatabaseNews] = useState<
-        number | null
-    >(null);
-    const [numberOfDatabaseUnhiddenNews, setNumberOfDatabaseUnhiddenNews] =
-        useState<number | null>(null);
+    const [newsNumbers, setNewsNumbers] = useState<NewsNumbers>({
+        numberOfDatabaseNews: null,
+        numberOfDatabaseUnhiddenNews: null,
+        numberOfFetchedNews: 0,
+    });
     const [isLoadMoreButtonEnabled, setLoadMoreButtonEnabled] = useState(false);
     const isFirstRender = useRef(true);
 
-    const navigateToAllNews = () => {
-        setNewsEntryId(null);
-    };
-
     const loadNews = async ({ shouldLoadMore = false }) => {
-        const fetchResult : {
+        const fetchResult: {
             news: News[];
-            numbers: {
-                numberOfDatabaseNews: number;
-                numberOfDatabaseUnhiddenNews: number;
-                numberOfFetchedNews: number;
-            };
-        } =
-        await fetchNews({
+            numbers: NewsNumbers;
+        } = await fetchNews({
             shouldLoadMore,
             activeBackend,
             news,
-            numberOfDatabaseNews: numberOfDatabaseNews || 0,
-            numberOfDatabaseUnhiddenNews: numberOfDatabaseUnhiddenNews || 0,
-            numberOfFetchedNews: numberOfFetchedNews || 0,
+            newsNumbers,
             newsEntryId: newsEntryId || 0,
-        })
+        });
         setNews(fetchResult.news);
-        setNumberOfDatabaseNews(fetchResult.numbers.numberOfDatabaseNews);
-        setNumberOfDatabaseUnhiddenNews(fetchResult.numbers.numberOfDatabaseUnhiddenNews);
-        setNumberOfFetchedNews(fetchResult.numbers.numberOfFetchedNews);
-        setNumberOfDisplayedNews(fetchResult.numbers.numberOfFetchedNews);
+        setNewsNumbers(fetchResult.numbers);
     };
 
     useEffect(() => {
@@ -72,7 +56,7 @@ const App: FC = () => {
 
     useEffect(() => {
         if (isFirstRender.current) {
-            // Markiere den ersten Render als abgeschlossen
+            // mark first render as done
         } else {
             void loadNews({ shouldLoadMore: false });
         }
@@ -80,19 +64,20 @@ const App: FC = () => {
 
     useEffect(() => {
         setLoadMoreButtonEnabled(
-            numberOfDatabaseUnhiddenNews
-                ? numberOfDisplayedNews < numberOfDatabaseUnhiddenNews
+            newsNumbers.numberOfDatabaseUnhiddenNews
+                ? newsNumbers.numberOfFetchedNews <
+                      newsNumbers.numberOfDatabaseUnhiddenNews
                 : false
         );
     }, [
-        numberOfDisplayedNews,
-        numberOfDatabaseNews,
-        numberOfDatabaseUnhiddenNews,
+        newsNumbers.numberOfDatabaseNews,
+        newsNumbers.numberOfDatabaseUnhiddenNews,
+        newsNumbers.numberOfFetchedNews,
     ]);
 
     useEffect(() => {
         if (isFirstRender.current) {
-            // Markiere den ersten Render als abgeschlossen
+            // mark first render as done
             isFirstRender.current = false;
         } else {
             void loadNews({ shouldLoadMore: false });
@@ -117,12 +102,7 @@ const App: FC = () => {
                         />
                     </AddNewsEntryErrorBoundary>
                     <DeveloperTools
-                        numberOfDisplayedNews={numberOfDisplayedNews}
-                        numberOfFetchedNews={numberOfFetchedNews}
-                        numberOfDatabaseNews={numberOfDatabaseNews || 0}
-                        numberOfDatabaseUnhiddenNews={
-                            numberOfDatabaseUnhiddenNews || 0
-                        }
+                        newsNumbers={newsNumbers}
                         showNews={shouldShowNews}
                         cbShowNewsOnChange={setShowNews}
                         activeBackend={activeBackend}
@@ -133,14 +113,15 @@ const App: FC = () => {
             <br />
             {shouldShowNews && (
                 <div>
-                    {numberOfDatabaseNews === null ? (
+                    {newsNumbers.numberOfDatabaseNews === null ? (
                         <div className="app__loading">
                             <br />
                             waiting for news...
                         </div>
                     ) : (
                         <div>
-                            {numberOfDatabaseNews && news.length > 0 ? (
+                            {newsNumbers.numberOfDatabaseNews &&
+                            news.length > 0 ? (
                                 <div className="app__newsListContainer">
                                     {newsEntryId && (
                                         <div>Id Parameter - {newsEntryId}</div>
@@ -171,7 +152,7 @@ const App: FC = () => {
                                         <div className="app__newsListContainer__btLoadMoreContainer">
                                             <Button
                                                 onClick={() =>
-                                                    navigateToAllNews()
+                                                    setNewsEntryId(null)
                                                 }
                                             >
                                                 Alle News anzeigen

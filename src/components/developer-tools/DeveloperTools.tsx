@@ -3,15 +3,13 @@ import PropTypes from 'prop-types';
 import { Accordion, SelectButton, Checkbox } from 'chayns-components';
 import { DeveloperToolsProps } from 'constants/types';
 import './developerTools.scss';
+import { NEWS_NUMBERS_SHAPE } from 'constants/shapes';
 
 require('../../constants/chayns.d');
 require('../../constants/chayns-components.d');
 
 const DeveloperTools = ({
-    numberOfDisplayedNews,
-    numberOfFetchedNews,
-    numberOfDatabaseNews,
-    numberOfDatabaseUnhiddenNews,
+    newsNumbers,
     showNews,
     cbShowNewsOnChange,
     activeBackend,
@@ -73,14 +71,13 @@ const DeveloperTools = ({
                     )}
                     <br />
                 </div>
-                Number of total News in the databse = {numberOfDatabaseNews}
+                Number of total News in the database ={' '}
+                {newsNumbers.numberOfDatabaseNews || 'loading...'}
                 <br />
-                Number of unhidden News in the databse ={' '}
-                {numberOfDatabaseUnhiddenNews}
+                Number of unhidden News in the database ={' '}
+                {newsNumbers.numberOfDatabaseUnhiddenNews}
                 <br />
-                Number of fetched News = {numberOfFetchedNews}
-                <br />
-                Number of displayed News = {numberOfDisplayedNews}
+                Number of fetched News = {newsNumbers.numberOfFetchedNews}
                 <div className="developerTools__selectBackend">
                     Backend:
                     <SelectButton
@@ -104,8 +101,9 @@ const DeveloperTools = ({
                     checked={showNews}
                     onChange={cbShowNewsOnChange}
                     className="developerTools__cbShowMore"
-                    title="Show news"
-                />
+                >
+                    Show news
+                </Checkbox>
                 <br />
                 <u>Sources: </u>
                 <ul>
@@ -116,7 +114,7 @@ const DeveloperTools = ({
                             target="_blank"
                             rel="noreferrer"
                         >
-                            GitHub
+                            &nbsp;GitHub
                         </a>
                     </li>
                     <li>
@@ -158,18 +156,11 @@ const DeveloperTools = ({
 };
 
 DeveloperTools.propTypes = {
-    numberOfDatabaseNews: PropTypes.number,
-    numberOfDatabaseUnhiddenNews: PropTypes.number.isRequired,
-    numberOfFetchedNews: PropTypes.number.isRequired,
-    numberOfDisplayedNews: PropTypes.number.isRequired,
+    newsNumbers: PropTypes.shape(NEWS_NUMBERS_SHAPE).isRequired,
     showNews: PropTypes.bool.isRequired,
     cbShowNewsOnChange: PropTypes.func.isRequired,
     activeBackend: PropTypes.number.isRequired,
     setActiveBackend: PropTypes.func.isRequired,
-};
-
-DeveloperTools.defaultProps = {
-    numberOfDatabaseNews: null,
 };
 
 DeveloperTools.DisplayName = 'DeveloperTools';

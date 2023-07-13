@@ -1,4 +1,4 @@
-import { News } from './interfaces';
+import { News, NewsNumbers } from './interfaces';
 
 export type AddNewsEntryProps = {
     activeBackend: number;
@@ -9,10 +9,7 @@ export type AddNewsEntryProps = {
     }) => Promise<void>;
 };
 export type DeveloperToolsProps = {
-    numberOfDisplayedNews: number;
-    numberOfFetchedNews: number;
-    numberOfDatabaseNews: number;
-    numberOfDatabaseUnhiddenNews: number;
+    newsNumbers: NewsNumbers;
     showNews: boolean;
     cbShowNewsOnChange: (value: boolean) => void;
     activeBackend: number;

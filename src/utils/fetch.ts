@@ -1,7 +1,7 @@
 import { getNews } from 'api/news/get';
 import { FETCH_COUNT } from 'constants/config';
 import { BackendUrls } from 'constants/enums';
-import { ListResponse, News } from 'constants/interfaces';
+import { ListResponse, News, NewsNumbers } from 'constants/interfaces';
 
 const getTimestamp = ({
     shouldBeNewest = false,
@@ -10,12 +10,14 @@ const getTimestamp = ({
     shouldBeNewest: boolean;
     news: News[];
 }): string | number => {
-    console.log(`
+    /* console.log(`
         shouldBeNewest: ${shouldBeNewest.toString()}\n
         news: ${news.toString()}\n
         newsLength: ${news.length.toString()}\n    
-        useTimestamoOfOldestNewsEntry: ${(news.length >= 1 && !shouldBeNewest).toString()}            
-    `);
+        useTimestamoOfOldestNewsEntry: ${(
+            news.length >= 1 && !shouldBeNewest
+        ).toString()}            
+    `); */
     if (news.length >= 1 && !shouldBeNewest) {
         //  if entries are already loaded take the timestamp of the oldest
         const oldestLoadedNewsEntry: News = news[news.length - 1];
@@ -34,64 +36,50 @@ export const fetchNews = async ({
     shouldLoadMore,
     activeBackend,
     news,
-    numberOfDatabaseNews,
-    numberOfDatabaseUnhiddenNews,
-    numberOfFetchedNews,
-    newsEntryId
+    newsNumbers,
+    newsEntryId,
 }: {
-    shouldLoadMore: boolean,
-    activeBackend: number,
-    news: News[],
-    numberOfDatabaseNews: number,
-    numberOfDatabaseUnhiddenNews: number,
-    numberOfFetchedNews: number,
-    newsEntryId: number
+    shouldLoadMore: boolean;
+    activeBackend: number;
+    news: News[];
+    newsNumbers: NewsNumbers;
+    newsEntryId: number;
 }): Promise<{
     news: News[];
-    numbers: {        
-        numberOfDatabaseNews: number;
-        numberOfDatabaseUnhiddenNews: number;
-        numberOfFetchedNews: number;
-    }
+    numbers: NewsNumbers;
 }> => {
-    const numbersBeforeFetch = {
-        numberOfDatabaseNews,
-        numberOfDatabaseUnhiddenNews,
-        numberOfFetchedNews,
-    };
-    const numbersAfterFetch: {
-        numberOfDatabaseNews: number;
-        numberOfDatabaseUnhiddenNews: number;
-        numberOfFetchedNews: number;
-    } = {
-        numberOfDatabaseNews,
-        numberOfDatabaseUnhiddenNews,
-        numberOfFetchedNews,
+    const numbersAfterFetch: NewsNumbers = {
+        numberOfDatabaseNews: newsNumbers.numberOfDatabaseNews,
+        numberOfDatabaseUnhiddenNews: newsNumbers.numberOfDatabaseUnhiddenNews,
+        numberOfFetchedNews: newsNumbers.numberOfFetchedNews,
     };
 
-    const newsBeforeFetch: News[] = news;
-    let newsAfterFetch: News[] = [];
+    let newsAfterFetch: News[] = news;
 
     // if no id parameter for a news entry is used, load multiple entries
-    // otherwise fetch only the news entry with the id defined in parameter       
+    // otherwise fetch only the news entry with the id defined in parameter
     const shouldLoadSingleNewsEntry = newsEntryId;
-    console.log(`
+    /* console.log(`
         ******** FETCH NEWS ********\n
-        shouldLoadSingleNewsEntry: ${  shouldLoadSingleNewsEntry.toString()  }\n
-        newsEntryId: ${  newsEntryId.toString()}\n
-        shouldLoadMore: ${  shouldLoadMore.toString()  }\n
-        activeBackend: ${  activeBackend.toString()  }\n
-        numberOfDatabaseNews: ${  numberOfDatabaseNews.toString()  }\n
-        numberOfDatabaseUnhiddenNews: ${  numberOfDatabaseUnhiddenNews.toString()  }\n
-        numberOfFetchedNews: ${  numberOfFetchedNews.toString()  }\n
-    `)
+        shouldLoadSingleNewsEntry: ${shouldLoadSingleNewsEntry.toString()}\n
+        newsEntryId: ${newsEntryId.toString()}\n
+        shouldLoadMore: ${shouldLoadMore.toString()}\n
+        activeBackend: ${activeBackend.toString()}\n
+        numberOfDatabaseNews: ${(
+            numbersAfterFetch.numberOfDatabaseNews || 0
+        ).toString()}\n
+        numberOfDatabaseUnhiddenNews: ${(
+            numbersAfterFetch.numberOfDatabaseUnhiddenNews || 0
+        ).toString()}\n
+        numberOfFetchedNews: ${numbersAfterFetch.numberOfFetchedNews.toString()}\n
+    `); */
 
     if (!shouldLoadSingleNewsEntry) {
         // reset local counter variables if shouldLoadMore is false
         if (!shouldLoadMore) {
-            numbersBeforeFetch.numberOfDatabaseUnhiddenNews = 0;
-            numbersBeforeFetch.numberOfFetchedNews = 0;
-            numbersBeforeFetch.numberOfDatabaseNews = 0;
+            numbersAfterFetch.numberOfDatabaseUnhiddenNews = 0;
+            numbersAfterFetch.numberOfFetchedNews = 0;
+            numbersAfterFetch.numberOfDatabaseNews = 0;
         }
 
         // generate fetchURL with parameters
@@ -100,15 +88,15 @@ export const fetchNews = async ({
         fetchURLWithParameters += `&tappId=${chayns.env.site.tapp.id}`;
         fetchURLWithParameters += `&timestamp=${getTimestamp({
             shouldBeNewest: !shouldLoadMore,
-            news: newsBeforeFetch,
+            news: newsAfterFetch,
         })}`;
         fetchURLWithParameters += `&count=${FETCH_COUNT}`;
         fetchURLWithParameters += `&adminMode=${(
             chayns.env.user.adminMode || false
         ).toString()}`;
-        console.log(`
+        /* console.log(`
             fetchURLWithParameters: ${fetchURLWithParameters}\n            
-        `);
+        `); */
 
         const response = await getNews({
             fetchUrlWithParameters: fetchURLWithParameters,
@@ -132,15 +120,13 @@ export const fetchNews = async ({
                 if (shouldLoadMore) {
                     // last value of news itemList array gets popped (offset of one)
                     itemList.shift();
-                    newsAfterFetch = newsBeforeFetch.concat(itemList);
-                }
-                else {
+                    newsAfterFetch = newsAfterFetch.concat(itemList);
+                } else {
                     newsAfterFetch = itemList;
                 }
                 numbersAfterFetch.numberOfDatabaseNews = fullLength;
                 numbersAfterFetch.numberOfDatabaseUnhiddenNews = length;
-                numbersAfterFetch.numberOfFetchedNews =
-                    numbersBeforeFetch.numberOfFetchedNews + itemList.length;
+                numbersAfterFetch.numberOfFetchedNews += itemList.length;
             }
         }
     } else {
@@ -153,10 +139,13 @@ export const fetchNews = async ({
         newsAfterFetch = [parsedResponse];
     }
 
-    console.log(`
+    /* console.log(
+        `
         ******** FETCH NEWS END ********\n       
     `,
-    numbersAfterFetch, newsAfterFetch)
+        numbersAfterFetch,
+        newsAfterFetch
+    ); */
 
     return {
         news: newsAfterFetch,
